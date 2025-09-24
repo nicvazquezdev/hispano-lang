@@ -141,18 +141,6 @@ mostrar "Precio:"
 mostrar precio
 ```
 
-## 🚧 Future Features
-
-- [ ] Basic mathematical operations (`+`, `-`, `*`, `/`)
-- [ ] Conditionals (`si`, `sino`)
-- [ ] Loops (`mientras`, `repetir`)
-- [ ] Comparisons (`>`, `<`, `==`)
-- [ ] User-defined functions
-- [ ] Arrays/lists
-- [ ] User input operations
-- [ ] Interactive web interface
-- [ ] Integrated exercises and tutorials
-
 ## 🤝 Contributing
 
 This project is open source and free. Contributions are welcome:
@@ -171,11 +159,4 @@ This project is under the MIT License - see the [LICENSE](LICENSE) file for deta
 
 Inspired by the need to democratize access to programming education for low-resource Spanish-speaking communities, eliminating the English language barrier.
 
-## 📞 Contact
-
-- GitHub: [your-username](https://github.com/your-username)
-- Email: your-email@example.com
-
 ---
-
-**Help us make programming more accessible to everyone!** 🌍

@@ -141,18 +141,6 @@ mostrar "Precio:"
 mostrar precio
 ```
 
-## 🚧 Características Futuras
-
-- [ ] Operaciones matemáticas básicas (`+`, `-`, `*`, `/`)
-- [ ] Condicionales (`si`, `sino`)
-- [ ] Bucles (`mientras`, `repetir`)
-- [ ] Comparaciones (`>`, `<`, `==`)
-- [ ] Funciones definidas por el usuario
-- [ ] Arrays/listas
-- [ ] Operaciones de entrada de usuario
-- [ ] Interfaz web interactiva
-- [ ] Ejercicios y tutoriales integrados
-
 ## 🤝 Contribuir
 
 Este proyecto es open source y gratuito. Las contribuciones son bienvenidas:
@@ -171,11 +159,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 Inspirado en la necesidad de democratizar el acceso a la educación en programación para comunidades hispanohablantes de bajos recursos, eliminando la barrera del idioma inglés.
 
-## 📞 Contacto
-
-- GitHub: [tu-usuario](https://github.com/tu-usuario)
-- Email: tu-email@ejemplo.com
-
 ---
-
-**¡Ayúdanos a hacer la programación más accesible para todos!** 🌍
