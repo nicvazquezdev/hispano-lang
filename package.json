@@ -1,0 +1,35 @@
+{
+  "name": "lenguaje-programacion-espanol",
+  "version": "1.0.0",
+  "description": "Un lenguaje de programación educativo en español para enseñar programación sin barreras de idioma",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "node test/test.js",
+    "dev": "nodemon main.js"
+  },
+  "keywords": [
+    "programming-language",
+    "education",
+    "spanish",
+    "interpreter",
+    "javascript",
+    "learning"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/lenguaje-programacion-espanol"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/lenguaje-programacion-espanol/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/lenguaje-programacion-espanol#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
