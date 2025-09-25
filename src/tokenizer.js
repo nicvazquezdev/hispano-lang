@@ -124,6 +124,14 @@ class Tokenizer {
         this.addToken("COMMA");
         break;
 
+      case "[":
+        this.addToken("LEFT_BRACKET");
+        break;
+
+      case "]":
+        this.addToken("RIGHT_BRACKET");
+        break;
+
       case '"':
         this.string();
         break;

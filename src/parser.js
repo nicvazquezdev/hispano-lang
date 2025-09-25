@@ -220,11 +220,30 @@ class Parser {
   }
 
   /**
+   * Parses a complete expression that can be followed by array access
+   * @returns {Object} Parsed expression
+   */
+  parseExpression() {
+    let expr = this.equality();
+
+    while (this.match("LEFT_BRACKET")) {
+      expr = this.finishArrayAccess(expr);
+    }
+
+    return expr;
+  }
+
+  /**
    * Parses an assignment
    * @returns {Object} Parsed assignment
    */
   assignment() {
-    const expr = this.equality();
+    let expr = this.equality();
+
+    // Handle array access
+    while (this.match("LEFT_BRACKET")) {
+      expr = this.finishArrayAccess(expr);
+    }
 
     if (this.match("EQUAL")) {
       const equals = this.previous();
@@ -235,6 +254,15 @@ class Parser {
         return {
           type: "Assign",
           name,
+          value,
+        };
+      }
+
+      if (expr.type === "ArrayAccess") {
+        return {
+          type: "ArrayAssign",
+          array: expr.array,
+          index: expr.index,
           value,
         };
       }
@@ -379,7 +407,27 @@ class Parser {
       return expr;
     }
 
+    if (this.match("LEFT_BRACKET")) {
+      return this.arrayLiteral();
+    }
+
     throw new Error("Expected expression");
+  }
+
+  /**
+   * Finishes parsing an array access
+   * @param {Object} array - The array being accessed
+   * @returns {Object} Array access expression
+   */
+  finishArrayAccess(array) {
+    const index = this.expression();
+    this.consume("RIGHT_BRACKET", "Expected ] after array index");
+
+    return {
+      type: "ArrayAccess",
+      array,
+      index,
+    };
   }
 
   /**
@@ -408,6 +456,27 @@ class Parser {
         name: callee.lexeme,
       },
       arguments: args,
+    };
+  }
+
+  /**
+   * Parses an array literal
+   * @returns {Object} Array literal
+   */
+  arrayLiteral() {
+    const elements = [];
+
+    if (!this.check("RIGHT_BRACKET")) {
+      do {
+        elements.push(this.expression());
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_BRACKET", "Expected ] after array elements");
+
+    return {
+      type: "ArrayLiteral",
+      elements,
     };
   }
 

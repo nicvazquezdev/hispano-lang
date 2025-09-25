@@ -394,8 +394,92 @@ function runTests() {
     );
   });
 
-  // Test 20: Complex example with all features
-  test("Complex example - calculator with functions", () => {
+  // Test 20: Basic array creation
+  test("Basic array creation", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      mostrar numeros
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[1, 2, 3, 4, 5]"],
+      "Basic array creation should work",
+    );
+  });
+
+  // Test 21: Array access
+  test("Array access", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      mostrar frutas[0]
+      mostrar frutas[1]
+      mostrar frutas[2]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["manzana", "banana", "naranja"],
+      "Array access should work correctly",
+    );
+  });
+
+  // Test 22: Array assignment
+  test("Array assignment", () => {
+    const code = `
+      variable numeros = [10, 20, 30]
+      numeros[1] = 25
+      mostrar numeros[1]
+      mostrar numeros
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["25", "[10, 25, 30]"],
+      "Array assignment should work",
+    );
+  });
+
+  // Test 23: Mixed array types
+  test("Mixed array types", () => {
+    const code = `
+      variable mixto = [1, "hola", verdadero, 3.14]
+      mostrar mixto[0]
+      mostrar mixto[1]
+      mostrar mixto[2]
+      mostrar mixto[3]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "hola", "true", "3.14"],
+      "Mixed array types should work",
+    );
+  });
+
+  // Test 24: Array with expressions
+  test("Array with expressions", () => {
+    const code = `
+      variable a = 5
+      variable b = 10
+      variable calculado = [a + b, a * b, a - b]
+      mostrar calculado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[15, 50, -5]"],
+      "Array with expressions should work",
+    );
+  });
+
+  // Test 25: Complex example with all features
+  test("Complex example - calculator with functions and arrays", () => {
     const code = `
       funcion calcular(a, b) {
           variable suma = a + b
@@ -414,6 +498,16 @@ function runTests() {
       si resultado > 10 {
           mostrar "El resultado es mayor que 10"
       }
+      
+      variable numeros = [1, 2, 3, 4, 5]
+      variable suma = 0
+      variable i = 0
+      mientras i < 5 {
+          suma = suma + numeros[i]
+          i = i + 1
+      }
+      mostrar "Suma de array:"
+      mostrar suma
     `;
 
     const output = run(code);
@@ -425,11 +519,13 @@ function runTests() {
       "Resultado final:",
       "15",
       "El resultado es mayor que 10",
+      "Suma de array:",
+      "15",
     ];
     assertEquals(
       output,
       expectedOutput,
-      "Complex calculator with functions should work correctly",
+      "Complex calculator with functions and arrays should work correctly",
     );
   });
 

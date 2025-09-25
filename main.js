@@ -48,22 +48,19 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-funcion saludar() {
-    mostrar "Hola mundo"
-}
-saludar()
+variable numeros = [1, 2, 3, 4, 5]
+mostrar numeros[0]
 
-funcion sumar(a, b) {
-    retornar a + b
-}
-variable resultado = sumar(5, 3)
-mostrar resultado
+variable frutas = ["manzana", "banana", "naranja"]
+mostrar frutas[1]
 
-funcion multiplicar(x, y) {
-    retornar x * y
-}
-variable producto = multiplicar(4, 6)
-mostrar producto
+variable a = 5
+variable b = 10
+variable calculado = [a + b, a * b, a - b]
+mostrar calculado
+
+numeros[1] = 25
+mostrar numeros
 `;
 
 console.log("Code to execute:");

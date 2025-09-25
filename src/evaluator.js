@@ -171,6 +171,15 @@ class Evaluator {
         this.environment.assign(expression.name, value);
         return value;
 
+      case "ArrayLiteral":
+        return this.evaluateArrayLiteral(expression);
+
+      case "ArrayAccess":
+        return this.evaluateArrayAccess(expression);
+
+      case "ArrayAssign":
+        return this.evaluateArrayAssign(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -359,6 +368,69 @@ class Evaluator {
   }
 
   /**
+   * Evaluates an array literal
+   * @param {Object} expression - Array literal expression
+   * @returns {Array} Array value
+   */
+  evaluateArrayLiteral(expression) {
+    const elements = [];
+    for (const element of expression.elements) {
+      elements.push(this.evaluateExpression(element));
+    }
+    return elements;
+  }
+
+  /**
+   * Evaluates array access
+   * @param {Object} expression - Array access expression
+   * @returns {any} Array element value
+   */
+  evaluateArrayAccess(expression) {
+    const array = this.evaluateExpression(expression.array);
+    const index = this.evaluateExpression(expression.index);
+
+    if (!Array.isArray(array)) {
+      throw new Error("Can only access elements of arrays");
+    }
+
+    if (typeof index !== "number") {
+      throw new Error("Array index must be a number");
+    }
+
+    if (index < 0 || index >= array.length) {
+      throw new Error("Array index out of bounds");
+    }
+
+    return array[index];
+  }
+
+  /**
+   * Evaluates array assignment
+   * @param {Object} expression - Array assignment expression
+   * @returns {any} Assigned value
+   */
+  evaluateArrayAssign(expression) {
+    const array = this.evaluateExpression(expression.array);
+    const index = this.evaluateExpression(expression.index);
+    const value = this.evaluateExpression(expression.value);
+
+    if (!Array.isArray(array)) {
+      throw new Error("Can only assign to elements of arrays");
+    }
+
+    if (typeof index !== "number") {
+      throw new Error("Array index must be a number");
+    }
+
+    if (index < 0 || index >= array.length) {
+      throw new Error("Array index out of bounds");
+    }
+
+    array[index] = value;
+    return value;
+  }
+
+  /**
    * Converts a value to string for display
    * @param {any} value - Value to convert
    * @returns {string} String representation
@@ -366,6 +438,9 @@ class Evaluator {
   stringify(value) {
     if (value === null) return "null";
     if (typeof value === "string") return value;
+    if (Array.isArray(value)) {
+      return "[" + value.map((v) => this.stringify(v)).join(", ") + "]";
+    }
     return value.toString();
   }
 }
