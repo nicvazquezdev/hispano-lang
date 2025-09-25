@@ -3155,6 +3155,262 @@ function runTests() {
     );
   });
 
+  // Test 163: Basic null value
+  test("Basic null value", () => {
+    const code = `
+      variable valor = nulo
+      mostrar valor
+      mostrar "Valor es: " + valor
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["null", "Valor es: null"],
+      "Basic null value should work",
+    );
+  });
+
+  // Test 164: Basic undefined value
+  test("Basic undefined value", () => {
+    const code = `
+      variable valor = indefinido
+      mostrar valor
+      mostrar "Valor es: " + valor
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["undefined", "Valor es: undefined"],
+      "Basic undefined value should work",
+    );
+  });
+
+  // Test 165: Null and undefined comparisons
+  test("Null and undefined comparisons", () => {
+    const code = `
+      variable a = nulo
+      variable b = indefinido
+      variable c = nulo
+      
+      mostrar "a == nulo: " + (a == nulo)
+      mostrar "b == indefinido: " + (b == indefinido)
+      mostrar "a == c: " + (a == c)
+      mostrar "a == b: " + (a == b)
+      mostrar "a != b: " + (a != b)
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "a == nulo: true",
+        "b == indefinido: true",
+        "a == c: true",
+        "a == b: false",
+        "a != b: true",
+      ],
+      "Null and undefined comparisons should work",
+    );
+  });
+
+  // Test 166: Null and undefined with other types
+  test("Null and undefined with other types", () => {
+    const code = `
+      variable valorNulo = nulo
+      variable valorIndefinido = indefinido
+      variable numero = 42
+      variable texto = "hola"
+      variable booleano = verdadero
+      
+      mostrar "nulo == numero: " + (valorNulo == numero)
+      mostrar "indefinido == texto: " + (valorIndefinido == texto)
+      mostrar "nulo == booleano: " + (valorNulo == booleano)
+      mostrar "indefinido == booleano: " + (valorIndefinido == booleano)
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "nulo == numero: false",
+        "indefinido == texto: false",
+        "nulo == booleano: false",
+        "indefinido == booleano: false",
+      ],
+      "Null and undefined with other types should work",
+    );
+  });
+
+  // Test 167: Null and undefined in conditions
+  test("Null and undefined in conditions", () => {
+    const code = `
+      variable valor = nulo
+      
+      si valor == nulo {
+        mostrar "El valor es nulo"
+      }
+      
+      valor = indefinido
+      
+      si valor == indefinido {
+        mostrar "El valor es indefinido"
+      }
+      
+      si valor != nulo {
+        mostrar "El valor no es nulo"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["El valor es nulo", "El valor es indefinido", "El valor no es nulo"],
+      "Null and undefined in conditions should work",
+    );
+  });
+
+  // Test 168: Null and undefined in arrays
+  test("Null and undefined in arrays", () => {
+    const code = `
+      variable arr = [1, nulo, "hola", indefinido, verdadero]
+      mostrar arr
+      
+      arr.recorrer(funcion(elemento, indice) {
+        si elemento == nulo {
+          mostrar "Elemento " + indice + " es nulo"
+        } sino {
+          si elemento == indefinido {
+            mostrar "Elemento " + indice + " es indefinido"
+          }
+        }
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "[1, null, hola, undefined, true]",
+        "Elemento 1 es nulo",
+        "Elemento 3 es indefinido",
+      ],
+      "Null and undefined in arrays should work",
+    );
+  });
+
+  // Test 169: Null and undefined in objects
+  test("Null and undefined in objects", () => {
+    const code = `
+      variable obj = {nombre: "Juan", edad: nulo, ciudad: indefinido}
+      mostrar obj
+      
+      mostrar "Edad es nulo: " + (obj.edad == nulo)
+      mostrar "Ciudad es indefinido: " + (obj.ciudad == indefinido)
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[object Object]", "Edad es nulo: true", "Ciudad es indefinido: true"],
+      "Null and undefined in objects should work",
+    );
+  });
+
+  // Test 170: Null and undefined with functions
+  test("Null and undefined with functions", () => {
+    const code = `
+      funcion procesar(valor) {
+        si valor == nulo {
+          retornar "Es nulo"
+        } sino {
+          si valor == indefinido {
+            retornar "Es indefinido"
+          } sino {
+            retornar "Es otro valor"
+          }
+        }
+      }
+      
+      mostrar procesar(nulo)
+      mostrar procesar(indefinido)
+      mostrar procesar(42)
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Es nulo", "Es indefinido", "Es otro valor"],
+      "Null and undefined with functions should work",
+    );
+  });
+
+  // Test 171: Null and undefined with try-catch
+  test("Null and undefined with try-catch", () => {
+    const code = `
+      intentar {
+        variable valor = nulo
+        mostrar "Valor: " + valor
+        valor = indefinido
+        mostrar "Valor: " + valor
+      } capturar (error) {
+        mostrar "Error: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Valor: null", "Valor: undefined"],
+      "Null and undefined with try-catch should work",
+    );
+  });
+
+  // Test 172: Null and undefined with loops
+  test("Null and undefined with loops", () => {
+    const code = `
+      variable valores = [nulo, indefinido, 42, "hola"]
+      variable contador = 0
+      
+      valores.recorrer(funcion(valor) {
+        si valor == nulo o valor == indefinido {
+          contador = contador + 1
+        }
+      })
+      
+      mostrar "Valores nulos o indefinidos: " + contador
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Valores nulos o indefinidos: 2"],
+      "Null and undefined with loops should work",
+    );
+  });
+
+  // Test 173: Null and undefined with logical operators
+  test("Null and undefined with logical operators", () => {
+    const code = `
+      variable a = nulo
+      variable b = indefinido
+      variable c = 42
+      
+      mostrar "a o c: " + (a o c)
+      mostrar "b o c: " + (b o c)
+      mostrar "a y c: " + (a y c)
+      mostrar "b y c: " + (b y c)
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["a o c: 42", "b o c: undefined", "a y c: null", "b y c: 42"],
+      "Null and undefined with logical operators should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

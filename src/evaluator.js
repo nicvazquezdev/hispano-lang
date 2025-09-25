@@ -1208,6 +1208,7 @@ class Evaluator {
    */
   stringify(value) {
     if (value === null) return "null";
+    if (value === undefined) return "undefined";
     if (typeof value === "string") return value;
     if (Array.isArray(value)) {
       return "[" + value.map((v) => this.stringify(v)).join(", ") + "]";

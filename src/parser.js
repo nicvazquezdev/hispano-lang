@@ -620,6 +620,8 @@ class Parser {
   primary() {
     if (this.match("FALSE")) return { type: "Literal", value: false };
     if (this.match("TRUE")) return { type: "Literal", value: true };
+    if (this.match("NULL")) return { type: "Literal", value: null };
+    if (this.match("UNDEFINED")) return { type: "Literal", value: undefined };
     if (this.match("NUMBER", "STRING")) {
       return {
         type: "Literal",

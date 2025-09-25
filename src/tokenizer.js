@@ -354,6 +354,8 @@ class Tokenizer {
       continuar: "CONTINUAR",
       intentar: "INTENTAR",
       capturar: "CAPTURAR",
+      nulo: "NULL",
+      indefinido: "UNDEFINED",
     };
 
     return keywords[text] || "IDENTIFIER";

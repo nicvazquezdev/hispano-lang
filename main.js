@@ -48,35 +48,45 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable numeros = [1, 2, 3, 4, 5]
+ // Asignación directa
+variable a = nulo
+variable b = indefinido
+mostrar a
+mostrar b
 
-// Recorrer números y mostrarlos
-numeros.recorrer(funcion(elemento) {
-  mostrar elemento
-})
+// Comparaciones básicas
+mostrar a == nulo
+mostrar b == indefinido
+mostrar a == indefinido
+mostrar b == nulo
 
-// Recorrer con índice
-numeros.recorrer(funcion(elemento, indice) {
-  mostrar "Elemento: " + elemento + " en índice " + indice
-})
+// Uso en condicionales
+si a == nulo {
+  mostrar "a es nulo"
+}
 
-// Recorrer strings
-variable palabras = ["hola", "mundo", "programacion"]
-palabras.recorrer(funcion(palabra) {
-  mostrar palabra.mayusculas()
-})
+si b == indefinido {
+  mostrar "b es indefinido"
+}
 
-// Recorrer array mixto
-variable mixto = [1, "hola", verdadero, {clave: "valor"}]
-mixto.recorrer(funcion(item) {
-  mostrar item
-})
+// En arrays
+variable lista = [1, nulo, 3, indefinido, 5]
+mostrar lista
+mostrar lista.longitud()
 
-// Recorrer array vacío
-variable vacio = []
-vacio.recorrer(funcion(item) {
-  mostrar "Esto no debería ejecutarse"
-})
+// En objetos
+variable objeto = {x: nulo, y: indefinido}
+mostrar objeto
+
+// Sobrescribir valores
+objeto.x = 42
+objeto.y = "texto"
+mostrar objeto
+
+// Comparaciones estrictas
+mostrar nulo == nulo
+mostrar indefinido == indefinido
+mostrar nulo != indefinido
 
 `;
 
