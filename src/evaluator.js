@@ -508,7 +508,11 @@ class Evaluator {
       );
     } else if (typeof object === "string") {
       // Check if the method is valid for strings
-      if (expression.method === "agregar" || expression.method === "remover") {
+      if (
+        expression.method === "agregar" ||
+        expression.method === "remover" ||
+        expression.method === "contiene"
+      ) {
         throw new Error(
           `Method ${expression.method}() can only be called on arrays`,
         );
@@ -559,6 +563,14 @@ class Evaluator {
           throw new Error("Cannot remove element from empty array");
         }
         return array.pop(); // Return the removed element
+
+      case "contiene":
+        // Check if array contains the specified element
+        if (args.length !== 1) {
+          throw new Error("Method contiene() requires exactly one argument");
+        }
+        const searchElement = this.evaluateExpression(args[0]);
+        return array.includes(searchElement);
 
       default:
         throw new Error(`Unknown array method: ${method}`);

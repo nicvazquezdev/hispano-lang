@@ -50,29 +50,34 @@ function clearVariables() {
 const exampleCode = `
 variable numeros = [1, 2, 3, 4, 5]
 
-// Remover el último elemento
-numeros.remover()
-mostrar numeros
-mostrar numeros.longitud()
+// Caso positivo: número presente
+mostrar numeros.contiene(3)
 
-// Remover varias veces seguidas
-numeros.remover()
-numeros.remover()
-mostrar numeros
-mostrar numeros.longitud()
+// Caso negativo: número ausente
+mostrar numeros.contiene(10)
 
-// Remover hasta dejar el array vacío
-numeros.remover()
-numeros.remover()
-mostrar numeros
-mostrar numeros.longitud()
+// Strings en arrays
+variable palabras = ["hola", "mundo", "programacion"]
+mostrar palabras.contiene("hola")
+mostrar palabras.contiene("adios")
 
-// Mezcla con otros tipos
-variable mezcla = ["hola", verdadero, 42, {clave: "valor"}]
-mostrar mezcla
-mezcla.remover()
-mostrar mezcla
-mostrar mezcla.longitud()
+// Booleanos en arrays
+variable valores = [verdadero, falso]
+mostrar valores.contiene(verdadero)
+mostrar valores.contiene(falso)
+
+// Arrays mixtos
+variable mixto = [1, "hola", verdadero, {clave: "valor"}]
+mostrar mixto.contiene(1)
+mostrar mixto.contiene("hola")
+mostrar mixto.contiene(verdadero)
+mostrar mixto.contiene({clave: "valor"}) // depende de si comparás por referencia o valor
+mostrar mixto.contiene(99)
+
+// Array vacío
+variable vacio = []
+mostrar vacio.contiene(1)
+mostrar vacio.contiene("nada")
 
 `;
 

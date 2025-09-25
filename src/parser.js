@@ -692,6 +692,7 @@ class Parser {
       name.lexeme === "ultimo" ||
       name.lexeme === "agregar" ||
       name.lexeme === "remover" ||
+      name.lexeme === "contiene" ||
       name.lexeme === "mayusculas" ||
       name.lexeme === "minusculas"
     ) {
@@ -700,8 +701,8 @@ class Parser {
         // Consume the opening parenthesis
         // Check if there are arguments
         if (!this.check("RIGHT_PAREN")) {
-          // Handle methods that accept arguments (like agregar)
-          if (name.lexeme === "agregar") {
+          // Handle methods that accept arguments (like agregar, contiene)
+          if (name.lexeme === "agregar" || name.lexeme === "contiene") {
             const args = [];
             do {
               args.push(this.expression());

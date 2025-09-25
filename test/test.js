@@ -2657,6 +2657,242 @@ function runTests() {
     );
   });
 
+  // Test 137: Basic array contains method
+  test("Basic array contains method", () => {
+    const code = `
+      variable arr = [1, 2, 3, 4, 5]
+      variable contiene3 = arr.contiene(3)
+      variable contiene6 = arr.contiene(6)
+      mostrar contiene3
+      mostrar contiene6
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false"],
+      "Basic array contains method should work",
+    );
+  });
+
+  // Test 138: Array contains with strings
+  test("Array contains with strings", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      variable contieneBanana = frutas.contiene("banana")
+      variable contieneUva = frutas.contiene("uva")
+      mostrar contieneBanana
+      mostrar contieneUva
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false"],
+      "Array contains with strings should work",
+    );
+  });
+
+  // Test 139: Array contains with different types
+  test("Array contains with different types", () => {
+    const code = `
+      variable mixto = ["hola", 42, verdadero, 3.14]
+      variable contieneHola = mixto.contiene("hola")
+      variable contiene42 = mixto.contiene(42)
+      variable contieneTrue = mixto.contiene(verdadero)
+      variable contienePi = mixto.contiene(3.14)
+      variable contieneFalso = mixto.contiene(falso)
+      mostrar contieneHola
+      mostrar contiene42
+      mostrar contieneTrue
+      mostrar contienePi
+      mostrar contieneFalso
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "true", "true", "false"],
+      "Array contains with different types should work",
+    );
+  });
+
+  // Test 140: Array contains with variables
+  test("Array contains with variables", () => {
+    const code = `
+      variable numeros = [10, 20, 30, 40]
+      variable buscar = 20
+      variable contiene = numeros.contiene(buscar)
+      mostrar contiene
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["true"], "Array contains with variables should work");
+  });
+
+  // Test 141: Array contains with expressions
+  test("Array contains with expressions", () => {
+    const code = `
+      variable arr = [1, 2, 3, 4, 5]
+      variable contiene = arr.contiene(2 + 1)
+      mostrar contiene
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true"],
+      "Array contains with expressions should work",
+    );
+  });
+
+  // Test 142: Array contains with empty array
+  test("Array contains with empty array", () => {
+    const code = `
+      variable vacio = []
+      variable contiene = vacio.contiene(1)
+      mostrar contiene
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false"],
+      "Array contains with empty array should work",
+    );
+  });
+
+  // Test 143: Array contains in conditions
+  test("Array contains in conditions", () => {
+    const code = `
+      variable colores = ["rojo", "verde", "azul"]
+      
+      si colores.contiene("rojo") {
+        mostrar "El array contiene rojo"
+      }
+      
+      si colores.contiene("amarillo") {
+        mostrar "El array contiene amarillo"
+      } sino {
+        mostrar "El array no contiene amarillo"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["El array contiene rojo", "El array no contiene amarillo"],
+      "Array contains in conditions should work",
+    );
+  });
+
+  // Test 144: Array contains with objects
+  test("Array contains with objects", () => {
+    const code = `
+      variable obj1 = {nombre: "Juan", edad: 25}
+      variable obj2 = {nombre: "María", edad: 30}
+      variable personas = [obj1, obj2]
+      variable contieneObj1 = personas.contiene(obj1)
+      variable contieneObj2 = personas.contiene(obj2)
+      mostrar contieneObj1
+      mostrar contieneObj2
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true"],
+      "Array contains with objects should work",
+    );
+  });
+
+  // Test 145: Array contains with arrays
+  test("Array contains with arrays", () => {
+    const code = `
+      variable subArray = [1, 2]
+      variable listas = [[1, 2], [3, 4], [5, 6]]
+      variable contiene = listas.contiene(subArray)
+      mostrar contiene
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false"],
+      "Array contains with arrays should work (arrays are compared by reference)",
+    );
+  });
+
+  // Test 146: Array contains with no arguments (error)
+  test("Array contains with no arguments should fail", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable resultado = arr.contiene()
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling contiene with no arguments",
+    );
+    assertTrue(
+      result.error.includes("Method contiene() requires exactly one argument"),
+      "Error should mention argument requirement",
+    );
+  });
+
+  // Test 147: Array contains with multiple arguments (error)
+  test("Array contains with multiple arguments should fail", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable resultado = arr.contiene(1, 2)
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling contiene with multiple arguments",
+    );
+    assertTrue(
+      result.error.includes("Method contiene() requires exactly one argument"),
+      "Error should mention argument requirement",
+    );
+  });
+
+  // Test 148: Error handling for array contains on non-arrays
+  test("Error handling for array contains on non-arrays", () => {
+    const code = `
+      variable texto = "hola"
+      variable resultado = texto.contiene("o")
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling contiene on non-array",
+    );
+    assertTrue(
+      result.error.includes("Method contiene() can only be called on arrays"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 149: Array contains with complex expressions
+  test("Array contains with complex expressions", () => {
+    const code = `
+      variable arr = [10, 20, 30, 40, 50]
+      variable contiene = arr.contiene(15 + 15)
+      mostrar contiene
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true"],
+      "Array contains with complex expressions should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
