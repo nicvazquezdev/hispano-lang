@@ -1748,6 +1748,228 @@ function runTests() {
     );
   });
 
+  // Test 91: Basic string lowercase method
+  test("Basic string lowercase method", () => {
+    const code = `
+      variable texto = "HOLA MUNDO"
+      mostrar texto.minusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola mundo"],
+      "Basic string lowercase method should work",
+    );
+  });
+
+  // Test 92: String lowercase with different strings
+  test("String lowercase with different strings", () => {
+    const code = `
+      variable texto1 = "HOLA"
+      variable texto2 = "PROGRAMACIÓN"
+      variable texto3 = "A"
+      variable texto4 = "¡HOLA, MUNDO!"
+      
+      mostrar texto1.minusculas
+      mostrar texto2.minusculas
+      mostrar texto3.minusculas
+      mostrar texto4.minusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola", "programación", "a", "¡hola, mundo!"],
+      "String lowercase with different strings should work",
+    );
+  });
+
+  // Test 93: String lowercase with string literals
+  test("String lowercase with string literals", () => {
+    const code = `
+      mostrar "HOLA".minusculas
+      mostrar "MUNDO".minusculas
+      mostrar "".minusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola", "mundo", ""],
+      "String lowercase with string literals should work",
+    );
+  });
+
+  // Test 94: String lowercase with parentheses
+  test("String lowercase with parentheses", () => {
+    const code = `
+      variable texto = "HOLA MUNDO"
+      mostrar texto.minusculas()
+      mostrar "PROGRAMACIÓN".minusculas()
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola mundo", "programación"],
+      "String lowercase with parentheses should work",
+    );
+  });
+
+  // Test 95: String lowercase in conditions
+  test("String lowercase in conditions", () => {
+    const code = `
+      variable nombre = "JUAN"
+      variable nombreMinusculas = nombre.minusculas
+      
+      si nombreMinusculas == "juan" {
+          mostrar "El nombre en minúsculas es juan"
+      }
+      
+      si nombre.minusculas == "juan" {
+          mostrar "También funciona en condiciones directas"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "El nombre en minúsculas es juan",
+        "También funciona en condiciones directas",
+      ],
+      "String lowercase in conditions should work",
+    );
+  });
+
+  // Test 96: String lowercase with expressions
+  test("String lowercase with expressions", () => {
+    const code = `
+      variable base = "HOLA"
+      variable mundo = "MUNDO"
+      variable saludo = base + " " + mundo
+      
+      mostrar base.minusculas
+      mostrar mundo.minusculas
+      mostrar saludo.minusculas
+      
+      variable saludoMinusculas = saludo.minusculas
+      mostrar saludoMinusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola", "mundo", "hola mundo", "hola mundo"],
+      "String lowercase with expressions should work",
+    );
+  });
+
+  // Test 97: String lowercase with special characters
+  test("String lowercase with special characters", () => {
+    const code = `
+      variable textoEspecial = "¡HOLA, MUNDO! ¿CÓMO ESTÁS?"
+      variable textoNumeros = "ABC123DEF"
+      variable textoMixto = "Hola Mundo"
+      
+      mostrar textoEspecial.minusculas
+      mostrar textoNumeros.minusculas
+      mostrar textoMixto.minusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["¡hola, mundo! ¿cómo estás?", "abc123def", "hola mundo"],
+      "String lowercase with special characters should work",
+    );
+  });
+
+  // Test 98: Error handling for string lowercase on non-strings
+  test("Error handling for string lowercase on non-strings", () => {
+    const code = `
+      variable numero = 123
+      mostrar numero.minusculas
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling lowercase on non-string",
+    );
+    assertTrue(
+      result.error.includes("Can only call methods on arrays or strings"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 99: String lowercase with empty string
+  test("String lowercase with empty string", () => {
+    const code = `
+      variable textoVacio = ""
+      mostrar textoVacio.minusculas
+      
+      variable textoEspacios = "   "
+      mostrar textoEspacios.minusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["", "   "],
+      "String lowercase with empty string should work",
+    );
+  });
+
+  // Test 100: String lowercase chaining
+  test("String lowercase chaining", () => {
+    const code = `
+      variable texto = "HOLA MUNDO"
+      variable resultado = texto.minusculas
+      mostrar resultado
+      
+      // Test that we can use the result in expressions
+      variable longitud = resultado.longitud
+      mostrar longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola mundo", "10"],
+      "String lowercase chaining should work",
+    );
+  });
+
+  // Test 101: String method combinations
+  test("String method combinations", () => {
+    const code = `
+      variable texto = "Hola Mundo"
+      
+      // Test mayusculas -> minusculas
+      variable mayusculas = texto.mayusculas
+      variable minusculas = mayusculas.minusculas
+      mostrar minusculas
+      
+      // Test minusculas -> mayusculas
+      variable minusculas2 = texto.minusculas
+      variable mayusculas2 = minusculas2.mayusculas
+      mostrar mayusculas2
+      
+      // Test chaining
+      variable resultado = texto.minusculas.mayusculas
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["hola mundo", "HOLA MUNDO", "HOLA MUNDO"],
+      "String method combinations should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

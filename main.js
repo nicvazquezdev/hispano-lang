@@ -48,33 +48,33 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-// Casos con .mayusculas()
+// Casos con .minusculas()
 
 // String literal
-mostrar "Hola".mayusculas()
+mostrar "Hola".minusculas()
 
 // Variable string
 variable texto = "Hola"
-mostrar texto.mayusculas()
+mostrar texto.minusculas()
 
 // String vacío
-mostrar "".mayusculas()
+mostrar "".minusculas()
 
 // String con espacios
-mostrar "   ".mayusculas()
+mostrar "   ".minusculas()
 
 // Caracteres especiales
-mostrar "¡Hola, mundo!".mayusculas()
+mostrar "¡Hola, mundo!".minusculas()
 
 // Unicode / acentos / emojis
-mostrar "canción".mayusculas()
-mostrar "ñandú".mayusculas()
-mostrar "😀".mayusculas()
+mostrar "canción".minusculas()
+mostrar "ñandú".minusculas()
+mostrar "😀".minusculas()
 
 // Concatenación
 variable saludo = "hola"
 variable nombre = "nico"
-mostrar (saludo + " " + nombre).mayusculas().longitud()
+mostrar (saludo + " " + nombre).minusculas().longitud()
 
 `;
 

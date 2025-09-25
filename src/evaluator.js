@@ -551,6 +551,9 @@ class Evaluator {
       case "mayusculas":
         return string.toUpperCase();
 
+      case "minusculas":
+        return string.toLowerCase();
+
       default:
         throw new Error(`Unknown string method: ${method}`);
     }
