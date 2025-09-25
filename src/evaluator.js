@@ -48,6 +48,10 @@ class Evaluator {
         return this.executeForStatement(statement);
       case "ReturnStatement":
         return this.executeReturnStatement(statement);
+      case "BreakStatement":
+        return this.executeBreakStatement(statement);
+      case "ContinueStatement":
+        return this.executeContinueStatement(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
       case "Block":
@@ -112,7 +116,17 @@ class Evaluator {
    */
   executeWhileStatement(statement) {
     while (this.isTruthy(this.evaluateExpression(statement.condition))) {
-      this.executeBlock(statement.body);
+      try {
+        this.executeBlock(statement.body);
+      } catch (breakException) {
+        if (breakException instanceof BreakException) {
+          break;
+        }
+        if (breakException instanceof ContinueException) {
+          continue;
+        }
+        throw breakException;
+      }
     }
   }
 
@@ -130,7 +144,21 @@ class Evaluator {
     // If no condition is provided, don't execute the loop (like JavaScript)
     if (statement.condition !== null) {
       while (this.isTruthy(this.evaluateExpression(statement.condition))) {
-        this.executeBlock(statement.body);
+        try {
+          this.executeBlock(statement.body);
+        } catch (breakException) {
+          if (breakException instanceof BreakException) {
+            break;
+          }
+          if (breakException instanceof ContinueException) {
+            // Execute increment before continuing
+            if (statement.increment !== null) {
+              this.evaluateExpression(statement.increment);
+            }
+            continue;
+          }
+          throw breakException;
+        }
 
         // Execute increment
         if (statement.increment !== null) {
@@ -151,6 +179,22 @@ class Evaluator {
     }
 
     throw new ReturnException(value);
+  }
+
+  /**
+   * Executes a break statement
+   * @param {Object} statement - Break statement
+   */
+  executeBreakStatement(statement) {
+    throw new BreakException();
+  }
+
+  /**
+   * Executes a continue statement
+   * @param {Object} statement - Continue statement
+   */
+  executeContinueStatement(statement) {
+    throw new ContinueException();
   }
 
   /**
@@ -842,6 +886,24 @@ class Environment {
 class ReturnException {
   constructor(value) {
     this.value = value;
+  }
+}
+
+/**
+ * Exception class for break statements
+ */
+class BreakException {
+  constructor() {
+    this.type = "break";
+  }
+}
+
+/**
+ * Exception class for continue statements
+ */
+class ContinueException {
+  constructor() {
+    this.type = "continue";
   }
 }
 

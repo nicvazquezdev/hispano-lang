@@ -1196,7 +1196,103 @@ function runTests() {
     );
   });
 
-  // Test 62: Complex example with all features including logical operators
+  // Test 62: Basic break statement
+  test("Basic break statement", () => {
+    const code = `
+      variable contador = 0
+      mientras contador < 10 {
+          mostrar contador
+          contador = contador + 1
+          si contador == 3 {
+              romper
+          }
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["0", "1", "2"], "Basic break statement should work");
+  });
+
+  // Test 63: Basic continue statement
+  test("Basic continue statement", () => {
+    const code = `
+      variable contador = 0
+      mientras contador < 5 {
+          contador = contador + 1
+          si contador == 3 {
+              continuar
+          }
+          mostrar contador
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "2", "4", "5"],
+      "Basic continue statement should work",
+    );
+  });
+
+  // Test 64: Break in for loop
+  test("Break in for loop", () => {
+    const code = `
+      para (variable i = 1; i <= 10; i = i + 1) {
+          mostrar i
+          si i == 4 {
+              romper
+          }
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["1", "2", "3", "4"], "Break in for loop should work");
+  });
+
+  // Test 65: Continue in for loop
+  test("Continue in for loop", () => {
+    const code = `
+      para (variable i = 1; i <= 5; i = i + 1) {
+          si i == 3 {
+              continuar
+          }
+          mostrar i
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "2", "4", "5"],
+      "Continue in for loop should work",
+    );
+  });
+
+  // Test 66: Break and continue with while loop
+  test("Break and continue with while loop", () => {
+    const code = `
+      variable i = 0
+      mientras i < 10 {
+          i = i + 1
+          si i == 2 o i == 4 o i == 6 o i == 8 {
+              continuar
+          }
+          si i > 7 {
+              romper
+          }
+          mostrar i
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "3", "5", "7"],
+      "Break and continue with while loop should work",
+    );
+  });
+
+  // Test 67: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas

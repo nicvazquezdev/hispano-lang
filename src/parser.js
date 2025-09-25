@@ -57,6 +57,14 @@ class Parser {
         return this.returnStatement();
       }
 
+      if (this.match("ROMPER")) {
+        return this.breakStatement();
+      }
+
+      if (this.match("CONTINUAR")) {
+        return this.continueStatement();
+      }
+
       return this.expressionStatement();
     } catch (error) {
       this.synchronize();
@@ -248,6 +256,30 @@ class Parser {
       type: "ReturnStatement",
       keyword,
       value,
+    };
+  }
+
+  /**
+   * Parses a break statement
+   * @returns {Object} Break statement
+   */
+  breakStatement() {
+    const keyword = this.previous();
+    return {
+      type: "BreakStatement",
+      keyword,
+    };
+  }
+
+  /**
+   * Parses a continue statement
+   * @returns {Object} Continue statement
+   */
+  continueStatement() {
+    const keyword = this.previous();
+    return {
+      type: "ContinueStatement",
+      keyword,
     };
   }
 
@@ -826,6 +858,8 @@ class Parser {
         case "MIENTRAS":
         case "PARA":
         case "RETORNAR":
+        case "ROMPER":
+        case "CONTINUAR":
           return;
       }
 

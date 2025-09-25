@@ -341,6 +341,8 @@ class Tokenizer {
       verdadero: "TRUE",
       falso: "FALSE",
       o: "OR",
+      romper: "ROMPER",
+      continuar: "CONTINUAR",
     };
 
     return keywords[text] || "IDENTIFIER";
