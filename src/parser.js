@@ -382,7 +382,15 @@ class Parser {
     }
 
     // Handle compound assignment operators
-    if (this.match("PLUS_EQUAL", "MINUS_EQUAL", "STAR_EQUAL", "SLASH_EQUAL")) {
+    if (
+      this.match(
+        "PLUS_EQUAL",
+        "MINUS_EQUAL",
+        "STAR_EQUAL",
+        "SLASH_EQUAL",
+        "PERCENT_EQUAL",
+      )
+    ) {
       const operator = this.previous();
       const value = this.logicalOr();
 
@@ -534,7 +542,7 @@ class Parser {
   factor() {
     let expr = this.unary();
 
-    while (this.match("SLASH", "STAR")) {
+    while (this.match("SLASH", "STAR", "PERCENT")) {
       const operator = this.previous();
       const right = this.unary();
       expr = {
@@ -657,7 +665,48 @@ class Parser {
       return this.objectLiteral();
     }
 
+    if (this.match("FUNCION")) {
+      return this.anonymousFunction();
+    }
+
     throw new Error("Expected expression");
+  }
+
+  /**
+   * Parses an anonymous function
+   * @returns {Object} Anonymous function expression
+   */
+  anonymousFunction() {
+    this.consume("LEFT_PAREN", "Expected ( after funcion");
+
+    const parameters = [];
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        if (parameters.length >= 255) {
+          throw new Error("Cannot have more than 255 parameters");
+        }
+        let param;
+        if (this.match("IDENTIFIER")) {
+          param = this.previous();
+        } else if (this.match("AND")) {
+          param = this.previous();
+        } else {
+          throw new Error("Expected parameter name");
+        }
+        parameters.push(param.lexeme);
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_PAREN", "Expected ) after parameters");
+    this.consume("LEFT_BRACE", "Expected { before function body");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after function body");
+
+    return {
+      type: "AnonymousFunction",
+      parameters,
+      body,
+    };
   }
 
   /**
@@ -693,6 +742,7 @@ class Parser {
       name.lexeme === "agregar" ||
       name.lexeme === "remover" ||
       name.lexeme === "contiene" ||
+      name.lexeme === "recorrer" ||
       name.lexeme === "mayusculas" ||
       name.lexeme === "minusculas"
     ) {
@@ -701,8 +751,12 @@ class Parser {
         // Consume the opening parenthesis
         // Check if there are arguments
         if (!this.check("RIGHT_PAREN")) {
-          // Handle methods that accept arguments (like agregar, contiene)
-          if (name.lexeme === "agregar" || name.lexeme === "contiene") {
+          // Handle methods that accept arguments (like agregar, contiene, recorrer)
+          if (
+            name.lexeme === "agregar" ||
+            name.lexeme === "contiene" ||
+            name.lexeme === "recorrer"
+          ) {
             const args = [];
             do {
               args.push(this.expression());

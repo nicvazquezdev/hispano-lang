@@ -2893,6 +2893,268 @@ function runTests() {
     );
   });
 
+  // Test 150: Basic array forEach method
+  test("Basic array forEach method", () => {
+    const code = `
+      variable arr = [1, 2, 3, 4, 5]
+      arr.recorrer(funcion() {
+        mostrar "Elemento: " + elemento
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "Elemento: 1",
+        "Elemento: 2",
+        "Elemento: 3",
+        "Elemento: 4",
+        "Elemento: 5",
+      ],
+      "Basic array forEach method should work",
+    );
+  });
+
+  // Test 151: Array forEach with index
+  test("Array forEach with index", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      frutas.recorrer(funcion() {
+        mostrar "Índice " + indice + ": " + elemento
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Índice 0: manzana", "Índice 1: banana", "Índice 2: naranja"],
+      "Array forEach with index should work",
+    );
+  });
+
+  // Test 152: Array forEach with different types
+  test("Array forEach with different types", () => {
+    const code = `
+      variable mixto = ["hola", 42, verdadero, 3.14]
+      mixto.recorrer(funcion() {
+        mostrar "Tipo: " + elemento
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Tipo: hola", "Tipo: 42", "Tipo: true", "Tipo: 3.14"],
+      "Array forEach with different types should work",
+    );
+  });
+
+  // Test 153: Array forEach with empty array
+  test("Array forEach with empty array", () => {
+    const code = `
+      variable vacio = []
+      vacio.recorrer(funcion() {
+        mostrar "Esto no se ejecutará"
+      })
+      mostrar "Array vacío procesado"
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Array vacío procesado"],
+      "Array forEach with empty array should work",
+    );
+  });
+
+  // Test 154: Array forEach with calculations
+  test("Array forEach with calculations", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable suma = 0
+      numeros.recorrer(funcion() {
+        suma = suma + elemento
+      })
+      mostrar "Suma total: " + suma
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Suma total: 15"],
+      "Array forEach with calculations should work",
+    );
+  });
+
+  // Test 155: Array forEach with conditions
+  test("Array forEach with conditions", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      numeros.recorrer(funcion() {
+        si elemento > 5 {
+          mostrar "Número grande: " + elemento
+        }
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "Número grande: 6",
+        "Número grande: 7",
+        "Número grande: 8",
+        "Número grande: 9",
+        "Número grande: 10",
+      ],
+      "Array forEach with conditions should work",
+    );
+  });
+
+  // Test 156: Array forEach with objects
+  test("Array forEach with objects", () => {
+    const code = `
+      variable personas = [
+        {nombre: "Juan", edad: 25},
+        {nombre: "María", edad: 30},
+        {nombre: "Pedro", edad: 35}
+      ]
+      personas.recorrer(funcion() {
+        mostrar "Persona " + indice + ": " + elemento
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "Persona 0: [object Object]",
+        "Persona 1: [object Object]",
+        "Persona 2: [object Object]",
+      ],
+      "Array forEach with objects should work",
+    );
+  });
+
+  // Test 157: Array forEach with arrays
+  test("Array forEach with arrays", () => {
+    const code = `
+      variable listas = [[1, 2], [3, 4], [5, 6]]
+      listas.recorrer(funcion() {
+        mostrar "Lista " + indice + ": " + elemento
+      })
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Lista 0: [1, 2]", "Lista 1: [3, 4]", "Lista 2: [5, 6]"],
+      "Array forEach with arrays should work",
+    );
+  });
+
+  // Test 158: Array forEach with no arguments (error)
+  test("Array forEach with no arguments should fail", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      arr.recorrer()
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling recorrer with no arguments",
+    );
+    assertTrue(
+      result.error.includes("Method recorrer() requires exactly one argument"),
+      "Error should mention argument requirement",
+    );
+  });
+
+  // Test 159: Array forEach with multiple arguments (error)
+  test("Array forEach with multiple arguments should fail", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      arr.recorrer(funcion() {}, funcion() {})
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling recorrer with multiple arguments",
+    );
+    assertTrue(
+      result.error.includes("Method recorrer() requires exactly one argument"),
+      "Error should mention argument requirement",
+    );
+  });
+
+  // Test 160: Array forEach with non-function argument (error)
+  test("Array forEach with non-function argument should fail", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      arr.recorrer("no es una función")
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling recorrer with non-function argument",
+    );
+    assertTrue(
+      result.error.includes(
+        "Method recorrer() requires a function as argument",
+      ),
+      "Error should mention function requirement",
+    );
+  });
+
+  // Test 161: Error handling for array forEach on non-arrays
+  test("Error handling for array forEach on non-arrays", () => {
+    const code = `
+      variable texto = "hola"
+      texto.recorrer(funcion() {})
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling recorrer on non-array",
+    );
+    assertTrue(
+      result.error.includes("Method recorrer() can only be called on arrays"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 162: Array forEach with complex logic
+  test("Array forEach with complex logic", () => {
+    const code = `
+      variable datos = [10, 20, 30, 40, 50]
+      variable pares = []
+      variable impares = []
+      
+      datos.recorrer(funcion() {
+        si elemento % 2 == 0 {
+          pares.agregar(elemento)
+        } sino {
+          impares.agregar(elemento)
+        }
+      })
+      
+      mostrar "Pares: " + pares
+      mostrar "Impares: " + impares
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Pares: [10, 20, 30, 40, 50]", "Impares: []"],
+      "Array forEach with complex logic should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

@@ -50,34 +50,33 @@ function clearVariables() {
 const exampleCode = `
 variable numeros = [1, 2, 3, 4, 5]
 
-// Caso positivo: número presente
-mostrar numeros.contiene(3)
+// Recorrer números y mostrarlos
+numeros.recorrer(funcion(elemento) {
+  mostrar elemento
+})
 
-// Caso negativo: número ausente
-mostrar numeros.contiene(10)
+// Recorrer con índice
+numeros.recorrer(funcion(elemento, indice) {
+  mostrar "Elemento: " + elemento + " en índice " + indice
+})
 
-// Strings en arrays
+// Recorrer strings
 variable palabras = ["hola", "mundo", "programacion"]
-mostrar palabras.contiene("hola")
-mostrar palabras.contiene("adios")
+palabras.recorrer(funcion(palabra) {
+  mostrar palabra.mayusculas()
+})
 
-// Booleanos en arrays
-variable valores = [verdadero, falso]
-mostrar valores.contiene(verdadero)
-mostrar valores.contiene(falso)
-
-// Arrays mixtos
+// Recorrer array mixto
 variable mixto = [1, "hola", verdadero, {clave: "valor"}]
-mostrar mixto.contiene(1)
-mostrar mixto.contiene("hola")
-mostrar mixto.contiene(verdadero)
-mostrar mixto.contiene({clave: "valor"}) // depende de si comparás por referencia o valor
-mostrar mixto.contiene(99)
+mixto.recorrer(funcion(item) {
+  mostrar item
+})
 
-// Array vacío
+// Recorrer array vacío
 variable vacio = []
-mostrar vacio.contiene(1)
-mostrar vacio.contiene("nada")
+vacio.recorrer(funcion(item) {
+  mostrar "Esto no debería ejecutarse"
+})
 
 `;
 

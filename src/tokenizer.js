@@ -90,6 +90,15 @@ class Tokenizer {
         }
         break;
 
+      case "%":
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("PERCENT_EQUAL");
+        } else {
+          this.addToken("PERCENT");
+        }
+        break;
+
       case ">":
         if (this.peek() === "=") {
           this.advance();

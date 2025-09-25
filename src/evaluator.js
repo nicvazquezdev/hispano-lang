@@ -238,6 +238,14 @@ class Evaluator {
       case "Variable":
         return this.environment.get(expression.name);
 
+      case "AnonymousFunction":
+        return {
+          type: "Function",
+          name: null,
+          parameters: expression.parameters,
+          body: expression.body,
+        };
+
       case "Assign":
         const value = this.evaluateExpression(expression.value);
         this.environment.assign(expression.name, value);
@@ -352,6 +360,13 @@ class Evaluator {
       case "STAR":
         this.checkNumberOperands(operator, left, right);
         return left * right;
+
+      case "PERCENT":
+        this.checkNumberOperands(operator, left, right);
+        if (right === 0) {
+          throw new Error("Modulo by zero");
+        }
+        return left % right;
 
       case "GREATER":
         if (typeof left === "string" && typeof right === "string") {
@@ -511,7 +526,8 @@ class Evaluator {
       if (
         expression.method === "agregar" ||
         expression.method === "remover" ||
-        expression.method === "contiene"
+        expression.method === "contiene" ||
+        expression.method === "recorrer"
       ) {
         throw new Error(
           `Method ${expression.method}() can only be called on arrays`,
@@ -571,6 +587,51 @@ class Evaluator {
         }
         const searchElement = this.evaluateExpression(args[0]);
         return array.includes(searchElement);
+
+      case "recorrer":
+        // Iterate through array and call function for each element
+        if (args.length !== 1) {
+          throw new Error("Method recorrer() requires exactly one argument");
+        }
+        const callback = this.evaluateExpression(args[0]);
+        if (callback.type !== "Function") {
+          throw new Error("Method recorrer() requires a function as argument");
+        }
+
+        // Call the function for each element
+        for (let i = 0; i < array.length; i++) {
+          // Create a new environment for the callback function
+          const callbackEnv = new Environment(this.environment);
+
+          // Handle function parameters
+          if (callback.parameters.length === 0) {
+            // No parameters - use automatic variables
+            callbackEnv.define("elemento", array[i]);
+            callbackEnv.define("indice", i);
+          } else if (callback.parameters.length === 1) {
+            // One parameter - element only
+            callbackEnv.define(callback.parameters[0], array[i]);
+            callbackEnv.define("indice", i);
+          } else if (callback.parameters.length === 2) {
+            // Two parameters - element and index
+            callbackEnv.define(callback.parameters[0], array[i]);
+            callbackEnv.define(callback.parameters[1], i);
+          } else {
+            throw new Error(
+              "Function in recorrer() can have at most 2 parameters",
+            );
+          }
+
+          // Execute the callback function
+          const previousEnv = this.environment;
+          this.environment = callbackEnv;
+          try {
+            this.executeBlock(callback.body);
+          } finally {
+            this.environment = previousEnv;
+          }
+        }
+        return null; // forEach doesn't return anything
 
       default:
         throw new Error(`Unknown array method: ${method}`);
@@ -1044,6 +1105,15 @@ class Evaluator {
           throw new Error("Division by zero");
         }
         return left / right;
+
+      case "PERCENT_EQUAL":
+        if (typeof left !== "number" || typeof right !== "number") {
+          throw new Error("Can only modulo numbers");
+        }
+        if (right === 0) {
+          throw new Error("Modulo by zero");
+        }
+        return left % right;
 
       default:
         throw new Error(`Unknown compound operator: ${operator}`);
