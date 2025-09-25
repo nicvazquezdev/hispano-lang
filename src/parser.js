@@ -690,6 +690,7 @@ class Parser {
       name.lexeme === "longitud" ||
       name.lexeme === "primero" ||
       name.lexeme === "ultimo" ||
+      name.lexeme === "agregar" ||
       name.lexeme === "mayusculas" ||
       name.lexeme === "minusculas"
     ) {
@@ -698,7 +699,25 @@ class Parser {
         // Consume the opening parenthesis
         // Check if there are arguments
         if (!this.check("RIGHT_PAREN")) {
-          throw new Error(`Method ${name.lexeme}() does not accept arguments`);
+          // Handle methods that accept arguments (like agregar)
+          if (name.lexeme === "agregar") {
+            const args = [];
+            do {
+              args.push(this.expression());
+            } while (this.match("COMMA"));
+            this.consume("RIGHT_PAREN", "Expected ) after method call");
+
+            return {
+              type: "MethodCall",
+              object,
+              method: name.lexeme,
+              arguments: args,
+            };
+          } else {
+            throw new Error(
+              `Method ${name.lexeme}() does not accept arguments`,
+            );
+          }
         }
         // Consume the closing parenthesis
         this.consume("RIGHT_PAREN", "Expected ) after method call");

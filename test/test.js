@@ -2221,6 +2221,215 @@ function runTests() {
     );
   });
 
+  // Test 113: Basic array add method
+  test("Basic array add method", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable nuevaLongitud = arr.agregar(4)
+      mostrar nuevaLongitud
+      mostrar arr[3]
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["4", "4"], "Basic array add method should work");
+  });
+
+  // Test 114: Array add with multiple elements
+  test("Array add with multiple elements", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable nuevaLongitud = arr.agregar(3, 4, 5)
+      mostrar nuevaLongitud
+      mostrar arr[2]
+      mostrar arr[3]
+      mostrar arr[4]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "3", "4", "5"],
+      "Array add with multiple elements should work",
+    );
+  });
+
+  // Test 115: Array add with different types
+  test("Array add with different types", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable nuevaLongitud = arr.agregar("hola", verdadero, 3.14)
+      mostrar nuevaLongitud
+      mostrar arr[2]
+      mostrar arr[3]
+      mostrar arr[4]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "hola", "true", "3.14"],
+      "Array add with different types should work",
+    );
+  });
+
+  // Test 116: Array add with variables
+  test("Array add with variables", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable elemento = "nuevo"
+      variable numero = 42
+      variable nuevaLongitud = arr.agregar(elemento, numero)
+      mostrar nuevaLongitud
+      mostrar arr[2]
+      mostrar arr[3]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "nuevo", "42"],
+      "Array add with variables should work",
+    );
+  });
+
+  // Test 117: Array add with expressions
+  test("Array add with expressions", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable nuevaLongitud = arr.agregar(3 + 4, "hola" + " mundo")
+      mostrar nuevaLongitud
+      mostrar arr[2]
+      mostrar arr[3]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "7", "hola mundo"],
+      "Array add with expressions should work",
+    );
+  });
+
+  // Test 118: Array add with empty array
+  test("Array add with empty array", () => {
+    const code = `
+      variable arr = []
+      variable nuevaLongitud = arr.agregar(1, 2, 3)
+      mostrar nuevaLongitud
+      mostrar arr[0]
+      mostrar arr[1]
+      mostrar arr[2]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3", "1", "2", "3"],
+      "Array add with empty array should work",
+    );
+  });
+
+  // Test 119: Array add with no arguments
+  test("Array add with no arguments", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable nuevaLongitud = arr.agregar()
+      mostrar nuevaLongitud
+      mostrar arr.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["3", "3"], "Array add with no arguments should work");
+  });
+
+  // Test 120: Array add with arrays
+  test("Array add with arrays", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable subArray = [3, 4]
+      variable nuevaLongitud = arr.agregar(subArray)
+      mostrar nuevaLongitud
+      mostrar arr[2]
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["3", "[3, 4]"], "Array add with arrays should work");
+  });
+
+  // Test 121: Array add with objects
+  test("Array add with objects", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable obj = {nombre: "Juan", edad: 25}
+      variable nuevaLongitud = arr.agregar(obj)
+      mostrar nuevaLongitud
+      mostrar arr[2]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3", "[object Object]"],
+      "Array add with objects should work",
+    );
+  });
+
+  // Test 122: Array add chaining
+  test("Array add chaining", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable longitud1 = arr.agregar(3)
+      variable longitud2 = arr.agregar(4, 5)
+      mostrar longitud1
+      mostrar longitud2
+      mostrar arr.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["3", "5", "5"], "Array add chaining should work");
+  });
+
+  // Test 123: Error handling for array add on non-arrays
+  test("Error handling for array add on non-arrays", () => {
+    const code = `
+      variable texto = "hola"
+      variable resultado = texto.agregar("mundo")
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling agregar on non-array",
+    );
+    assertTrue(
+      result.error.includes("Method agregar() can only be called on arrays"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 124: Array add in conditions
+  test("Array add in conditions", () => {
+    const code = `
+      variable arr = [1, 2]
+      variable nuevaLongitud = arr.agregar(3)
+      
+      si nuevaLongitud == 3 {
+        mostrar "Array tiene 3 elementos"
+      }
+      
+      si arr.longitud == 3 {
+        mostrar "Confirmado: longitud es 3"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Array tiene 3 elementos", "Confirmado: longitud es 3"],
+      "Array add in conditions should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

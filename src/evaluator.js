@@ -501,8 +501,16 @@ class Evaluator {
 
     // Determine if it's an array or string method based on the object type
     if (Array.isArray(object)) {
-      return this.evaluateArrayMethod(object, expression.method);
+      return this.evaluateArrayMethod(
+        object,
+        expression.method,
+        expression.arguments,
+      );
     } else if (typeof object === "string") {
+      // Check if the method is valid for strings
+      if (expression.method === "agregar") {
+        throw new Error("Method agregar() can only be called on arrays");
+      }
       return this.evaluateStringMethod(object, expression.method);
     } else {
       throw new Error(
@@ -515,9 +523,10 @@ class Evaluator {
    * Evaluates an array method
    * @param {Array} array - The array object
    * @param {string} method - The method name
+   * @param {Array} args - Method arguments (optional)
    * @returns {any} Method result
    */
-  evaluateArrayMethod(array, method) {
+  evaluateArrayMethod(array, method, args = []) {
     switch (method) {
       case "longitud":
         return array.length;
@@ -533,6 +542,14 @@ class Evaluator {
           throw new Error("Cannot get last element of empty array");
         }
         return array[array.length - 1];
+
+      case "agregar":
+        // Evaluate all arguments and add them to the array
+        for (const arg of args) {
+          const value = this.evaluateExpression(arg);
+          array.push(value);
+        }
+        return array.length; // Return the new length
 
       default:
         throw new Error(`Unknown array method: ${method}`);

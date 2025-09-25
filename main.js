@@ -48,13 +48,32 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-intentar {
-  mostrar "Inicio del bloque"
-  mostrar variableQueNoExiste
-  mostrar "Esto no se ejecutará"
-} capturar (error) {
-  mostrar "Algo falló: " + error
-}
+variable numeros = [1, 2, 3]
+
+// Agregar un número
+numeros.agregar(4)
+mostrar numeros
+mostrar numeros.longitud()
+
+// Agregar un string
+numeros.agregar("hola")
+mostrar numeros
+mostrar numeros.longitud()
+
+// Agregar un booleano
+numeros.agregar(verdadero)
+mostrar numeros
+mostrar numeros.longitud()
+
+// Agregar otro array
+numeros.agregar([5, 6])
+mostrar numeros
+mostrar numeros.longitud()
+
+// Agregar un objeto
+numeros.agregar({clave: "valor"})
+mostrar numeros
+
 `;
 
 console.log("Code to execute:");
