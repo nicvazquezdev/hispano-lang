@@ -215,6 +215,9 @@ class Evaluator {
       case "PropertyAssign":
         return this.evaluatePropertyAssign(expression);
 
+      case "Logical":
+        return this.evaluateLogicalExpression(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -324,6 +327,7 @@ class Evaluator {
   isTruthy(value) {
     if (value === null) return false;
     if (typeof value === "boolean") return value;
+    if (typeof value === "number") return value !== 0;
     return true;
   }
 
@@ -511,6 +515,33 @@ class Evaluator {
 
     object[expression.name] = value;
     return value;
+  }
+
+  /**
+   * Evaluates logical expression
+   * @param {Object} expression - Logical expression
+   * @returns {any} Logical result
+   */
+  evaluateLogicalExpression(expression) {
+    const left = this.evaluateExpression(expression.left);
+
+    if (expression.operator === "OR") {
+      // Short-circuit evaluation for OR
+      if (this.isTruthy(left)) {
+        return left;
+      }
+      return this.evaluateExpression(expression.right);
+    }
+
+    if (expression.operator === "AND") {
+      // Short-circuit evaluation for AND
+      if (!this.isTruthy(left)) {
+        return left;
+      }
+      return this.evaluateExpression(expression.right);
+    }
+
+    throw new Error(`Unknown logical operator: ${expression.operator}`);
   }
 
   /**

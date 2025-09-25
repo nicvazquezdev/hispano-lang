@@ -97,9 +97,15 @@ class Parser {
         if (parameters.length >= 255) {
           throw new Error("Cannot have more than 255 parameters");
         }
-        parameters.push(
-          this.consume("IDENTIFIER", "Expected parameter name").lexeme,
-        );
+        let param;
+        if (this.match("IDENTIFIER")) {
+          param = this.previous();
+        } else if (this.match("AND")) {
+          param = this.previous();
+        } else {
+          throw new Error("Expected parameter name");
+        }
+        parameters.push(param.lexeme);
       } while (this.match("COMMA"));
     }
 
@@ -291,11 +297,11 @@ class Parser {
    * @returns {Object} Parsed assignment
    */
   assignment() {
-    let expr = this.equality();
+    let expr = this.logicalOr();
 
     if (this.match("EQUAL")) {
       const equals = this.previous();
-      const value = this.assignment();
+      const value = this.logicalOr();
 
       if (expr.type === "Variable") {
         const name = expr.name;
@@ -342,6 +348,48 @@ class Parser {
       const right = this.comparison();
       expr = {
         type: "Binary",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a logical AND expression
+   * @returns {Object} Logical AND expression
+   */
+  logicalAnd() {
+    let expr = this.equality();
+
+    while (this.match("AND")) {
+      const operator = this.previous();
+      const right = this.equality();
+      expr = {
+        type: "Logical",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a logical OR expression
+   * @returns {Object} Logical OR expression
+   */
+  logicalOr() {
+    let expr = this.logicalAnd();
+
+    while (this.match("OR")) {
+      const operator = this.previous();
+      const right = this.logicalAnd();
+      expr = {
+        type: "Logical",
         left: expr,
         operator: operator.type,
         right,
@@ -467,6 +515,18 @@ class Parser {
     }
 
     if (this.match("IDENTIFIER")) {
+      const identifier = this.previous();
+      if (this.check("LEFT_PAREN")) {
+        this.advance(); // Consume the LEFT_PAREN
+        return this.finishCall(identifier);
+      }
+      return {
+        type: "Variable",
+        name: identifier.lexeme,
+      };
+    }
+
+    if (this.match("AND")) {
       const identifier = this.previous();
       if (this.check("LEFT_PAREN")) {
         this.advance(); // Consume the LEFT_PAREN

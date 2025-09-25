@@ -48,28 +48,14 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-// Crear un objeto persona
-variable persona = {
-    nombre: "Ana García",
-    edad: 28,
-    profesion: "Desarrolladora",
-    activa: verdadero
+variable edad = 23
+variable nombre = "Pedro"
+
+si edad > 18 y nombre == "Juan" {
+    mostrar "Eres mayor de edad y tu nombre es Juan"
+} sino {
+    mostrar "Tu nombre no es Juan"
 }
-
-mostrar "Información inicial:"
-mostrar persona.nombre
-mostrar persona.edad
-
-// Modificar propiedades del objeto
-persona.edad = 30
-persona.profesion = "Senior Developer"
-persona.salario = 75000
-
-mostrar "Información actualizada:"
-mostrar persona.nombre
-mostrar persona.edad
-mostrar persona.profesion
-mostrar persona.salario
 `;
 
 console.log("Code to execute:");

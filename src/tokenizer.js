@@ -279,6 +279,8 @@ class Tokenizer {
       retornar: "RETORNAR",
       verdadero: "TRUE",
       falso: "FALSE",
+      y: "AND",
+      o: "OR",
     };
 
     return keywords[text] || "IDENTIFIER";

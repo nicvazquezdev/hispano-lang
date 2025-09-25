@@ -786,8 +786,119 @@ function runTests() {
     );
   });
 
-  // Test 42: Complex example with all features including objects and property assignment
-  test("Complex example - calculator with functions, arrays, for loops, comments, objects and property assignment", () => {
+  // Test 42: Basic logical AND
+  test("Basic logical AND", () => {
+    const code = `
+      variable a = verdadero
+      variable b = verdadero
+      variable c = falso
+      
+      mostrar a y b
+      mostrar a y c
+      mostrar c y a
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false", "false"],
+      "Basic logical AND should work",
+    );
+  });
+
+  // Test 43: Basic logical OR
+  test("Basic logical OR", () => {
+    const code = `
+      variable a = verdadero
+      variable b = falso
+      variable c = falso
+      
+      mostrar a o b
+      mostrar a o c
+      mostrar c o b
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "false"],
+      "Basic logical OR should work",
+    );
+  });
+
+  // Test 44: Logical operators with numbers
+  test("Logical operators with numbers", () => {
+    const code = `
+      variable a = 10
+      variable b = 0
+      variable c = 5
+      
+      mostrar a y c
+      mostrar a y b
+      mostrar b o c
+      mostrar b o b
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "0", "5", "0"],
+      "Logical operators with numbers should work",
+    );
+  });
+
+  // Test 45: Complex logical expressions
+  test("Complex logical expressions", () => {
+    const code = `
+      variable edad = 25
+      variable tieneLicencia = verdadero
+      variable tieneExperiencia = falso
+      
+      variable puedeConducir = edad >= 18 y tieneLicencia
+      variable puedeTrabajar = edad >= 18 y (tieneLicencia o tieneExperiencia)
+      
+      mostrar puedeConducir
+      mostrar puedeTrabajar
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true"],
+      "Complex logical expressions should work",
+    );
+  });
+
+  // Test 46: Logical operators in conditions
+  test("Logical operators in conditions", () => {
+    const code = `
+      variable temperatura = 25
+      variable lluvia = falso
+      variable viento = verdadero
+      
+      si temperatura > 20 y !lluvia {
+          mostrar "Buen día para salir"
+      }
+      
+      si temperatura < 10 o lluvia {
+          mostrar "Mejor quedarse en casa"
+      }
+      
+      si viento y temperatura > 15 {
+          mostrar "Día ventoso pero agradable"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Buen día para salir", "Día ventoso pero agradable"],
+      "Logical operators in conditions should work",
+    );
+  });
+
+  // Test 47: Complex example with all features including logical operators
+  test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas
       funcion calcular(a, b) {
@@ -834,6 +945,18 @@ function runTests() {
       mostrar info.operacion
       mostrar "Extra:"
       mostrar info.extra
+      
+      // Usar operadores lógicos para validaciones
+      variable esValido = info.resultado > 10 y info.resultado < 100
+      variable esComplejo = info.operacion == "suma modificada" o info.extra != ""
+      
+      si esValido y esComplejo {
+          mostrar "El resultado es válido y complejo"
+      }
+      
+      si !esValido o !esComplejo {
+          mostrar "El resultado necesita revisión"
+      }
     `;
 
     const output = run(code);
@@ -854,6 +977,7 @@ function runTests() {
       "suma modificada",
       "Extra:",
       "información adicional",
+      "El resultado es válido y complejo",
     ];
     assertEquals(
       output,
