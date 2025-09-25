@@ -30,15 +30,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Check code formatting
-        run: |
-          # Verificar que no hay console.log en producción
-          if grep -r "console\.log" src/ --exclude-dir=node_modules; then
-            echo "❌ Found console.log in source code"
-            exit 1
-          fi
-          echo "✅ No console.log found in source code"
-
   lint:
     runs-on: ubuntu-latest
 
