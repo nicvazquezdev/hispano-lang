@@ -48,19 +48,19 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable numeros = [1, 2, 3, 4, 5]
-mostrar numeros[0]
+para (variable i = 1; i <= 5; i = i + 1) {
+    mostrar i
+}
 
-variable frutas = ["manzana", "banana", "naranja"]
-mostrar frutas[1]
+variable numeros = [10, 20, 30, 40, 50]
+para (variable i = 0; i < 5; i = i + 1) {
+    mostrar numeros[i]
+}
 
-variable a = 5
-variable b = 10
-variable calculado = [a + b, a * b, a - b]
-mostrar calculado
-
-numeros[1] = 25
-mostrar numeros
+variable contador = 0
+para (; contador < 3; contador = contador + 1) {
+    mostrar "Iteración: " + contador
+}
 `;
 
 console.log("Code to execute:");

@@ -49,6 +49,10 @@ class Parser {
         return this.whileStatement();
       }
 
+      if (this.match("PARA")) {
+        return this.forStatement();
+      }
+
       if (this.match("RETORNAR")) {
         return this.returnStatement();
       }
@@ -163,6 +167,55 @@ class Parser {
     return {
       type: "WhileStatement",
       condition,
+      body,
+    };
+  }
+
+  /**
+   * Parses a for statement
+   * @returns {Object} For statement
+   */
+  forStatement() {
+    this.consume("LEFT_PAREN", "Expected ( after para");
+
+    // Initializer (optional)
+    let initializer = null;
+    if (!this.check("SEMICOLON")) {
+      if (this.match("VARIABLE")) {
+        initializer = this.variableDeclaration();
+      } else {
+        initializer = this.expressionStatement();
+      }
+      // Consume the semicolon after initializer
+      this.consume("SEMICOLON", "Expected ; after for initializer");
+    } else {
+      // Skip the first semicolon if no initializer
+      this.advance();
+    }
+
+    // Condition (optional)
+    let condition = null;
+    if (!this.check("SEMICOLON")) {
+      condition = this.expression();
+    }
+    this.consume("SEMICOLON", "Expected ; after condition");
+
+    // Increment (optional)
+    let increment = null;
+    if (!this.check("RIGHT_PAREN")) {
+      increment = this.expression();
+    }
+    this.consume("RIGHT_PAREN", "Expected ) after for clause");
+
+    this.consume("LEFT_BRACE", "Expected { after for clause");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after block");
+
+    return {
+      type: "ForStatement",
+      initializer,
+      condition,
+      increment,
       body,
     };
   }
@@ -565,6 +618,7 @@ class Parser {
         case "MOSTRAR":
         case "SI":
         case "MIENTRAS":
+        case "PARA":
         case "RETORNAR":
           return;
       }

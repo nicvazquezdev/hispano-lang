@@ -5,6 +5,7 @@
 
 class Tokenizer {
   constructor() {
+    this.source = "";
     this.tokens = [];
     this.current = 0;
     this.startPos = 0;
@@ -124,6 +125,10 @@ class Tokenizer {
         this.addToken("COMMA");
         break;
 
+      case ";":
+        this.addToken("SEMICOLON");
+        break;
+
       case "[":
         this.addToken("LEFT_BRACKET");
         break;
@@ -227,6 +232,7 @@ class Tokenizer {
       si: "SI",
       sino: "SINO",
       mientras: "MIENTRAS",
+      para: "PARA",
       funcion: "FUNCION",
       retornar: "RETORNAR",
       verdadero: "TRUE",

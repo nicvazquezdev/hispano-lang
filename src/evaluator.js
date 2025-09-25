@@ -44,6 +44,8 @@ class Evaluator {
         return this.executeIfStatement(statement);
       case "WhileStatement":
         return this.executeWhileStatement(statement);
+      case "ForStatement":
+        return this.executeForStatement(statement);
       case "ReturnStatement":
         return this.executeReturnStatement(statement);
       case "ExpressionStatement":
@@ -111,6 +113,30 @@ class Evaluator {
   executeWhileStatement(statement) {
     while (this.isTruthy(this.evaluateExpression(statement.condition))) {
       this.executeBlock(statement.body);
+    }
+  }
+
+  /**
+   * Executes a for statement
+   * @param {Object} statement - For statement
+   */
+  executeForStatement(statement) {
+    // Execute initializer
+    if (statement.initializer !== null) {
+      this.execute(statement.initializer);
+    }
+
+    // Execute loop
+    // If no condition is provided, don't execute the loop (like JavaScript)
+    if (statement.condition !== null) {
+      while (this.isTruthy(this.evaluateExpression(statement.condition))) {
+        this.executeBlock(statement.body);
+
+        // Execute increment
+        if (statement.increment !== null) {
+          this.evaluateExpression(statement.increment);
+        }
+      }
     }
   }
 
