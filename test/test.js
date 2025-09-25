@@ -1065,7 +1065,138 @@ function runTests() {
     );
   });
 
-  // Test 57: Complex example with all features including logical operators
+  // Test 57: Basic comparison operators
+  test("Basic comparison operators", () => {
+    const code = `
+      variable a = 10
+      variable b = 5
+      variable c = 10
+      
+      mostrar a > b
+      mostrar a < b
+      mostrar a >= c
+      mostrar b <= c
+      mostrar a == c
+      mostrar a != b
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false", "true", "true", "true", "true"],
+      "Basic comparison operators should work",
+    );
+  });
+
+  // Test 58: Comparison with strings
+  test("Comparison with strings", () => {
+    const code = `
+      variable nombre1 = "Ana"
+      variable nombre2 = "Carlos"
+      
+      mostrar nombre1 < nombre2
+      mostrar nombre1 > nombre2
+      mostrar nombre1 == "Ana"
+      mostrar nombre1 != nombre2
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false", "true", "true"],
+      "Comparison with strings should work",
+    );
+  });
+
+  // Test 59: Comparison in conditions
+  test("Comparison in conditions", () => {
+    const code = `
+      variable edad = 25
+      variable nota = 85
+      
+      si edad >= 18 {
+          mostrar "Es mayor de edad"
+      }
+      
+      si nota > 80 {
+          mostrar "Nota excelente"
+      }
+      
+      si edad < 30 {
+          mostrar "Es joven"
+      }
+      
+      si nota <= 100 {
+          mostrar "Nota válida"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Es mayor de edad", "Nota excelente", "Es joven", "Nota válida"],
+      "Comparison in conditions should work",
+    );
+  });
+
+  // Test 60: Complex comparison expressions
+  test("Complex comparison expressions", () => {
+    const code = `
+      variable x = 10
+      variable y = 20
+      variable z = 15
+      
+      mostrar x < y y y > z
+      mostrar x >= 10 y z <= 20
+      mostrar x != y y y != z
+      mostrar x == 10 y z > x
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "true", "true"],
+      "Complex comparison expressions should work",
+    );
+  });
+
+  // Test 61: Comparison with arrays and objects
+  test("Comparison with arrays and objects", () => {
+    const code = `
+      variable numeros = [10, 20, 30]
+      variable persona = {edad: 25, puntos: 100}
+      
+      si numeros[0] < numeros[1] {
+          mostrar "Primer número es menor"
+      }
+      
+      si persona.edad >= 18 {
+          mostrar "Es mayor de edad"
+      }
+      
+      si persona.puntos > 50 {
+          mostrar "Tiene muchos puntos"
+      }
+      
+      si numeros[2] <= 30 {
+          mostrar "Último número es 30 o menor"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "Primer número es menor",
+        "Es mayor de edad",
+        "Tiene muchos puntos",
+        "Último número es 30 o menor",
+      ],
+      "Comparison with arrays and objects should work",
+    );
+  });
+
+  // Test 62: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas

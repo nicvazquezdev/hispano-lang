@@ -96,6 +96,32 @@ variable cuenta = {saldo: 1000}
 cuenta.saldo += 500
 mostrar "Saldo después de cuenta.saldo += 500:"
 mostrar cuenta.saldo
+
+// Operadores de comparación
+variable edad = 25
+variable nota = 85
+variable nombre = "Ana"
+
+mostrar "Comparaciones básicas:"
+mostrar edad > 18
+mostrar nota >= 80
+mostrar edad < 30
+mostrar nota <= 100
+mostrar nombre == "Ana"
+mostrar edad != 30
+
+// Comparaciones en condiciones
+si edad >= 18 {
+    mostrar "Es mayor de edad"
+}
+
+si nota > 80 {
+    mostrar "Nota excelente"
+}
+
+si nombre < "Carlos" {
+    mostrar "Nombre viene antes alfabéticamente"
+}
 `;
 
 console.log("Code to execute:");

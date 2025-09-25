@@ -305,18 +305,30 @@ class Evaluator {
         return left * right;
 
       case "GREATER":
+        if (typeof left === "string" && typeof right === "string") {
+          return left > right;
+        }
         this.checkNumberOperands(operator, left, right);
         return left > right;
 
       case "GREATER_EQUAL":
+        if (typeof left === "string" && typeof right === "string") {
+          return left >= right;
+        }
         this.checkNumberOperands(operator, left, right);
         return left >= right;
 
       case "LESS":
+        if (typeof left === "string" && typeof right === "string") {
+          return left < right;
+        }
         this.checkNumberOperands(operator, left, right);
         return left < right;
 
       case "LESS_EQUAL":
+        if (typeof left === "string" && typeof right === "string") {
+          return left <= right;
+        }
         this.checkNumberOperands(operator, left, right);
         return left <= right;
 
