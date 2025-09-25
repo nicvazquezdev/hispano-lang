@@ -48,7 +48,9 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-mostrar raiz(16)
+variable saludo = "Hola"
+variable nombre = "Nico"
+mostrar (saludo + " " + nombre) + " tiene " + (saludo + " " + nombre).longitud() + " letras"
 `;
 
 console.log("Code to execute:");

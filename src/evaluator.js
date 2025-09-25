@@ -277,8 +277,8 @@ class Evaluator {
       case "Call":
         return this.evaluateCallExpression(expression);
 
-      case "ArrayMethod":
-        return this.evaluateArrayMethod(expression);
+      case "MethodCall":
+        return this.evaluateMethodCall(expression);
 
       case "Unary":
         const right = this.evaluateExpression(expression.right);
@@ -490,18 +490,33 @@ class Evaluator {
   }
 
   /**
-   * Evaluates an array method call
-   * @param {Object} expression - Array method expression
+   * Evaluates a method call (array or string)
+   * @param {Object} expression - Method call expression
    * @returns {any} Method result
    */
-  evaluateArrayMethod(expression) {
-    const array = this.evaluateExpression(expression.object);
+  evaluateMethodCall(expression) {
+    const object = this.evaluateExpression(expression.object);
 
-    if (!Array.isArray(array)) {
-      throw new Error("Can only call array methods on arrays");
+    // Determine if it's an array or string method based on the object type
+    if (Array.isArray(object)) {
+      return this.evaluateArrayMethod(object, expression.method);
+    } else if (typeof object === "string") {
+      return this.evaluateStringMethod(object, expression.method);
+    } else {
+      throw new Error(
+        `Can only call methods on arrays or strings, got ${typeof object}`,
+      );
     }
+  }
 
-    switch (expression.method) {
+  /**
+   * Evaluates an array method
+   * @param {Array} array - The array object
+   * @param {string} method - The method name
+   * @returns {any} Method result
+   */
+  evaluateArrayMethod(array, method) {
+    switch (method) {
       case "longitud":
         return array.length;
 
@@ -518,7 +533,23 @@ class Evaluator {
         return array[array.length - 1];
 
       default:
-        throw new Error(`Unknown array method: ${expression.method}`);
+        throw new Error(`Unknown array method: ${method}`);
+    }
+  }
+
+  /**
+   * Evaluates a string method
+   * @param {string} string - The string object
+   * @param {string} method - The method name
+   * @returns {any} Method result
+   */
+  evaluateStringMethod(string, method) {
+    switch (method) {
+      case "longitud":
+        return string.length;
+
+      default:
+        throw new Error(`Unknown string method: ${method}`);
     }
   }
 

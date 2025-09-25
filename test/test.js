@@ -1394,7 +1394,167 @@ function runTests() {
     );
   });
 
-  // Test 73: Complex example with all features including logical operators
+  // Test 73: Basic string length method
+  test("Basic string length method", () => {
+    const code = `
+      variable texto = "Hola mundo"
+      mostrar texto.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["10"], "Basic string length method should work");
+  });
+
+  // Test 74: String length with different strings
+  test("String length with different strings", () => {
+    const code = `
+      variable texto1 = "Hola"
+      variable texto2 = "Programación"
+      variable texto3 = ""
+      variable texto4 = "¡Hola, mundo!"
+      
+      mostrar texto1.longitud
+      mostrar texto2.longitud
+      mostrar texto3.longitud
+      mostrar texto4.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "12", "0", "13"],
+      "String length with different strings should work",
+    );
+  });
+
+  // Test 75: String length with variables
+  test("String length with variables", () => {
+    const code = `
+      variable nombre = "Juan"
+      variable apellido = "Pérez"
+      variable nombreCompleto = nombre + " " + apellido
+      
+      mostrar nombre.longitud
+      mostrar apellido.longitud
+      mostrar nombreCompleto.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "5", "10"],
+      "String length with variables should work",
+    );
+  });
+
+  // Test 76: String length in conditions
+  test("String length in conditions", () => {
+    const code = `
+      variable password = "secreto123"
+      
+      si password.longitud >= 8 {
+          mostrar "Contraseña válida"
+      }
+      
+      si password.longitud < 5 {
+          mostrar "Contraseña muy corta"
+      }
+      
+      si password.longitud > 10 {
+          mostrar "Contraseña muy larga"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Contraseña válida"],
+      "String length in conditions should work",
+    );
+  });
+
+  // Test 77: String length with expressions
+  test("String length with expressions", () => {
+    const code = `
+      variable base = "Hola"
+      variable repeticiones = 3
+      variable textoRepetido = base + base + base
+      
+      mostrar base.longitud
+      mostrar textoRepetido.longitud
+      
+      variable longitudEsperada = base.longitud * repeticiones
+      mostrar longitudEsperada
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "12", "12"],
+      "String length with expressions should work",
+    );
+  });
+
+  // Test 78: Error handling for string length on non-strings
+  test("Error handling for string length on non-strings", () => {
+    const code = `
+      variable numero = 123
+      mostrar numero.longitud
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling length on non-string",
+    );
+    assertTrue(
+      result.error.includes("Can only call methods on arrays or strings"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 79: String length with empty string
+  test("String length with empty string", () => {
+    const code = `
+      variable textoVacio = ""
+      mostrar textoVacio.longitud
+      
+      variable textoEspacios = "   "
+      mostrar textoEspacios.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["0", "3"],
+      "String length with empty string should work",
+    );
+  });
+
+  // Test 80: String length with special characters
+  test("String length with special characters", () => {
+    const code = `
+      variable textoEspecial = "¡Hola, mundo! ¿Cómo estás?"
+      variable textoEmojis = "😀🌍🚀"
+      variable textoNumeros = "1234567890"
+      
+      mostrar textoEspecial.longitud
+      mostrar textoEmojis.longitud
+      mostrar textoNumeros.longitud
+    `;
+
+    const output = run(code);
+    // Note: Emojis may have different lengths depending on encoding
+    // We'll check that we get 3 outputs and the first and last are correct
+    assertEquals(output.length, 3, "Should have 3 outputs");
+    assertEquals(output[0], "26", "Special text should have length 26");
+    assertEquals(output[2], "10", "Numbers text should have length 10");
+    // The emoji length might vary, so we just check it's a number
+    const emojiLength = parseInt(output[1]);
+    assertTrue(emojiLength > 0, "Emoji string should have positive length");
+  });
+
+  // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas

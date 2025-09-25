@@ -18,6 +18,11 @@ class Parser {
 
     while (!this.isAtEnd()) {
       statements.push(this.declaration());
+
+      // Consume semicolon if present between statements
+      if (this.match("SEMICOLON")) {
+        // Semicolon consumed
+      }
     }
 
     return statements;
@@ -676,14 +681,25 @@ class Parser {
     this.consume("IDENTIFIER", "Expected property name after .");
     const name = this.previous();
 
-    // Check if this is an array method call
+    // Check if this is a method call (array or string)
     if (
       name.lexeme === "longitud" ||
       name.lexeme === "primero" ||
       name.lexeme === "ultimo"
     ) {
+      // Check if there are parentheses (method call syntax)
+      if (this.match("LEFT_PAREN")) {
+        // Consume the opening parenthesis
+        // Check if there are arguments
+        if (!this.check("RIGHT_PAREN")) {
+          throw new Error(`Method ${name.lexeme}() does not accept arguments`);
+        }
+        // Consume the closing parenthesis
+        this.consume("RIGHT_PAREN", "Expected ) after method call");
+      }
+
       return {
-        type: "ArrayMethod",
+        type: "MethodCall",
         object,
         method: name.lexeme,
       };
