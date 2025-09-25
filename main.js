@@ -48,34 +48,13 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-// Casos con .minusculas()
-
-// String literal
-mostrar "Hola".minusculas()
-
-// Variable string
-variable texto = "Hola"
-mostrar texto.minusculas()
-
-// String vacío
-mostrar "".minusculas()
-
-// String con espacios
-mostrar "   ".minusculas()
-
-// Caracteres especiales
-mostrar "¡Hola, mundo!".minusculas()
-
-// Unicode / acentos / emojis
-mostrar "canción".minusculas()
-mostrar "ñandú".minusculas()
-mostrar "😀".minusculas()
-
-// Concatenación
-variable saludo = "hola"
-variable nombre = "nico"
-mostrar (saludo + " " + nombre).minusculas().longitud()
-
+intentar {
+  mostrar "Inicio del bloque"
+  mostrar variableQueNoExiste
+  mostrar "Esto no se ejecutará"
+} capturar (error) {
+  mostrar "Algo falló: " + error
+}
 `;
 
 console.log("Code to execute:");

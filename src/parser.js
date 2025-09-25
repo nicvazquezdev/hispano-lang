@@ -70,6 +70,10 @@ class Parser {
         return this.continueStatement();
       }
 
+      if (this.match("INTENTAR")) {
+        return this.tryStatement();
+      }
+
       return this.expressionStatement();
     } catch (error) {
       this.synchronize();
@@ -891,10 +895,48 @@ class Parser {
         case "RETORNAR":
         case "ROMPER":
         case "CONTINUAR":
+        case "INTENTAR":
+        case "CAPTURAR":
           return;
       }
 
       this.advance();
+    }
+  }
+
+  /**
+   * Parses a try-catch statement
+   * @returns {Object} Try-catch statement
+   */
+  tryStatement() {
+    // Parse the try block
+    this.consume("LEFT_BRACE", "Expected { after intentar");
+    const tryBlock = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after intentar block");
+
+    // Look for catch block
+    if (this.match("CAPTURAR")) {
+      // Parse catch parameter (error variable name)
+      this.consume("LEFT_PAREN", "Expected ( after capturar");
+      const errorVariable = this.consume(
+        "IDENTIFIER",
+        "Expected error variable name",
+      );
+      this.consume("RIGHT_PAREN", "Expected ) after error variable");
+
+      // Parse catch block
+      this.consume("LEFT_BRACE", "Expected { after capturar");
+      const catchBlock = this.block();
+      this.consume("RIGHT_BRACE", "Expected } after capturar block");
+
+      return {
+        type: "TryCatch",
+        tryBlock,
+        catchBlock,
+        errorVariable: errorVariable.lexeme,
+      };
+    } else {
+      throw new Error("Expected capturar after intentar block");
     }
   }
 }

@@ -343,6 +343,8 @@ class Tokenizer {
       o: "OR",
       romper: "ROMPER",
       continuar: "CONTINUAR",
+      intentar: "INTENTAR",
+      capturar: "CAPTURAR",
     };
 
     return keywords[text] || "IDENTIFIER";

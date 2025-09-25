@@ -1970,6 +1970,257 @@ function runTests() {
     );
   });
 
+  // Test 102: Basic try-catch without error
+  test("Basic try-catch without error", () => {
+    const code = `
+      intentar {
+        variable x = 10
+        mostrar "Try block executed"
+        mostrar x
+      } capturar (error) {
+        mostrar "Catch block executed"
+        mostrar error
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Try block executed", "10"],
+      "Try-catch without error should execute try block only",
+    );
+  });
+
+  // Test 103: Basic try-catch with error
+  test("Basic try-catch with error", () => {
+    const code = `
+      intentar {
+        variable x = 10 / 0
+        mostrar "This should not be shown"
+      } capturar (error) {
+        mostrar "Error caught: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length > 0 && output[0].includes("Error caught:"),
+      "Try-catch with error should execute catch block",
+    );
+  });
+
+  // Test 104: Try-catch with variable access in catch
+  test("Try-catch with variable access in catch", () => {
+    const code = `
+      intentar {
+        variable x = 10 / 0
+        mostrar "This should not be shown"
+      } capturar (error) {
+        mostrar "Error message: " + error
+        variable errorLength = error.longitud
+        mostrar "Error length: " + errorLength
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length >= 2 &&
+        output[0].includes("Error message:") &&
+        output[1].includes("Error length:"),
+      "Try-catch should allow variable access in catch block",
+    );
+  });
+
+  // Test 105: Try-catch with multiple statements in catch
+  test("Try-catch with multiple statements in catch", () => {
+    const code = `
+      intentar {
+        variable x = 10 / 0
+        mostrar "This should not be shown"
+      } capturar (error) {
+        mostrar "First catch statement"
+        mostrar "Second catch statement"
+        mostrar "Error: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "First catch statement",
+        "Second catch statement",
+        "Error: " + output[2].split("Error: ")[1],
+      ],
+      "Try-catch should execute multiple statements in catch block",
+    );
+  });
+
+  // Test 106: Try-catch with nested try-catch
+  test("Try-catch with nested try-catch", () => {
+    const code = `
+      intentar {
+        intentar {
+          variable x = 10 / 0
+          mostrar "Inner try"
+        } capturar (innerError) {
+          mostrar "Inner catch: " + innerError
+        }
+        mostrar "Outer try"
+      } capturar (outerError) {
+        mostrar "Outer catch: " + outerError
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length >= 2 &&
+        output[0].includes("Inner catch:") &&
+        output[1].includes("Outer try"),
+      "Nested try-catch should work correctly",
+    );
+  });
+
+  // Test 107: Try-catch with function calls
+  test("Try-catch with function calls", () => {
+    const code = `
+      funcion dividir(a, b) {
+        si b == 0 {
+          mostrar "Division by zero error"
+        }
+        retornar a / b
+      }
+      
+      intentar {
+        variable resultado = dividir(10, 0)
+        mostrar "Result: " + resultado
+      } capturar (error) {
+        mostrar "Function error caught: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(output.length > 0, "Try-catch with function calls should work");
+  });
+
+  // Test 108: Try-catch with array operations
+  test("Try-catch with array operations", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      
+      intentar {
+        variable elemento = arr[10]
+        mostrar "Element: " + elemento
+      } capturar (error) {
+        mostrar "Array error caught: " + error
+        mostrar "Array length: " + arr.longitud
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length >= 2 &&
+        output[0].includes("Array error caught:") &&
+        output[1].includes("Array length: 3"),
+      "Try-catch with array operations should work",
+    );
+  });
+
+  // Test 109: Try-catch with string operations
+  test("Try-catch with string operations", () => {
+    const code = `
+      intentar {
+        variable texto = "Hola"
+        variable resultado = texto.longitud
+        mostrar "Length: " + resultado
+        
+        // This should not cause an error
+        variable mayusculas = texto.mayusculas
+        mostrar "Uppercase: " + mayusculas
+      } capturar (error) {
+        mostrar "String error caught: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Length: 4", "Uppercase: HOLA"],
+      "Try-catch with string operations should work",
+    );
+  });
+
+  // Test 110: Try-catch with loop inside try
+  test("Try-catch with loop inside try", () => {
+    const code = `
+      intentar {
+        para (variable i = 1; i <= 3; i++) {
+          si i == 2 {
+            variable x = 10 / 0
+          }
+          mostrar "Loop iteration: " + i
+        }
+      } capturar (error) {
+        mostrar "Loop error caught: " + error
+      }
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length >= 2 &&
+        output[0].includes("Loop iteration: 1") &&
+        output[1].includes("Loop error caught:"),
+      "Try-catch with loop should work",
+    );
+  });
+
+  // Test 111: Try-catch with break/continue (should not be caught)
+  test("Try-catch with break/continue should not be caught", () => {
+    const code = `
+      intentar {
+        para (variable i = 1; i <= 5; i++) {
+          si i == 3 {
+            romper
+          }
+          mostrar "Before break: " + i
+        }
+        mostrar "After loop"
+      } capturar (error) {
+        mostrar "This should not be shown"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Before break: 1", "Before break: 2", "After loop"],
+      "Try-catch should not catch break/continue exceptions",
+    );
+  });
+
+  // Test 112: Try-catch with return statement
+  test("Try-catch with return statement", () => {
+    const code = `
+      funcion testFunction() {
+        intentar {
+          variable x = 10 / 0
+          retornar "Success"
+        } capturar (error) {
+          retornar "Error: " + error
+        }
+      }
+      
+      variable resultado = testFunction()
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertTrue(
+      output.length > 0 && output[0].includes("Error:"),
+      "Try-catch with return should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

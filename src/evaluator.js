@@ -52,6 +52,8 @@ class Evaluator {
         return this.executeBreakStatement(statement);
       case "ContinueStatement":
         return this.executeContinueStatement(statement);
+      case "TryCatch":
+        return this.executeTryCatch(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
       case "Block":
@@ -1104,6 +1106,31 @@ class Evaluator {
     }
     return value.toString();
   }
+
+  /**
+   * Executes a try-catch statement
+   * @param {Object} statement - Try-catch statement to execute
+   */
+  executeTryCatch(statement) {
+    try {
+      // Execute the try block
+      this.executeBlock(statement.tryBlock);
+    } catch (error) {
+      // Check if it's a control flow exception (break/continue)
+      if (
+        error instanceof BreakException ||
+        error instanceof ContinueException
+      ) {
+        throw error; // Re-throw control flow exceptions
+      }
+
+      // Store the error in the environment for the catch block
+      this.environment.define(statement.errorVariable, error.message);
+
+      // Execute the catch block
+      this.executeBlock(statement.catchBlock);
+    }
+  }
 }
 
 /**
@@ -1185,6 +1212,16 @@ class BreakException {
 class ContinueException {
   constructor() {
     this.type = "continue";
+  }
+}
+
+/**
+ * Exception class for try-catch errors
+ */
+class TryCatchException {
+  constructor(message) {
+    this.type = "try-catch";
+    this.message = message;
   }
 }
 
