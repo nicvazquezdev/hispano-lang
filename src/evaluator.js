@@ -548,6 +548,9 @@ class Evaluator {
       case "longitud":
         return string.length;
 
+      case "mayusculas":
+        return string.toUpperCase();
+
       default:
         throw new Error(`Unknown string method: ${method}`);
     }

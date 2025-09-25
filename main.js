@@ -48,9 +48,34 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable saludo = "Hola"
-variable nombre = "Nico"
-mostrar (saludo + " " + nombre) + " tiene " + (saludo + " " + nombre).longitud() + " letras"
+// Casos con .mayusculas()
+
+// String literal
+mostrar "Hola".mayusculas()
+
+// Variable string
+variable texto = "Hola"
+mostrar texto.mayusculas()
+
+// String vacío
+mostrar "".mayusculas()
+
+// String con espacios
+mostrar "   ".mayusculas()
+
+// Caracteres especiales
+mostrar "¡Hola, mundo!".mayusculas()
+
+// Unicode / acentos / emojis
+mostrar "canción".mayusculas()
+mostrar "ñandú".mayusculas()
+mostrar "😀".mayusculas()
+
+// Concatenación
+variable saludo = "hola"
+variable nombre = "nico"
+mostrar (saludo + " " + nombre).mayusculas().longitud()
+
 `;
 
 console.log("Code to execute:");

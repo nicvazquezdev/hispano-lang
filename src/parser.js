@@ -685,7 +685,8 @@ class Parser {
     if (
       name.lexeme === "longitud" ||
       name.lexeme === "primero" ||
-      name.lexeme === "ultimo"
+      name.lexeme === "ultimo" ||
+      name.lexeme === "mayusculas"
     ) {
       // Check if there are parentheses (method call syntax)
       if (this.match("LEFT_PAREN")) {

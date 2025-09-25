@@ -1554,6 +1554,200 @@ function runTests() {
     assertTrue(emojiLength > 0, "Emoji string should have positive length");
   });
 
+  // Test 81: Basic string uppercase method
+  test("Basic string uppercase method", () => {
+    const code = `
+      variable texto = "hola mundo"
+      mostrar texto.mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA MUNDO"],
+      "Basic string uppercase method should work",
+    );
+  });
+
+  // Test 82: String uppercase with different strings
+  test("String uppercase with different strings", () => {
+    const code = `
+      variable texto1 = "hola"
+      variable texto2 = "programación"
+      variable texto3 = "a"
+      variable texto4 = "¡hola, mundo!"
+      
+      mostrar texto1.mayusculas
+      mostrar texto2.mayusculas
+      mostrar texto3.mayusculas
+      mostrar texto4.mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA", "PROGRAMACIÓN", "A", "¡HOLA, MUNDO!"],
+      "String uppercase with different strings should work",
+    );
+  });
+
+  // Test 83: String uppercase with string literals
+  test("String uppercase with string literals", () => {
+    const code = `
+      mostrar "hola".mayusculas
+      mostrar "mundo".mayusculas
+      mostrar "".mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA", "MUNDO", ""],
+      "String uppercase with string literals should work",
+    );
+  });
+
+  // Test 84: String uppercase with parentheses
+  test("String uppercase with parentheses", () => {
+    const code = `
+      variable texto = "hola mundo"
+      mostrar texto.mayusculas()
+      mostrar "programación".mayusculas()
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA MUNDO", "PROGRAMACIÓN"],
+      "String uppercase with parentheses should work",
+    );
+  });
+
+  // Test 85: String uppercase in conditions
+  test("String uppercase in conditions", () => {
+    const code = `
+      variable nombre = "juan"
+      variable nombreMayusculas = nombre.mayusculas
+      
+      si nombreMayusculas == "JUAN" {
+          mostrar "El nombre en mayúsculas es JUAN"
+      }
+      
+      si nombre.mayusculas == "JUAN" {
+          mostrar "También funciona en condiciones directas"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "El nombre en mayúsculas es JUAN",
+        "También funciona en condiciones directas",
+      ],
+      "String uppercase in conditions should work",
+    );
+  });
+
+  // Test 86: String uppercase with expressions
+  test("String uppercase with expressions", () => {
+    const code = `
+      variable base = "hola"
+      variable mundo = "mundo"
+      variable saludo = base + " " + mundo
+      
+      mostrar base.mayusculas
+      mostrar mundo.mayusculas
+      mostrar saludo.mayusculas
+      
+      variable saludoMayusculas = saludo.mayusculas
+      mostrar saludoMayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA", "MUNDO", "HOLA MUNDO", "HOLA MUNDO"],
+      "String uppercase with expressions should work",
+    );
+  });
+
+  // Test 87: String uppercase with special characters
+  test("String uppercase with special characters", () => {
+    const code = `
+      variable textoEspecial = "¡hola, mundo! ¿cómo estás?"
+      variable textoNumeros = "abc123def"
+      variable textoMixto = "Hola Mundo"
+      
+      mostrar textoEspecial.mayusculas
+      mostrar textoNumeros.mayusculas
+      mostrar textoMixto.mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["¡HOLA, MUNDO! ¿CÓMO ESTÁS?", "ABC123DEF", "HOLA MUNDO"],
+      "String uppercase with special characters should work",
+    );
+  });
+
+  // Test 88: Error handling for string uppercase on non-strings
+  test("Error handling for string uppercase on non-strings", () => {
+    const code = `
+      variable numero = 123
+      mostrar numero.mayusculas
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling uppercase on non-string",
+    );
+    assertTrue(
+      result.error.includes("Can only call methods on arrays or strings"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 89: String uppercase with empty string
+  test("String uppercase with empty string", () => {
+    const code = `
+      variable textoVacio = ""
+      mostrar textoVacio.mayusculas
+      
+      variable textoEspacios = "   "
+      mostrar textoEspacios.mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["", "   "],
+      "String uppercase with empty string should work",
+    );
+  });
+
+  // Test 90: String uppercase chaining
+  test("String uppercase chaining", () => {
+    const code = `
+      variable texto = "hola mundo"
+      variable resultado = texto.mayusculas
+      mostrar resultado
+      
+      // Test that we can use the result in expressions
+      variable longitud = resultado.longitud
+      mostrar longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["HOLA MUNDO", "10"],
+      "String uppercase chaining should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
