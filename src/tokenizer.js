@@ -1,5 +1,5 @@
 /**
- * Tokenizer for educational programming language in Spanish
+ * Tokenizer for HispanoLang
  * Converts source code into tokens for the parser
  */
 

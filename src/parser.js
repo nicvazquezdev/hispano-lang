@@ -1,5 +1,5 @@
 /**
- * Parser for educational programming language in Spanish
+ * Parser for HispanoLang
  * Converts tokens into an Abstract Syntax Tree (AST)
  */
 

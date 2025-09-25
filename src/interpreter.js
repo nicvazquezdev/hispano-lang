@@ -1,5 +1,5 @@
 /**
- * Main interpreter for educational programming language in Spanish
+ * Main interpreter for HispanoLang
  * Coordinates tokenizer, parser and evaluator
  */
 

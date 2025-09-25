@@ -1,5 +1,5 @@
 /**
- * Evaluator for educational programming language in Spanish
+ * Evaluator for HispanoLang
  * Executes AST statements
  */
 

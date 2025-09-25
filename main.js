@@ -1,5 +1,5 @@
 /**
- * Educational Programming Language in Spanish
+ * HispanoLang
  * A simple interpreter to teach programming without language barriers
  *
  * Features:

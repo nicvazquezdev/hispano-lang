@@ -1,5 +1,5 @@
 /**
- * Tests for Educational Programming Language in Spanish
+ * Tests for HispanoLang
  * Validates basic interpreter functionality
  */
 
@@ -67,7 +67,7 @@ function assertTrue(condition, message = "") {
  */
 function runTests() {
   console.log(
-    `${colors.bold}${colors.yellow}🧪 Running Tests for Educational Programming Language in Spanish${colors.reset}\n`,
+    `${colors.bold}${colors.yellow}🧪 Running Tests for HispanoLang${colors.reset}\n`,
   );
 
   // Test 1: Basic variables
