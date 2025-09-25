@@ -6,7 +6,12 @@
   "scripts": {
     "start": "node main.js",
     "test": "node test/test.js",
-    "dev": "nodemon main.js"
+    "dev": "nodemon main.js",
+    "lint": "echo 'Linting not configured yet'",
+    "format": "echo 'Formatting not configured yet'",
+    "coverage": "echo 'Coverage not configured yet'",
+    "build": "echo 'Build not needed for interpreter'",
+    "demo": "node main.js"
   },
   "keywords": [
     "programming-language",
