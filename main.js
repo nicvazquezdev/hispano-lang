@@ -56,6 +56,8 @@ si x > 11 {
 } sino {
   mostrar "x es menor que 11"
 }
+
+mostrar 2 + x
 `;
 
 console.log("Code to execute:");

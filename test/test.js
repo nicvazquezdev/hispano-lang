@@ -75,6 +75,7 @@ function runTests() {
     const code = `
       variable numero = 42
       variable texto = "hola"
+      variable booleano = verdadero
     `;
 
     const result = interpret(code);
@@ -83,6 +84,7 @@ function runTests() {
     const variables = getVariables();
     assertEquals(variables.numero, 42, "Variable numero should be 42");
     assertEquals(variables.texto, "hola", 'Variable texto should be "hola"');
+    assertEquals(variables.booleano, true, "Variable booleano should be true");
   });
 
   // Test 2: Show values
@@ -118,7 +120,118 @@ function runTests() {
     );
   });
 
-  // Test 4: Error handling
+  // Test 4: Arithmetic operations
+  test("Arithmetic operations", () => {
+    const code = `
+      variable a = 20
+      variable b = 4
+      variable suma = a + b
+      variable resta = a - b
+      variable multiplicacion = a * b
+      variable division = a / b
+      mostrar suma
+      mostrar resta
+      mostrar multiplicacion
+      mostrar division
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["24", "16", "80", "5"],
+      "Arithmetic operations should work correctly",
+    );
+  });
+
+  // Test 5: String concatenation
+  test("String concatenation", () => {
+    const code = `
+      variable nombre = "Juan"
+      variable apellido = "Pérez"
+      variable nombreCompleto = nombre + " " + apellido
+      mostrar nombreCompleto
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Juan Pérez"], "String concatenation should work");
+  });
+
+  // Test 6: Comparison operators
+  test("Comparison operators", () => {
+    const code = `
+      variable a = 10
+      variable b = 5
+      variable mayor = a > b
+      variable menor = a < b
+      variable igual = a == 10
+      variable diferente = a != b
+      mostrar mayor
+      mostrar menor
+      mostrar igual
+      mostrar diferente
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false", "true", "true"],
+      "Comparison operators should work correctly",
+    );
+  });
+
+  // Test 7: Basic conditional (if)
+  test("Basic if statement", () => {
+    const code = `
+      variable edad = 18
+      si edad >= 18 {
+          mostrar "mayor de edad"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["mayor de edad"], "Basic if statement should work");
+  });
+
+  // Test 8: If-else statement
+  test("If-else statement", () => {
+    const code = `
+      variable edad = 16
+      si edad >= 18 {
+          mostrar "mayor de edad"
+      } sino {
+          mostrar "menor de edad"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["menor de edad"], "If-else statement should work");
+  });
+
+  // Test 9: Multiple conditions
+  test("Multiple conditions", () => {
+    const code = `
+      variable a = 10
+      variable b = 5
+      si a > b {
+          mostrar "a es mayor"
+      }
+      si a == 10 {
+          mostrar "a es igual a 10"
+      }
+      si b < 10 {
+          mostrar "b es menor que 10"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["a es mayor", "a es igual a 10", "b es menor que 10"],
+      "Multiple conditions should work",
+    );
+  });
+
+  // Test 10: Error handling - undefined variable
   test("Error handling - undefined variable", () => {
     const code = `
       mostrar variableNoDefinida
@@ -132,36 +245,75 @@ function runTests() {
     );
   });
 
-  // Test 5: Complex example
-  test("Complex example - personal information", () => {
+  // Test 11: Unary operators
+  test("Unary operators", () => {
     const code = `
-      variable nombre = "Ana"
-      variable edad = 25
-      variable ciudad = "Madrid"
+      variable a = 10
+      variable negativo = -a
+      variable booleano = verdadero
+      variable negacion = !booleano
+      mostrar negativo
+      mostrar negacion
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["-10", "false"],
+      "Unary operators should work correctly",
+    );
+  });
+
+  // Test 12: Division by zero error
+  test("Error handling - division by zero", () => {
+    const code = `
+      variable resultado = 10 / 0
+    `;
+
+    const result = interpret(code);
+    assertTrue(!result.success, "Should fail when dividing by zero");
+    assertTrue(
+      result.error.includes("Division by zero"),
+      "Error should mention division by zero",
+    );
+  });
+
+  // Test 13: Complex example with all features
+  test("Complex example - calculator with conditions", () => {
+    const code = `
+      variable numero1 = 15
+      variable numero2 = 3
+      variable suma = numero1 + numero2
+      variable resta = numero1 - numero2
+      variable producto = numero1 * numero2
+      variable cociente = numero1 / numero2
       
-      mostrar "Información personal:"
-      mostrar "Nombre:"
-      mostrar nombre
-      mostrar "Edad:"
-      mostrar edad
-      mostrar "Ciudad:"
-      mostrar ciudad
+      mostrar "Calculadora Simple"
+      mostrar suma
+      mostrar resta
+      mostrar producto
+      mostrar cociente
+      
+      si suma > 20 {
+          mostrar "La suma es mayor que 20"
+      } sino {
+          mostrar "La suma es menor o igual que 20"
+      }
     `;
 
     const output = run(code);
     const expectedOutput = [
-      "Información personal:",
-      "Nombre:",
-      "Ana",
-      "Edad:",
-      "25",
-      "Ciudad:",
-      "Madrid",
+      "Calculadora Simple",
+      "18",
+      "12",
+      "45",
+      "5",
+      "La suma es menor o igual que 20",
     ];
     assertEquals(
       output,
       expectedOutput,
-      "Personal information should display correctly",
+      "Complex calculator should work correctly",
     );
   });
 
