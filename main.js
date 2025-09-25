@@ -46,7 +46,6 @@ function clearVariables() {
 }
 
 // Example usage
-console.log("=== Educational Programming Language in Spanish ===\n");
 
 const exampleCode = `
 variable x = 12
