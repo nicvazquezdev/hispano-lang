@@ -218,6 +218,9 @@ class Evaluator {
       case "Logical":
         return this.evaluateLogicalExpression(expression);
 
+      case "Postfix":
+        return this.evaluatePostfixExpression(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -542,6 +545,87 @@ class Evaluator {
     }
 
     throw new Error(`Unknown logical operator: ${expression.operator}`);
+  }
+
+  /**
+   * Evaluates postfix expression (increment/decrement)
+   * @param {Object} expression - Postfix expression
+   * @returns {any} Postfix result
+   */
+  evaluatePostfixExpression(expression) {
+    const operand = this.evaluateExpression(expression.operand);
+
+    if (expression.operator === "PLUS_PLUS") {
+      if (typeof operand !== "number") {
+        throw new Error("Can only increment numbers");
+      }
+      const newValue = operand + 1;
+
+      // Update the variable if it's a variable reference
+      if (expression.operand.type === "Variable") {
+        this.environment.assign(expression.operand.name, newValue);
+      } else if (expression.operand.type === "PropertyAccess") {
+        const object = this.evaluateExpression(expression.operand.object);
+        if (typeof object !== "object" || object === null) {
+          throw new Error("Can only increment properties of objects");
+        }
+        object[expression.operand.name] = newValue;
+      } else if (expression.operand.type === "ArrayAccess") {
+        const array = this.evaluateExpression(expression.operand.array);
+        const index = this.evaluateExpression(expression.operand.index);
+        if (!Array.isArray(array)) {
+          throw new Error("Can only increment elements of arrays");
+        }
+        if (typeof index !== "number") {
+          throw new Error("Array index must be a number");
+        }
+        if (index < 0 || index >= array.length) {
+          throw new Error("Array index out of bounds");
+        }
+        array[index] = newValue;
+      } else {
+        throw new Error("Invalid increment target");
+      }
+
+      return operand; // Return the original value (postfix behavior)
+    }
+
+    if (expression.operator === "MINUS_MINUS") {
+      if (typeof operand !== "number") {
+        throw new Error("Can only decrement numbers");
+      }
+      const newValue = operand - 1;
+
+      // Update the variable if it's a variable reference
+      if (expression.operand.type === "Variable") {
+        this.environment.assign(expression.operand.name, newValue);
+      } else if (expression.operand.type === "PropertyAccess") {
+        const object = this.evaluateExpression(expression.operand.object);
+        if (typeof object !== "object" || object === null) {
+          throw new Error("Can only decrement properties of objects");
+        }
+        object[expression.operand.name] = newValue;
+      } else if (expression.operand.type === "ArrayAccess") {
+        const array = this.evaluateExpression(expression.operand.array);
+        const index = this.evaluateExpression(expression.operand.index);
+        if (!Array.isArray(array)) {
+          throw new Error("Can only decrement elements of arrays");
+        }
+        if (typeof index !== "number") {
+          throw new Error("Array index must be a number");
+        }
+        if (index < 0 || index >= array.length) {
+          throw new Error("Array index out of bounds");
+        }
+        array[index] = newValue;
+      } else {
+        throw new Error("Invalid decrement target");
+      }
+
+      return operand; // Return the original value (postfix behavior)
+    }
+
+    throw new Error(`Unknown postfix operator: ${expression.operator}`);
   }
 
   /**

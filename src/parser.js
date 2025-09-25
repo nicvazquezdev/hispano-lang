@@ -69,7 +69,14 @@ class Parser {
    * @returns {Object} Variable declaration
    */
   variableDeclaration() {
-    const name = this.consume("IDENTIFIER", "Expected variable name");
+    let name;
+    if (this.match("IDENTIFIER")) {
+      name = this.previous();
+    } else if (this.match("AND")) {
+      name = this.previous();
+    } else {
+      throw new Error("Expected variable name");
+    }
 
     let initializer = null;
     if (this.match("EQUAL")) {
@@ -477,7 +484,26 @@ class Parser {
       };
     }
 
-    return this.call();
+    return this.postfix();
+  }
+
+  /**
+   * Parses a postfix expression (increment/decrement)
+   * @returns {Object} Postfix expression
+   */
+  postfix() {
+    let expr = this.call();
+
+    while (this.match("PLUS_PLUS", "MINUS_MINUS")) {
+      const operator = this.previous();
+      expr = {
+        type: "Postfix",
+        operator: operator.type,
+        operand: expr,
+      };
+    }
+
+    return expr;
   }
 
   /**

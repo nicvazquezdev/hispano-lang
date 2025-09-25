@@ -897,7 +897,80 @@ function runTests() {
     );
   });
 
-  // Test 47: Complex example with all features including logical operators
+  // Test 47: Basic increment operator
+  test("Basic increment operator", () => {
+    const code = `
+      variable contador = 5
+      variable resultado = contador++
+      mostrar contador
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["6", "5"], "Basic increment operator should work");
+  });
+
+  // Test 48: Basic decrement operator
+  test("Basic decrement operator", () => {
+    const code = `
+      variable numero = 10
+      variable resultado = numero--
+      mostrar numero
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["9", "10"], "Basic decrement operator should work");
+  });
+
+  // Test 49: Increment with arrays
+  test("Increment with arrays", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      numeros[0]++
+      mostrar numeros[0]
+      numeros[1]++
+      mostrar numeros[1]
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["2", "3"], "Increment with arrays should work");
+  });
+
+  // Test 50: Increment with objects
+  test("Increment with objects", () => {
+    const code = `
+      variable persona = {edad: 25, puntos: 100}
+      persona.edad++
+      persona.puntos++
+      mostrar persona.edad
+      mostrar persona.puntos
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["26", "101"], "Increment with objects should work");
+  });
+
+  // Test 51: Multiple increments
+  test("Multiple increments", () => {
+    const code = `
+      variable x = 0
+      x++
+      x++
+      x++
+      mostrar x
+      
+      variable y = 10
+      y--
+      y--
+      mostrar y
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["3", "8"], "Multiple increments should work");
+  });
+
+  // Test 52: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas

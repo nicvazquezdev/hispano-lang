@@ -72,14 +72,6 @@ class Tokenizer {
         }
         break;
 
-      case "+":
-        this.addToken("PLUS");
-        break;
-
-      case "-":
-        this.addToken("MINUS");
-        break;
-
       case "*":
         this.addToken("STAR");
         break;
@@ -112,6 +104,24 @@ class Tokenizer {
           this.addToken("BANG_EQUAL");
         } else {
           this.addToken("BANG");
+        }
+        break;
+
+      case "+":
+        if (this.peek() === "+") {
+          this.advance();
+          this.addToken("PLUS_PLUS");
+        } else {
+          this.addToken("PLUS");
+        }
+        break;
+
+      case "-":
+        if (this.peek() === "-") {
+          this.advance();
+          this.addToken("MINUS_MINUS");
+        } else {
+          this.addToken("MINUS");
         }
         break;
 
@@ -258,8 +268,43 @@ class Tokenizer {
     }
 
     const text = this.source.substring(this.startPos, this.current);
-    const type = this.getKeywordType(text);
-    this.addToken(type);
+
+    // Special handling for 'y' - only treat as AND in logical contexts
+    if (text === "y") {
+      // Check if this is a logical context by looking at previous tokens
+      const prevToken = this.tokens[this.tokens.length - 1];
+      if (
+        prevToken &&
+        (prevToken.type === "IDENTIFIER" ||
+          prevToken.type === "NUMBER" ||
+          prevToken.type === "STRING" ||
+          prevToken.type === "TRUE" ||
+          prevToken.type === "FALSE" ||
+          prevToken.type === "RIGHT_PAREN" ||
+          prevToken.type === "RIGHT_BRACKET")
+      ) {
+        // Check if the next token is a logical operator or end of expression
+        const nextChar = this.peek();
+        if (
+          nextChar === " " ||
+          nextChar === "\n" ||
+          nextChar === "\t" ||
+          nextChar === ")" ||
+          nextChar === "}" ||
+          nextChar === ";" ||
+          this.isAtEnd()
+        ) {
+          this.addToken("AND");
+        } else {
+          this.addToken("IDENTIFIER");
+        }
+      } else {
+        this.addToken("IDENTIFIER");
+      }
+    } else {
+      const type = this.getKeywordType(text);
+      this.addToken(type);
+    }
   }
 
   /**
@@ -279,7 +324,6 @@ class Tokenizer {
       retornar: "RETORNAR",
       verdadero: "TRUE",
       falso: "FALSE",
-      y: "AND",
       o: "OR",
     };
 

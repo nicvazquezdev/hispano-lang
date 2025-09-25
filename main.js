@@ -48,14 +48,21 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable edad = 23
-variable nombre = "Pedro"
+// Incremento en arrays
+variable numeros = [1, 2, 3]
+mostrar "Array inicial:"
+mostrar numeros[0]
+numeros[0]++
+mostrar "Después de numeros[0]++:"
+mostrar numeros[0]
 
-si edad > 18 y nombre == "Juan" {
-    mostrar "Eres mayor de edad y tu nombre es Juan"
-} sino {
-    mostrar "Tu nombre no es Juan"
-}
+// Incremento en objetos
+variable persona = {edad: 25}
+mostrar "Edad inicial:"
+mostrar persona.edad
+persona.edad--
+mostrar "Después de persona.edad--:"
+mostrar persona.edad
 `;
 
 console.log("Code to execute:");
