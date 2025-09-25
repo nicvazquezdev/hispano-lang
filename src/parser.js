@@ -433,6 +433,8 @@ class Parser {
     while (true) {
       if (this.match("LEFT_BRACKET")) {
         expr = this.finishArrayAccess(expr);
+      } else if (this.match("DOT")) {
+        expr = this.finishPropertyAccess(expr);
       } else {
         break;
       }
@@ -477,6 +479,10 @@ class Parser {
       return this.arrayLiteral();
     }
 
+    if (this.match("LEFT_BRACE")) {
+      return this.objectLiteral();
+    }
+
     throw new Error("Expected expression");
   }
 
@@ -493,6 +499,22 @@ class Parser {
       type: "ArrayAccess",
       array,
       index,
+    };
+  }
+
+  /**
+   * Finishes parsing a property access
+   * @param {Object} object - The object being accessed
+   * @returns {Object} Property access expression
+   */
+  finishPropertyAccess(object) {
+    this.consume("IDENTIFIER", "Expected property name after .");
+    const name = this.previous();
+
+    return {
+      type: "PropertyAccess",
+      object,
+      name: name.lexeme,
     };
   }
 
@@ -543,6 +565,44 @@ class Parser {
     return {
       type: "ArrayLiteral",
       elements,
+    };
+  }
+
+  /**
+   * Parses an object literal
+   * @returns {Object} Object literal
+   */
+  objectLiteral() {
+    const properties = [];
+
+    if (!this.check("RIGHT_BRACE")) {
+      do {
+        // Parse property name (identifier or string)
+        let name;
+        if (this.match("IDENTIFIER")) {
+          name = this.previous().lexeme;
+        } else if (this.match("STRING")) {
+          name = this.previous().literal;
+        } else {
+          throw new Error("Expected property name");
+        }
+
+        this.consume("COLON", "Expected : after property name");
+        const value = this.expression();
+
+        properties.push({
+          type: "Property",
+          name,
+          value,
+        });
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_BRACE", "Expected } after object properties");
+
+    return {
+      type: "ObjectLiteral",
+      properties,
     };
   }
 

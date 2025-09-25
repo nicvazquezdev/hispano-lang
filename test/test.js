@@ -616,8 +616,99 @@ function runTests() {
     assertEquals(output, ["Hola, Mundo"], "Comments in functions should work");
   });
 
-  // Test 33: Complex example with all features and comments
-  test("Complex example - calculator with functions, arrays, for loops and comments", () => {
+  // Test 33: Basic object creation
+  test("Basic object creation", () => {
+    const code = `
+      variable persona = {nombre: "Juan", edad: 25}
+      mostrar persona.nombre
+      mostrar persona.edad
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Juan", "25"], "Basic object creation should work");
+  });
+
+  // Test 34: Object with different value types
+  test("Object with different value types", () => {
+    const code = `
+      variable datos = {
+          nombre: "María",
+          edad: 30,
+          activo: verdadero,
+          salario: 50000.5
+      }
+      mostrar datos.nombre
+      mostrar datos.edad
+      mostrar datos.activo
+      mostrar datos.salario
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["María", "30", "true", "50000.5"],
+      "Object with different value types should work",
+    );
+  });
+
+  // Test 35: Object property access with variables
+  test("Object property access with variables", () => {
+    const code = `
+      variable producto = {nombre: "Laptop", precio: 1000}
+      variable propiedad = "nombre"
+      mostrar producto.nombre
+      mostrar producto.precio
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Laptop", "1000"],
+      "Object property access should work",
+    );
+  });
+
+  // Test 36: Nested objects
+  test("Nested objects", () => {
+    const code = `
+      variable empresa = {
+          nombre: "TechCorp",
+          direccion: {
+              calle: "Av. Principal 123",
+              ciudad: "Madrid"
+          }
+      }
+      mostrar empresa.nombre
+      mostrar empresa.direccion.ciudad
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["TechCorp", "Madrid"], "Nested objects should work");
+  });
+
+  // Test 37: Object with array properties
+  test("Object with array properties", () => {
+    const code = `
+      variable estudiante = {
+          nombre: "Ana",
+          materias: ["Matemáticas", "Física", "Química"],
+          calificaciones: [95, 87, 92]
+      }
+      mostrar estudiante.nombre
+      mostrar estudiante.materias[0]
+      mostrar estudiante.calificaciones[1]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Ana", "Matemáticas", "87"],
+      "Object with array properties should work",
+    );
+  });
+
+  // Test 38: Complex example with all features including objects
+  test("Complex example - calculator with functions, arrays, for loops, comments and objects", () => {
     const code = `
       // Función para calcular operaciones básicas
       funcion calcular(a, b) {
@@ -646,6 +737,16 @@ function runTests() {
       }
       mostrar "Suma de array:"
       mostrar suma
+      
+      // Objeto con información del cálculo
+      variable info = {
+          resultado: suma,
+          operacion: "suma de array",
+          elementos: numeros
+      }
+      mostrar "Información del cálculo:"
+      mostrar info.resultado
+      mostrar info.operacion
     `;
 
     const output = run(code);
@@ -659,11 +760,14 @@ function runTests() {
       "El resultado es mayor que 10",
       "Suma de array:",
       "15",
+      "Información del cálculo:",
+      "15",
+      "suma de array",
     ];
     assertEquals(
       output,
       expectedOutput,
-      "Complex calculator with functions, arrays, for loops and comments should work correctly",
+      "Complex calculator with functions, arrays, for loops, comments and objects should work correctly",
     );
   });
 

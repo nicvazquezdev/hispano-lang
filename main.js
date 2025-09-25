@@ -48,20 +48,16 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-para (variable i = 1; i <= 5; i = i + 1) {
-    mostrar i
+// Crear un objeto persona
+variable persona = {
+    nombre: "Ana García",
+    edad: 28,
+    profesion: "Desarrolladora",
+    activa: verdadero
 }
 
-variable numeros = [10, 20, 30, 40, 50]
-para (variable i = 0; i < 5; i = i + 1) {
-    mostrar numeros[i]
-}
-
-// soy un comentario!
-variable contador = 0
-para (; contador < 3; contador = contador + 1) {
-    mostrar "Iteración: " + contador
-}
+mostrar "Información de la persona:"
+mostrar persona.edad
 `;
 
 console.log("Code to execute:");

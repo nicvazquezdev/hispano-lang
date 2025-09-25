@@ -139,12 +139,20 @@ class Tokenizer {
         this.addToken("SEMICOLON");
         break;
 
+      case ":":
+        this.addToken("COLON");
+        break;
+
       case "[":
         this.addToken("LEFT_BRACKET");
         break;
 
       case "]":
         this.addToken("RIGHT_BRACKET");
+        break;
+
+      case ".":
+        this.addToken("DOT");
         break;
 
       case '"':

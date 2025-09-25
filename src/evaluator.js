@@ -206,6 +206,12 @@ class Evaluator {
       case "ArrayAssign":
         return this.evaluateArrayAssign(expression);
 
+      case "ObjectLiteral":
+        return this.evaluateObjectLiteral(expression);
+
+      case "PropertyAccess":
+        return this.evaluatePropertyAccess(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -454,6 +460,37 @@ class Evaluator {
 
     array[index] = value;
     return value;
+  }
+
+  /**
+   * Evaluates object literal
+   * @param {Object} expression - Object literal expression
+   * @returns {Object} Object value
+   */
+  evaluateObjectLiteral(expression) {
+    const object = {};
+
+    for (const property of expression.properties) {
+      const value = this.evaluateExpression(property.value);
+      object[property.name] = value;
+    }
+
+    return object;
+  }
+
+  /**
+   * Evaluates property access
+   * @param {Object} expression - Property access expression
+   * @returns {any} Property value
+   */
+  evaluatePropertyAccess(expression) {
+    const object = this.evaluateExpression(expression.object);
+
+    if (typeof object !== "object" || object === null) {
+      throw new Error("Can only access properties of objects");
+    }
+
+    return object[expression.name];
   }
 
   /**
