@@ -439,6 +439,18 @@ class Evaluator {
    * @returns {any} Function result
    */
   evaluateCallExpression(expression) {
+    // Check if it's a built-in mathematical function BEFORE evaluating the callee
+    if (
+      expression.callee.type === "Variable" &&
+      this.isMathFunction(expression.callee.name)
+    ) {
+      const args = [];
+      for (const argument of expression.arguments) {
+        args.push(this.evaluateExpression(argument));
+      }
+      return this.evaluateMathFunction(expression.callee.name, args);
+    }
+
     const callee = this.evaluateExpression(expression.callee);
     const args = [];
 
@@ -507,6 +519,202 @@ class Evaluator {
 
       default:
         throw new Error(`Unknown array method: ${expression.method}`);
+    }
+  }
+
+  /**
+   * Checks if a function name is a built-in mathematical function
+   * @param {string} name - Function name
+   * @returns {boolean} True if it's a math function
+   */
+  isMathFunction(name) {
+    const mathFunctions = [
+      "raiz",
+      "potencia",
+      "seno",
+      "coseno",
+      "tangente",
+      "logaritmo",
+      "valorAbsoluto",
+      "redondear",
+      "techo",
+      "piso",
+      "aleatorio",
+      "maximo",
+      "minimo",
+      "suma",
+      "promedio",
+    ];
+    return mathFunctions.includes(name);
+  }
+
+  /**
+   * Evaluates a mathematical function
+   * @param {string} name - Function name
+   * @param {Array} args - Function arguments
+   * @returns {number} Function result
+   */
+  evaluateMathFunction(name, args) {
+    switch (name) {
+      case "raiz":
+        if (args.length !== 1) {
+          throw new Error("raiz() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("raiz() requires a number argument");
+        }
+        if (args[0] < 0) {
+          throw new Error("Cannot take square root of negative number");
+        }
+        return Math.sqrt(args[0]);
+
+      case "potencia":
+        if (args.length !== 2) {
+          throw new Error("potencia() requires exactly 2 arguments");
+        }
+        if (typeof args[0] !== "number" || typeof args[1] !== "number") {
+          throw new Error("potencia() requires number arguments");
+        }
+        return Math.pow(args[0], args[1]);
+
+      case "seno":
+        if (args.length !== 1) {
+          throw new Error("seno() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("seno() requires a number argument");
+        }
+        return Math.sin(args[0]);
+
+      case "coseno":
+        if (args.length !== 1) {
+          throw new Error("coseno() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("coseno() requires a number argument");
+        }
+        return Math.cos(args[0]);
+
+      case "tangente":
+        if (args.length !== 1) {
+          throw new Error("tangente() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("tangente() requires a number argument");
+        }
+        return Math.tan(args[0]);
+
+      case "logaritmo":
+        if (args.length !== 1) {
+          throw new Error("logaritmo() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("logaritmo() requires a number argument");
+        }
+        if (args[0] <= 0) {
+          throw new Error("Cannot take logarithm of non-positive number");
+        }
+        return Math.log(args[0]);
+
+      case "valorAbsoluto":
+        if (args.length !== 1) {
+          throw new Error("valorAbsoluto() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("valorAbsoluto() requires a number argument");
+        }
+        return Math.abs(args[0]);
+
+      case "redondear":
+        if (args.length !== 1) {
+          throw new Error("redondear() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("redondear() requires a number argument");
+        }
+        return Math.round(args[0]);
+
+      case "techo":
+        if (args.length !== 1) {
+          throw new Error("techo() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("techo() requires a number argument");
+        }
+        return Math.ceil(args[0]);
+
+      case "piso":
+        if (args.length !== 1) {
+          throw new Error("piso() requires exactly 1 argument");
+        }
+        if (typeof args[0] !== "number") {
+          throw new Error("piso() requires a number argument");
+        }
+        return Math.floor(args[0]);
+
+      case "aleatorio":
+        if (args.length === 0) {
+          return Math.random();
+        } else if (args.length === 1) {
+          if (typeof args[0] !== "number") {
+            throw new Error("aleatorio() requires a number argument");
+          }
+          return Math.random() * args[0];
+        } else if (args.length === 2) {
+          if (typeof args[0] !== "number" || typeof args[1] !== "number") {
+            throw new Error("aleatorio() requires number arguments");
+          }
+          return Math.random() * (args[1] - args[0]) + args[0];
+        } else {
+          throw new Error("aleatorio() accepts 0, 1, or 2 arguments");
+        }
+
+      case "maximo":
+        if (args.length < 1) {
+          throw new Error("maximo() requires at least 1 argument");
+        }
+        for (const arg of args) {
+          if (typeof arg !== "number") {
+            throw new Error("maximo() requires number arguments");
+          }
+        }
+        return Math.max(...args);
+
+      case "minimo":
+        if (args.length < 1) {
+          throw new Error("minimo() requires at least 1 argument");
+        }
+        for (const arg of args) {
+          if (typeof arg !== "number") {
+            throw new Error("minimo() requires number arguments");
+          }
+        }
+        return Math.min(...args);
+
+      case "suma":
+        if (args.length < 1) {
+          throw new Error("suma() requires at least 1 argument");
+        }
+        for (const arg of args) {
+          if (typeof arg !== "number") {
+            throw new Error("suma() requires number arguments");
+          }
+        }
+        return args.reduce((sum, arg) => sum + arg, 0);
+
+      case "promedio":
+        if (args.length < 1) {
+          throw new Error("promedio() requires at least 1 argument");
+        }
+        for (const arg of args) {
+          if (typeof arg !== "number") {
+            throw new Error("promedio() requires number arguments");
+          }
+        }
+        return args.reduce((sum, arg) => sum + arg, 0) / args.length;
+
+      default:
+        throw new Error(`Unknown mathematical function: ${name}`);
     }
   }
 

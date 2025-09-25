@@ -48,16 +48,7 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable numeros = [1, 2, 3, 4, 5]
-mostrar numeros.longitud    // 5
-mostrar numeros.primero    // 1
-mostrar numeros.ultimo     // 5
-
-variable frutas = ["manzana", "banana", "naranja"]
-si frutas.longitud > 0 {
-    mostrar frutas.primero  // "manzana"
-    mostrar frutas.ultimo  // "naranja"
-}
+mostrar raiz(16)
 `;
 
 console.log("Code to execute:");

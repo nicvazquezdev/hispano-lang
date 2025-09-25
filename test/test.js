@@ -1483,6 +1483,261 @@ function runTests() {
     );
   });
 
+  // Mathematical functions tests
+  test("Basic mathematical functions", () => {
+    const code = `
+      // Basic math functions
+      mostrar "Raíz cuadrada de 16:"
+      mostrar raiz(16)
+      
+      mostrar "2 elevado a la 3:"
+      mostrar potencia(2, 3)
+      
+      mostrar "Seno de 0:"
+      mostrar seno(0)
+      
+      mostrar "Coseno de 0:"
+      mostrar coseno(0)
+      
+      mostrar "Valor absoluto de -5:"
+      mostrar valorAbsoluto(-5)
+    `;
+
+    const output = run(code);
+    const expectedOutput = [
+      "Raíz cuadrada de 16:",
+      "4",
+      "2 elevado a la 3:",
+      "8",
+      "Seno de 0:",
+      "0",
+      "Coseno de 0:",
+      "1",
+      "Valor absoluto de -5:",
+      "5",
+    ];
+    assertEquals(
+      output,
+      expectedOutput,
+      "Basic mathematical functions should work correctly",
+    );
+  });
+
+  test("Rounding and floor/ceiling functions", () => {
+    const code = `
+      variable numero = 3.7
+      
+      mostrar "Número original:"
+      mostrar numero
+      
+      mostrar "Redondeado:"
+      mostrar redondear(numero)
+      
+      mostrar "Techo:"
+      mostrar techo(numero)
+      
+      mostrar "Piso:"
+      mostrar piso(numero)
+    `;
+
+    const output = run(code);
+    const expectedOutput = [
+      "Número original:",
+      "3.7",
+      "Redondeado:",
+      "4",
+      "Techo:",
+      "4",
+      "Piso:",
+      "3",
+    ];
+    assertEquals(
+      output,
+      expectedOutput,
+      "Rounding and floor/ceiling functions should work correctly",
+    );
+  });
+
+  test("Statistical functions", () => {
+    const code = `
+      // Statistical functions
+      mostrar "Máximo de 5, 10, 3:"
+      mostrar maximo(5, 10, 3)
+      
+      mostrar "Mínimo de 5, 10, 3:"
+      mostrar minimo(5, 10, 3)
+      
+      mostrar "Suma de 1, 2, 3, 4:"
+      mostrar suma(1, 2, 3, 4)
+      
+      mostrar "Promedio de 10, 20, 30:"
+      mostrar promedio(10, 20, 30)
+    `;
+
+    const output = run(code);
+    const expectedOutput = [
+      "Máximo de 5, 10, 3:",
+      "10",
+      "Mínimo de 5, 10, 3:",
+      "3",
+      "Suma de 1, 2, 3, 4:",
+      "10",
+      "Promedio de 10, 20, 30:",
+      "20",
+    ];
+    assertEquals(
+      output,
+      expectedOutput,
+      "Statistical functions should work correctly",
+    );
+  });
+
+  test("Trigonometric functions", () => {
+    const code = `
+      variable angulo = 1.5708  // π/2 radians
+      
+      mostrar "Ángulo:"
+      mostrar angulo
+      
+      mostrar "Seno:"
+      mostrar seno(angulo)
+      
+      mostrar "Coseno:"
+      mostrar coseno(angulo)
+      
+      mostrar "Tangente:"
+      mostrar tangente(angulo)
+    `;
+
+    const output = run(code);
+    // Check that we get the right number of outputs and approximate values
+    assertEquals(output.length, 8, "Should have 8 outputs");
+    assertEquals(output[0], "Ángulo:", "Should show angle label");
+    assertEquals(output[1], "1.5708", "Should show angle value");
+    assertEquals(output[2], "Seno:", "Should show sine label");
+
+    // Check that sine is approximately 1
+    const sineValue = parseFloat(output[3]);
+    if (Math.abs(sineValue - 1) > 0.001) {
+      throw new Error(`Sine should be approximately 1, got ${sineValue}`);
+    }
+
+    assertEquals(output[4], "Coseno:", "Should show cosine label");
+
+    // Check that cosine is approximately 0
+    const cosineValue = parseFloat(output[5]);
+    if (Math.abs(cosineValue) > 0.001) {
+      throw new Error(`Cosine should be approximately 0, got ${cosineValue}`);
+    }
+
+    assertEquals(output[6], "Tangente:", "Should show tangent label");
+
+    // Tangent should be a very large number
+    const tangentValue = parseFloat(output[7]);
+    if (Math.abs(tangentValue) < 1000) {
+      throw new Error(`Tangent should be very large, got ${tangentValue}`);
+    }
+  });
+
+  test("Logarithmic functions", () => {
+    const code = `
+      variable numero = 2.71828  // e
+      
+      mostrar "Número:"
+      mostrar numero
+      
+      mostrar "Logaritmo natural:"
+      mostrar logaritmo(numero)
+    `;
+
+    const output = run(code);
+    assertEquals(output.length, 4, "Should have 4 outputs");
+    assertEquals(output[0], "Número:", "Should show number label");
+    assertEquals(output[1], "2.71828", "Should show number value");
+    assertEquals(
+      output[2],
+      "Logaritmo natural:",
+      "Should show logarithm label",
+    );
+
+    // Check that logarithm is approximately 1
+    const logValue = parseFloat(output[3]);
+    if (Math.abs(logValue - 1) > 0.001) {
+      throw new Error(`Logarithm should be approximately 1, got ${logValue}`);
+    }
+  });
+
+  test("Random number generation", () => {
+    const code = `
+      // Test random number generation
+      mostrar "Número aleatorio entre 0 y 1:"
+      variable aleatorio1 = aleatorio()
+      mostrar aleatorio1
+      
+      mostrar "Número aleatorio entre 0 y 10:"
+      variable aleatorio2 = aleatorio(10)
+      mostrar aleatorio2
+      
+      mostrar "Número aleatorio entre 5 y 15:"
+      variable aleatorio3 = aleatorio(5, 15)
+      mostrar aleatorio3
+    `;
+
+    const output = run(code);
+    // We can't predict exact values, so we just check that we get 3 numbers
+    assertEquals(
+      output.length,
+      6, // 3 labels + 3 numbers
+      "Random number generation should work correctly",
+    );
+  });
+
+  test("Mathematical functions with variables", () => {
+    const code = `
+      variable base = 2
+      variable exponente = 8
+      variable resultado = potencia(base, exponente)
+      
+      mostrar "2 elevado a la 8:"
+      mostrar resultado
+      
+      variable raizResultado = raiz(resultado)
+      mostrar "Raíz cuadrada del resultado:"
+      mostrar raizResultado
+    `;
+
+    const output = run(code);
+    const expectedOutput = [
+      "2 elevado a la 8:",
+      "256",
+      "Raíz cuadrada del resultado:",
+      "16",
+    ];
+    assertEquals(
+      output,
+      expectedOutput,
+      "Mathematical functions with variables should work correctly",
+    );
+  });
+
+  test("Error handling for mathematical functions", () => {
+    const code = `
+      // This should cause an error
+      mostrar raiz(-4)
+    `;
+
+    const result = interpret(code);
+    if (result.success) {
+      throw new Error("Should have thrown an error for negative square root");
+    }
+
+    if (!result.error.includes("Cannot take square root of negative number")) {
+      throw new Error(
+        `Expected specific error message for negative square root, got: ${result.error}`,
+      );
+    }
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);
