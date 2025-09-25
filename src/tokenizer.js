@@ -206,6 +206,7 @@ class Tokenizer {
       mostrar: "MOSTRAR",
       si: "SI",
       sino: "SINO",
+      mientras: "MIENTRAS",
       verdadero: "TRUE",
       falso: "FALSE",
     };

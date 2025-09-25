@@ -40,6 +40,8 @@ class Evaluator {
         return this.executeMostrarStatement(statement);
       case "IfStatement":
         return this.executeIfStatement(statement);
+      case "WhileStatement":
+        return this.executeWhileStatement(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
       case "Block":
@@ -80,6 +82,16 @@ class Evaluator {
       this.executeBlock(statement.thenBranch);
     } else if (statement.elseBranch !== null) {
       this.executeBlock(statement.elseBranch);
+    }
+  }
+
+  /**
+   * Executes a while statement
+   * @param {Object} statement - While statement
+   */
+  executeWhileStatement(statement) {
+    while (this.isTruthy(this.evaluateExpression(statement.condition))) {
+      this.executeBlock(statement.body);
     }
   }
 

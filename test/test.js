@@ -278,8 +278,61 @@ function runTests() {
     );
   });
 
-  // Test 13: Complex example with all features
-  test("Complex example - calculator with conditions", () => {
+  // Test 13: Basic while loop
+  test("Basic while loop", () => {
+    const code = `
+      variable contador = 1
+      mientras contador <= 3 {
+          mostrar contador
+          contador = contador + 1
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "2", "3"],
+      "Basic while loop should work correctly",
+    );
+  });
+
+  // Test 14: While loop with condition
+  test("While loop with condition", () => {
+    const code = `
+      variable i = 5
+      mientras i > 0 {
+          mostrar i
+          i = i - 1
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "4", "3", "2", "1"],
+      "While loop with condition should work",
+    );
+  });
+
+  // Test 15: While loop that never executes
+  test("While loop that never executes", () => {
+    const code = `
+      variable x = 10
+      mientras x < 5 {
+          mostrar "esto no se ejecuta"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [],
+      "While loop with false condition should not execute",
+    );
+  });
+
+  // Test 16: Complex example with all features
+  test("Complex example - calculator with conditions and loops", () => {
     const code = `
       variable numero1 = 15
       variable numero2 = 3
@@ -299,6 +352,13 @@ function runTests() {
       } sino {
           mostrar "La suma es menor o igual que 20"
       }
+      
+      variable contador = 1
+      mientras contador <= 2 {
+          mostrar "Iteración"
+          mostrar contador
+          contador = contador + 1
+      }
     `;
 
     const output = run(code);
@@ -309,11 +369,15 @@ function runTests() {
       "45",
       "5",
       "La suma es menor o igual que 20",
+      "Iteración",
+      "1",
+      "Iteración",
+      "2",
     ];
     assertEquals(
       output,
       expectedOutput,
-      "Complex calculator should work correctly",
+      "Complex calculator with loops should work correctly",
     );
   });
 

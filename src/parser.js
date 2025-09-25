@@ -41,6 +41,10 @@ class Parser {
         return this.ifStatement();
       }
 
+      if (this.match("MIENTRAS")) {
+        return this.whileStatement();
+      }
+
       return this.expressionStatement();
     } catch (error) {
       this.synchronize();
@@ -102,6 +106,23 @@ class Parser {
       condition,
       thenBranch,
       elseBranch,
+    };
+  }
+
+  /**
+   * Parses a while statement
+   * @returns {Object} While statement
+   */
+  whileStatement() {
+    const condition = this.expression();
+    this.consume("LEFT_BRACE", "Expected { after condition");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after block");
+
+    return {
+      type: "WhileStatement",
+      condition,
+      body,
     };
   }
 
@@ -374,6 +395,7 @@ class Parser {
         case "VARIABLE":
         case "MOSTRAR":
         case "SI":
+        case "MIENTRAS":
           return;
       }
 
