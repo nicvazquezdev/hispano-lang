@@ -20,8 +20,6 @@ HispanoLang propone una sintaxis sencilla en español, enfocada en aprender conc
 
 ```
 
----
-
 ## Instalación y uso
 
 1. Clona este repositorio:
