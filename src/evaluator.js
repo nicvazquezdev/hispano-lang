@@ -508,8 +508,10 @@ class Evaluator {
       );
     } else if (typeof object === "string") {
       // Check if the method is valid for strings
-      if (expression.method === "agregar") {
-        throw new Error("Method agregar() can only be called on arrays");
+      if (expression.method === "agregar" || expression.method === "remover") {
+        throw new Error(
+          `Method ${expression.method}() can only be called on arrays`,
+        );
       }
       return this.evaluateStringMethod(object, expression.method);
     } else {
@@ -550,6 +552,13 @@ class Evaluator {
           array.push(value);
         }
         return array.length; // Return the new length
+
+      case "remover":
+        // Remove and return the last element
+        if (array.length === 0) {
+          throw new Error("Cannot remove element from empty array");
+        }
+        return array.pop(); // Return the removed element
 
       default:
         throw new Error(`Unknown array method: ${method}`);

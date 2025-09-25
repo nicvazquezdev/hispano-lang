@@ -48,31 +48,31 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable numeros = [1, 2, 3]
+variable numeros = [1, 2, 3, 4, 5]
 
-// Agregar un número
-numeros.agregar(4)
+// Remover el último elemento
+numeros.remover()
 mostrar numeros
 mostrar numeros.longitud()
 
-// Agregar un string
-numeros.agregar("hola")
+// Remover varias veces seguidas
+numeros.remover()
+numeros.remover()
 mostrar numeros
 mostrar numeros.longitud()
 
-// Agregar un booleano
-numeros.agregar(verdadero)
+// Remover hasta dejar el array vacío
+numeros.remover()
+numeros.remover()
 mostrar numeros
 mostrar numeros.longitud()
 
-// Agregar otro array
-numeros.agregar([5, 6])
-mostrar numeros
-mostrar numeros.longitud()
-
-// Agregar un objeto
-numeros.agregar({clave: "valor"})
-mostrar numeros
+// Mezcla con otros tipos
+variable mezcla = ["hola", verdadero, 42, {clave: "valor"}]
+mostrar mezcla
+mezcla.remover()
+mostrar mezcla
+mostrar mezcla.longitud()
 
 `;
 

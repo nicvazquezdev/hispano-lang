@@ -2430,6 +2430,233 @@ function runTests() {
     );
   });
 
+  // Test 125: Basic array remove method
+  test("Basic array remove method", () => {
+    const code = `
+      variable arr = [1, 2, 3, 4]
+      variable elementoRemovido = arr.remover()
+      mostrar elementoRemovido
+      mostrar arr.longitud
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["4", "3", "[1, 2, 3]"],
+      "Basic array remove method should work",
+    );
+  });
+
+  // Test 126: Array remove with different types
+  test("Array remove with different types", () => {
+    const code = `
+      variable arr = ["hola", 42, verdadero, 3.14]
+      variable elemento1 = arr.remover()
+      variable elemento2 = arr.remover()
+      mostrar elemento1
+      mostrar elemento2
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3.14", "true", "[hola, 42]"],
+      "Array remove with different types should work",
+    );
+  });
+
+  // Test 127: Array remove with single element
+  test("Array remove with single element", () => {
+    const code = `
+      variable arr = ["unico"]
+      variable elemento = arr.remover()
+      mostrar elemento
+      mostrar arr.longitud
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["unico", "0", "[]"],
+      "Array remove with single element should work",
+    );
+  });
+
+  // Test 128: Array remove with empty array (error)
+  test("Array remove with empty array should fail", () => {
+    const code = `
+      variable arr = []
+      variable elemento = arr.remover()
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling remover on empty array",
+    );
+    assertTrue(
+      result.error.includes("Cannot remove element from empty array"),
+      "Error should mention empty array",
+    );
+  });
+
+  // Test 129: Array remove chaining
+  test("Array remove chaining", () => {
+    const code = `
+      variable arr = [1, 2, 3, 4, 5]
+      variable elem1 = arr.remover()
+      variable elem2 = arr.remover()
+      variable elem3 = arr.remover()
+      mostrar elem1
+      mostrar elem2
+      mostrar elem3
+      mostrar arr.longitud
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "4", "3", "2", "[1, 2]"],
+      "Array remove chaining should work",
+    );
+  });
+
+  // Test 130: Array remove with variables
+  test("Array remove with variables", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      variable ultimaFruta = frutas.remover()
+      mostrar ultimaFruta
+      mostrar frutas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["naranja", "[manzana, banana]"],
+      "Array remove with variables should work",
+    );
+  });
+
+  // Test 131: Array remove in conditions
+  test("Array remove in conditions", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable elemento = arr.remover()
+      
+      si elemento == 3 {
+        mostrar "Se removió el elemento 3"
+      }
+      
+      si arr.longitud == 2 {
+        mostrar "Array ahora tiene 2 elementos"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Se removió el elemento 3", "Array ahora tiene 2 elementos"],
+      "Array remove in conditions should work",
+    );
+  });
+
+  // Test 132: Array remove with objects
+  test("Array remove with objects", () => {
+    const code = `
+      variable personas = [
+        {nombre: "Juan", edad: 25},
+        {nombre: "María", edad: 30}
+      ]
+      variable ultimaPersona = personas.remover()
+      mostrar ultimaPersona
+      mostrar personas.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[object Object]", "1"],
+      "Array remove with objects should work",
+    );
+  });
+
+  // Test 133: Array remove with arrays
+  test("Array remove with arrays", () => {
+    const code = `
+      variable listas = [[1, 2], [3, 4], [5, 6]]
+      variable ultimaLista = listas.remover()
+      mostrar ultimaLista
+      mostrar listas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[5, 6]", "[[1, 2], [3, 4]]"],
+      "Array remove with arrays should work",
+    );
+  });
+
+  // Test 134: Array remove and add combination
+  test("Array remove and add combination", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable removido = arr.remover()
+      variable nuevaLongitud = arr.agregar(4, 5)
+      mostrar removido
+      mostrar nuevaLongitud
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3", "4", "[1, 2, 4, 5]"],
+      "Array remove and add combination should work",
+    );
+  });
+
+  // Test 135: Error handling for array remove on non-arrays
+  test("Error handling for array remove on non-arrays", () => {
+    const code = `
+      variable texto = "hola"
+      variable resultado = texto.remover()
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when calling remover on non-array",
+    );
+    assertTrue(
+      result.error.includes("Method remover() can only be called on arrays"),
+      "Error should mention method restrictions",
+    );
+  });
+
+  // Test 136: Array remove with expressions
+  test("Array remove with expressions", () => {
+    const code = `
+      variable arr = [10, 20, 30]
+      variable elemento = arr.remover()
+      variable resultado = elemento * 2
+      mostrar resultado
+      mostrar arr
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["60", "[10, 20]"],
+      "Array remove with expressions should work",
+    );
+  });
+
   // Test 81: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `

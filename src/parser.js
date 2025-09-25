@@ -691,6 +691,7 @@ class Parser {
       name.lexeme === "primero" ||
       name.lexeme === "ultimo" ||
       name.lexeme === "agregar" ||
+      name.lexeme === "remover" ||
       name.lexeme === "mayusculas" ||
       name.lexeme === "minusculas"
     ) {
