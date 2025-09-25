@@ -33,6 +33,10 @@ class Parser {
         return this.variableDeclaration();
       }
 
+      if (this.match("FUNCION")) {
+        return this.functionDeclaration();
+      }
+
       if (this.match("MOSTRAR")) {
         return this.mostrarStatement();
       }
@@ -43,6 +47,10 @@ class Parser {
 
       if (this.match("MIENTRAS")) {
         return this.whileStatement();
+      }
+
+      if (this.match("RETORNAR")) {
+        return this.returnStatement();
       }
 
       return this.expressionStatement();
@@ -68,6 +76,39 @@ class Parser {
       type: "VariableDeclaration",
       name: name.lexeme,
       initializer,
+    };
+  }
+
+  /**
+   * Parses a function declaration
+   * @returns {Object} Function declaration
+   */
+  functionDeclaration() {
+    const name = this.consume("IDENTIFIER", "Expected function name");
+    this.consume("LEFT_PAREN", "Expected ( after function name");
+
+    const parameters = [];
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        if (parameters.length >= 255) {
+          throw new Error("Cannot have more than 255 parameters");
+        }
+        parameters.push(
+          this.consume("IDENTIFIER", "Expected parameter name").lexeme,
+        );
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_PAREN", "Expected ) after parameters");
+    this.consume("LEFT_BRACE", "Expected { before function body");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after function body");
+
+    return {
+      type: "FunctionDeclaration",
+      name: name.lexeme,
+      parameters,
+      body,
     };
   }
 
@@ -123,6 +164,24 @@ class Parser {
       type: "WhileStatement",
       condition,
       body,
+    };
+  }
+
+  /**
+   * Parses a return statement
+   * @returns {Object} Return statement
+   */
+  returnStatement() {
+    const keyword = this.previous();
+    let value = null;
+    if (!this.check("RIGHT_BRACE")) {
+      value = this.expression();
+    }
+
+    return {
+      type: "ReturnStatement",
+      keyword,
+      value,
     };
   }
 
@@ -303,13 +362,53 @@ class Parser {
     }
 
     if (this.match("IDENTIFIER")) {
+      const identifier = this.previous();
+      if (this.check("LEFT_PAREN")) {
+        this.advance(); // Consume the LEFT_PAREN
+        return this.finishCall(identifier);
+      }
       return {
         type: "Variable",
-        name: this.previous().lexeme,
+        name: identifier.lexeme,
       };
     }
 
+    if (this.match("LEFT_PAREN")) {
+      const expr = this.expression();
+      this.consume("RIGHT_PAREN", "Expected ) after expression");
+      return expr;
+    }
+
     throw new Error("Expected expression");
+  }
+
+  /**
+   * Finishes parsing a function call
+   * @param {Object} callee - The function being called
+   * @returns {Object} Function call expression
+   */
+  finishCall(callee) {
+    const args = [];
+
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        if (args.length >= 255) {
+          throw new Error("Cannot have more than 255 arguments");
+        }
+        args.push(this.expression());
+      } while (this.match("COMMA"));
+    }
+
+    const paren = this.consume("RIGHT_PAREN", "Expected ) after arguments");
+
+    return {
+      type: "Call",
+      callee: {
+        type: "Variable",
+        name: callee.lexeme,
+      },
+      arguments: args,
+    };
   }
 
   /**
@@ -393,9 +492,11 @@ class Parser {
 
       switch (this.peek().type) {
         case "VARIABLE":
+        case "FUNCION":
         case "MOSTRAR":
         case "SI":
         case "MIENTRAS":
+        case "RETORNAR":
           return;
       }
 

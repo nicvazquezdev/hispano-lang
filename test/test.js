@@ -331,53 +331,105 @@ function runTests() {
     );
   });
 
-  // Test 16: Complex example with all features
-  test("Complex example - calculator with conditions and loops", () => {
+  // Test 16: Basic function declaration
+  test("Basic function declaration", () => {
     const code = `
-      variable numero1 = 15
-      variable numero2 = 3
-      variable suma = numero1 + numero2
-      variable resta = numero1 - numero2
-      variable producto = numero1 * numero2
-      variable cociente = numero1 / numero2
-      
-      mostrar "Calculadora Simple"
-      mostrar suma
-      mostrar resta
+      funcion saludar() {
+          mostrar "Hola mundo"
+      }
+      saludar()
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Hola mundo"],
+      "Basic function should work correctly",
+    );
+  });
+
+  // Test 17: Function with parameters
+  test("Function with parameters", () => {
+    const code = `
+      funcion sumar(a, b) {
+          retornar a + b
+      }
+      variable resultado = sumar(5, 3)
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["8"], "Function with parameters should work");
+  });
+
+  // Test 18: Function with return value
+  test("Function with return value", () => {
+    const code = `
+      funcion multiplicar(x, y) {
+          retornar x * y
+      }
+      variable producto = multiplicar(4, 6)
       mostrar producto
-      mostrar cociente
-      
-      si suma > 20 {
-          mostrar "La suma es mayor que 20"
-      } sino {
-          mostrar "La suma es menor o igual que 20"
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["24"], "Function with return value should work");
+  });
+
+  // Test 19: Function without return
+  test("Function without return", () => {
+    const code = `
+      funcion mostrarMensaje() {
+          mostrar "Función sin retorno"
+      }
+      variable resultado = mostrarMensaje()
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Función sin retorno", "null"],
+      "Function without return should work",
+    );
+  });
+
+  // Test 20: Complex example with all features
+  test("Complex example - calculator with functions", () => {
+    const code = `
+      funcion calcular(a, b) {
+          variable suma = a + b
+          variable producto = a * b
+          mostrar "Suma:"
+          mostrar suma
+          mostrar "Producto:"
+          mostrar producto
+          retornar suma
       }
       
-      variable contador = 1
-      mientras contador <= 2 {
-          mostrar "Iteración"
-          mostrar contador
-          contador = contador + 1
+      variable resultado = calcular(10, 5)
+      mostrar "Resultado final:"
+      mostrar resultado
+      
+      si resultado > 10 {
+          mostrar "El resultado es mayor que 10"
       }
     `;
 
     const output = run(code);
     const expectedOutput = [
-      "Calculadora Simple",
-      "18",
-      "12",
-      "45",
-      "5",
-      "La suma es menor o igual que 20",
-      "Iteración",
-      "1",
-      "Iteración",
-      "2",
+      "Suma:",
+      "15",
+      "Producto:",
+      "50",
+      "Resultado final:",
+      "15",
+      "El resultado es mayor que 10",
     ];
     assertEquals(
       output,
       expectedOutput,
-      "Complex calculator with loops should work correctly",
+      "Complex calculator with functions should work correctly",
     );
   });
 

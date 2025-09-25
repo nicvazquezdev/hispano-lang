@@ -112,6 +112,18 @@ class Tokenizer {
         this.addToken("RIGHT_BRACE");
         break;
 
+      case "(":
+        this.addToken("LEFT_PAREN");
+        break;
+
+      case ")":
+        this.addToken("RIGHT_PAREN");
+        break;
+
+      case ",":
+        this.addToken("COMMA");
+        break;
+
       case '"':
         this.string();
         break;
@@ -207,6 +219,8 @@ class Tokenizer {
       si: "SI",
       sino: "SINO",
       mientras: "MIENTRAS",
+      funcion: "FUNCION",
+      retornar: "RETORNAR",
       verdadero: "TRUE",
       falso: "FALSE",
     };

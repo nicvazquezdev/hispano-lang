@@ -48,15 +48,22 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable x = 12
-
-si x > 11 {
-  mostrar "x es mayor que 11"
-} sino {
-  mostrar "x es menor que 11"
+funcion saludar() {
+    mostrar "Hola mundo"
 }
+saludar()
 
-mostrar 2 + x
+funcion sumar(a, b) {
+    retornar a + b
+}
+variable resultado = sumar(5, 3)
+mostrar resultado
+
+funcion multiplicar(x, y) {
+    retornar x * y
+}
+variable producto = multiplicar(4, 6)
+mostrar producto
 `;
 
 console.log("Code to execute:");

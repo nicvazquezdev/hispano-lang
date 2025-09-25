@@ -36,12 +36,16 @@ class Evaluator {
     switch (statement.type) {
       case "VariableDeclaration":
         return this.executeVariableDeclaration(statement);
+      case "FunctionDeclaration":
+        return this.executeFunctionDeclaration(statement);
       case "MostrarStatement":
         return this.executeMostrarStatement(statement);
       case "IfStatement":
         return this.executeIfStatement(statement);
       case "WhileStatement":
         return this.executeWhileStatement(statement);
+      case "ReturnStatement":
+        return this.executeReturnStatement(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
       case "Block":
@@ -60,6 +64,21 @@ class Evaluator {
     }
 
     this.environment.define(statement.name, value);
+  }
+
+  /**
+   * Executes a function declaration
+   * @param {Object} statement - Function declaration
+   */
+  executeFunctionDeclaration(statement) {
+    const functionObj = {
+      type: "Function",
+      name: statement.name,
+      parameters: statement.parameters,
+      body: statement.body,
+    };
+
+    this.environment.define(statement.name, functionObj);
   }
 
   /**
@@ -93,6 +112,19 @@ class Evaluator {
     while (this.isTruthy(this.evaluateExpression(statement.condition))) {
       this.executeBlock(statement.body);
     }
+  }
+
+  /**
+   * Executes a return statement
+   * @param {Object} statement - Return statement
+   */
+  executeReturnStatement(statement) {
+    let value = null;
+    if (statement.value !== null) {
+      value = this.evaluateExpression(statement.value);
+    }
+
+    throw new ReturnException(value);
   }
 
   /**
@@ -138,6 +170,9 @@ class Evaluator {
         const value = this.evaluateExpression(expression.value);
         this.environment.assign(expression.name, value);
         return value;
+
+      case "Call":
+        return this.evaluateCallExpression(expression);
 
       case "Unary":
         const right = this.evaluateExpression(expression.right);
@@ -280,6 +315,50 @@ class Evaluator {
   }
 
   /**
+   * Evaluates a function call
+   * @param {Object} expression - Call expression
+   * @returns {any} Function result
+   */
+  evaluateCallExpression(expression) {
+    const callee = this.evaluateExpression(expression.callee);
+    const args = [];
+
+    for (const argument of expression.arguments) {
+      args.push(this.evaluateExpression(argument));
+    }
+
+    if (callee.type !== "Function") {
+      throw new Error("Can only call functions");
+    }
+
+    if (args.length !== callee.parameters.length) {
+      throw new Error(
+        `Expected ${callee.parameters.length} arguments but got ${args.length}`,
+      );
+    }
+
+    const environment = new Environment(this.environment);
+
+    for (let i = 0; i < args.length; i++) {
+      environment.define(callee.parameters[i], args[i]);
+    }
+
+    const previous = this.environment;
+    try {
+      this.environment = environment;
+      this.executeBlock(callee.body);
+      return null;
+    } catch (returnValue) {
+      if (returnValue instanceof ReturnException) {
+        return returnValue.value;
+      }
+      throw returnValue;
+    } finally {
+      this.environment = previous;
+    }
+  }
+
+  /**
    * Converts a value to string for display
    * @param {any} value - Value to convert
    * @returns {string} String representation
@@ -343,6 +422,15 @@ class Environment {
     }
 
     throw new Error(`Undefined variable: ${name}`);
+  }
+}
+
+/**
+ * Exception class for return statements
+ */
+class ReturnException {
+  constructor(value) {
+    this.value = value;
   }
 }
 
