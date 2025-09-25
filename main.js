@@ -63,6 +63,39 @@ mostrar persona.edad
 persona.edad--
 mostrar "Después de persona.edad--:"
 mostrar persona.edad
+
+// Operadores de asignación compuesta
+variable numero = 10
+mostrar "Número inicial:"
+mostrar numero
+
+numero += 5
+mostrar "Después de numero += 5:"
+mostrar numero
+
+numero *= 2
+mostrar "Después de numero *= 2:"
+mostrar numero
+
+numero -= 3
+mostrar "Después de numero -= 3:"
+mostrar numero
+
+numero /= 4
+mostrar "Después de numero /= 4:"
+mostrar numero
+
+// Con arrays
+variable numeros = [10, 20, 30]
+numeros[0] += 5
+mostrar "Array después de numeros[0] += 5:"
+mostrar numeros[0]
+
+// Con objetos
+variable cuenta = {saldo: 1000}
+cuenta.saldo += 500
+mostrar "Saldo después de cuenta.saldo += 500:"
+mostrar cuenta.saldo
 `;
 
 console.log("Code to execute:");

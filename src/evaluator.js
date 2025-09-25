@@ -215,6 +215,15 @@ class Evaluator {
       case "PropertyAssign":
         return this.evaluatePropertyAssign(expression);
 
+      case "CompoundAssign":
+        return this.evaluateCompoundAssign(expression);
+
+      case "CompoundArrayAssign":
+        return this.evaluateCompoundArrayAssign(expression);
+
+      case "CompoundPropertyAssign":
+        return this.evaluateCompoundPropertyAssign(expression);
+
       case "Logical":
         return this.evaluateLogicalExpression(expression);
 
@@ -545,6 +554,123 @@ class Evaluator {
     }
 
     throw new Error(`Unknown logical operator: ${expression.operator}`);
+  }
+
+  /**
+   * Evaluates compound assignment
+   * @param {Object} expression - Compound assignment expression
+   * @returns {any} Assignment result
+   */
+  evaluateCompoundAssign(expression) {
+    const currentValue = this.environment.get(expression.name);
+    const rightValue = this.evaluateExpression(expression.value);
+    const newValue = this.performCompoundOperation(
+      currentValue,
+      expression.operator,
+      rightValue,
+    );
+
+    this.environment.assign(expression.name, newValue);
+    return newValue;
+  }
+
+  /**
+   * Evaluates compound array assignment
+   * @param {Object} expression - Compound array assignment expression
+   * @returns {any} Assignment result
+   */
+  evaluateCompoundArrayAssign(expression) {
+    const array = this.evaluateExpression(expression.array);
+    const index = this.evaluateExpression(expression.index);
+    const rightValue = this.evaluateExpression(expression.value);
+
+    if (!Array.isArray(array)) {
+      throw new Error("Can only assign to elements of arrays");
+    }
+    if (typeof index !== "number") {
+      throw new Error("Array index must be a number");
+    }
+    if (index < 0 || index >= array.length) {
+      throw new Error("Array index out of bounds");
+    }
+
+    const currentValue = array[index];
+    const newValue = this.performCompoundOperation(
+      currentValue,
+      expression.operator,
+      rightValue,
+    );
+
+    array[index] = newValue;
+    return newValue;
+  }
+
+  /**
+   * Evaluates compound property assignment
+   * @param {Object} expression - Compound property assignment expression
+   * @returns {any} Assignment result
+   */
+  evaluateCompoundPropertyAssign(expression) {
+    const object = this.evaluateExpression(expression.object);
+    const rightValue = this.evaluateExpression(expression.value);
+
+    if (typeof object !== "object" || object === null) {
+      throw new Error("Can only assign to properties of objects");
+    }
+
+    const currentValue = object[expression.name];
+    const newValue = this.performCompoundOperation(
+      currentValue,
+      expression.operator,
+      rightValue,
+    );
+
+    object[expression.name] = newValue;
+    return newValue;
+  }
+
+  /**
+   * Performs compound operation
+   * @param {any} left - Left operand
+   * @param {string} operator - Compound operator
+   * @param {any} right - Right operand
+   * @returns {any} Operation result
+   */
+  performCompoundOperation(left, operator, right) {
+    switch (operator) {
+      case "PLUS_EQUAL":
+        if (typeof left === "number" && typeof right === "number") {
+          return left + right;
+        }
+        if (typeof left === "string" || typeof right === "string") {
+          return String(left) + String(right);
+        }
+        throw new Error("Cannot add non-numeric values");
+
+      case "MINUS_EQUAL":
+        if (typeof left !== "number" || typeof right !== "number") {
+          throw new Error("Can only subtract numbers");
+        }
+        return left - right;
+
+      case "STAR_EQUAL":
+        if (typeof left !== "number" || typeof right !== "number") {
+          throw new Error("Can only multiply numbers");
+        }
+        return left * right;
+
+      case "SLASH_EQUAL":
+        if (typeof left !== "number" || typeof right !== "number") {
+          throw new Error("Can only divide numbers");
+        }
+        if (right === 0) {
+          throw new Error("Division by zero");
+        }
+        return left / right;
+
+      default:
+        throw new Error(`Unknown compound operator: ${operator}`);
+    }
   }
 
   /**

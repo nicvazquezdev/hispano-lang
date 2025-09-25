@@ -340,6 +340,44 @@ class Parser {
       throw new Error("Invalid assignment target");
     }
 
+    // Handle compound assignment operators
+    if (this.match("PLUS_EQUAL", "MINUS_EQUAL", "STAR_EQUAL", "SLASH_EQUAL")) {
+      const operator = this.previous();
+      const value = this.logicalOr();
+
+      if (expr.type === "Variable") {
+        const name = expr.name;
+        return {
+          type: "CompoundAssign",
+          name,
+          operator: operator.type,
+          value,
+        };
+      }
+
+      if (expr.type === "ArrayAccess") {
+        return {
+          type: "CompoundArrayAssign",
+          array: expr.array,
+          index: expr.index,
+          operator: operator.type,
+          value,
+        };
+      }
+
+      if (expr.type === "PropertyAccess") {
+        return {
+          type: "CompoundPropertyAssign",
+          object: expr.object,
+          name: expr.name,
+          operator: operator.type,
+          value,
+        };
+      }
+
+      throw new Error("Invalid compound assignment target");
+    }
+
     return expr;
   }
 

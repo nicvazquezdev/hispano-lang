@@ -73,11 +73,21 @@ class Tokenizer {
         break;
 
       case "*":
-        this.addToken("STAR");
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("STAR_EQUAL");
+        } else {
+          this.addToken("STAR");
+        }
         break;
 
       case "/":
-        this.addToken("SLASH");
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("SLASH_EQUAL");
+        } else {
+          this.addToken("SLASH");
+        }
         break;
 
       case ">":
@@ -111,6 +121,9 @@ class Tokenizer {
         if (this.peek() === "+") {
           this.advance();
           this.addToken("PLUS_PLUS");
+        } else if (this.peek() === "=") {
+          this.advance();
+          this.addToken("PLUS_EQUAL");
         } else {
           this.addToken("PLUS");
         }
@@ -120,6 +133,9 @@ class Tokenizer {
         if (this.peek() === "-") {
           this.advance();
           this.addToken("MINUS_MINUS");
+        } else if (this.peek() === "=") {
+          this.advance();
+          this.addToken("MINUS_EQUAL");
         } else {
           this.addToken("MINUS");
         }

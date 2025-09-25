@@ -970,7 +970,102 @@ function runTests() {
     assertEquals(output, ["3", "8"], "Multiple increments should work");
   });
 
-  // Test 52: Complex example with all features including logical operators
+  // Test 52: Basic compound assignment
+  test("Basic compound assignment", () => {
+    const code = `
+      variable x = 10
+      x += 5
+      mostrar x
+      x *= 2
+      mostrar x
+      x -= 3
+      mostrar x
+      x /= 4
+      mostrar x
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15", "30", "27", "6.75"],
+      "Basic compound assignment should work",
+    );
+  });
+
+  // Test 53: Compound assignment with arrays
+  test("Compound assignment with arrays", () => {
+    const code = `
+      variable numeros = [10, 20, 30]
+      numeros[0] += 5
+      numeros[1] *= 2
+      numeros[2] -= 10
+      mostrar numeros[0]
+      mostrar numeros[1]
+      mostrar numeros[2]
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15", "40", "20"],
+      "Compound assignment with arrays should work",
+    );
+  });
+
+  // Test 54: Compound assignment with objects
+  test("Compound assignment with objects", () => {
+    const code = `
+      variable cuenta = {saldo: 1000, puntos: 50}
+      cuenta.saldo += 500
+      cuenta.puntos *= 2
+      mostrar cuenta.saldo
+      mostrar cuenta.puntos
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1500", "100"],
+      "Compound assignment with objects should work",
+    );
+  });
+
+  // Test 55: String concatenation with +=
+  test("String concatenation with +=", () => {
+    const code = `
+      variable mensaje = "Hola"
+      mensaje += " mundo"
+      mostrar mensaje
+      
+      variable numero = 5
+      numero += " años"
+      mostrar numero
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Hola mundo", "5 años"],
+      "String concatenation with += should work",
+    );
+  });
+
+  // Test 56: Error handling for compound assignment
+  test("Error handling for compound assignment", () => {
+    const code = `
+      variable x = "texto"
+      x -= 5
+    `;
+
+    const result = interpret(code);
+    assertEquals(
+      result.success,
+      false,
+      "Should fail when trying to subtract from string",
+    );
+  });
+
+  // Test 57: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas
