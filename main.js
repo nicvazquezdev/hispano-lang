@@ -48,16 +48,15 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-variable i = 0
-mientras i < 10 {
-  i = i + 1
-  si i > 5 {
-    mostrar "i es mayor que 5"
-    romper
-  }
-  mostrar "----------"
-  mostrar i
-  mostrar "i es menor que 5"
+variable numeros = [1, 2, 3, 4, 5]
+mostrar numeros.longitud    // 5
+mostrar numeros.primero    // 1
+mostrar numeros.ultimo     // 5
+
+variable frutas = ["manzana", "banana", "naranja"]
+si frutas.longitud > 0 {
+    mostrar frutas.primero  // "manzana"
+    mostrar frutas.ultimo  // "naranja"
 }
 `;
 

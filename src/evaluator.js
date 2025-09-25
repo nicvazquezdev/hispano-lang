@@ -277,6 +277,9 @@ class Evaluator {
       case "Call":
         return this.evaluateCallExpression(expression);
 
+      case "ArrayMethod":
+        return this.evaluateArrayMethod(expression);
+
       case "Unary":
         const right = this.evaluateExpression(expression.right);
         return this.evaluateUnaryExpression(expression.operator, right);
@@ -471,6 +474,39 @@ class Evaluator {
       throw returnValue;
     } finally {
       this.environment = previous;
+    }
+  }
+
+  /**
+   * Evaluates an array method call
+   * @param {Object} expression - Array method expression
+   * @returns {any} Method result
+   */
+  evaluateArrayMethod(expression) {
+    const array = this.evaluateExpression(expression.object);
+
+    if (!Array.isArray(array)) {
+      throw new Error("Can only call array methods on arrays");
+    }
+
+    switch (expression.method) {
+      case "longitud":
+        return array.length;
+
+      case "primero":
+        if (array.length === 0) {
+          throw new Error("Cannot get first element of empty array");
+        }
+        return array[0];
+
+      case "ultimo":
+        if (array.length === 0) {
+          throw new Error("Cannot get last element of empty array");
+        }
+        return array[array.length - 1];
+
+      default:
+        throw new Error(`Unknown array method: ${expression.method}`);
     }
   }
 

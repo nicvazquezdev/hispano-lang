@@ -676,6 +676,19 @@ class Parser {
     this.consume("IDENTIFIER", "Expected property name after .");
     const name = this.previous();
 
+    // Check if this is an array method call
+    if (
+      name.lexeme === "longitud" ||
+      name.lexeme === "primero" ||
+      name.lexeme === "ultimo"
+    ) {
+      return {
+        type: "ArrayMethod",
+        object,
+        method: name.lexeme,
+      };
+    }
+
     return {
       type: "PropertyAccess",
       object,

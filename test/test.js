@@ -1292,7 +1292,109 @@ function runTests() {
     );
   });
 
-  // Test 67: Complex example with all features including logical operators
+  // Test 67: Basic array length method
+  test("Basic array length method", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      mostrar numeros.longitud
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["5"], "Basic array length method should work");
+  });
+
+  // Test 68: Basic array first method
+  test("Basic array first method", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      mostrar frutas.primero
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["manzana"], "Basic array first method should work");
+  });
+
+  // Test 69: Basic array last method
+  test("Basic array last method", () => {
+    const code = `
+      variable colores = ["rojo", "verde", "azul"]
+      mostrar colores.ultimo
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["azul"], "Basic array last method should work");
+  });
+
+  // Test 70: Array methods with expressions
+  test("Array methods with expressions", () => {
+    const code = `
+      variable numeros = [10, 20, 30, 40, 50]
+      variable longitud = numeros.longitud
+      variable primero = numeros.primero
+      variable ultimo = numeros.ultimo
+      
+      mostrar longitud
+      mostrar primero
+      mostrar ultimo
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "10", "50"],
+      "Array methods with expressions should work",
+    );
+  });
+
+  // Test 71: Array methods in conditions
+  test("Array methods in conditions", () => {
+    const code = `
+      variable lista = [1, 2, 3]
+      
+      si lista.longitud > 0 {
+          mostrar "La lista tiene elementos"
+      }
+      
+      si lista.primero == 1 {
+          mostrar "El primer elemento es 1"
+      }
+      
+      si lista.ultimo == 3 {
+          mostrar "El último elemento es 3"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      [
+        "La lista tiene elementos",
+        "El primer elemento es 1",
+        "El último elemento es 3",
+      ],
+      "Array methods in conditions should work",
+    );
+  });
+
+  // Test 72: Error handling for empty array methods
+  test("Error handling for empty array methods", () => {
+    const code = `
+      variable listaVacia = []
+      mostrar listaVacia.primero
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when getting first element of empty array",
+    );
+    assertTrue(
+      result.error.includes("Cannot get first element of empty array"),
+      "Error should mention empty array",
+    );
+  });
+
+  // Test 73: Complex example with all features including logical operators
   test("Complex example - calculator with functions, arrays, for loops, comments, objects, property assignment and logical operators", () => {
     const code = `
       // Función para calcular operaciones básicas
