@@ -707,8 +707,87 @@ function runTests() {
     );
   });
 
-  // Test 38: Complex example with all features including objects
-  test("Complex example - calculator with functions, arrays, for loops, comments and objects", () => {
+  // Test 38: Basic property assignment
+  test("Basic property assignment", () => {
+    const code = `
+      variable persona = {nombre: "Juan", edad: 25}
+      mostrar persona.nombre
+      persona.edad = 30
+      mostrar persona.edad
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Juan", "30"],
+      "Basic property assignment should work",
+    );
+  });
+
+  // Test 39: Property assignment with different types
+  test("Property assignment with different types", () => {
+    const code = `
+      variable datos = {nombre: "María", activo: falso}
+      mostrar datos.activo
+      datos.activo = verdadero
+      datos.salario = 50000
+      mostrar datos.activo
+      mostrar datos.salario
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "true", "50000"],
+      "Property assignment with different types should work",
+    );
+  });
+
+  // Test 40: Nested property assignment
+  test("Nested property assignment", () => {
+    const code = `
+      variable empresa = {
+          nombre: "TechCorp",
+          direccion: {
+              calle: "Av. Principal 123",
+              ciudad: "Madrid"
+          }
+      }
+      mostrar empresa.direccion.ciudad
+      empresa.direccion.ciudad = "Barcelona"
+      mostrar empresa.direccion.ciudad
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Madrid", "Barcelona"],
+      "Nested property assignment should work",
+    );
+  });
+
+  // Test 41: Property assignment with expressions
+  test("Property assignment with expressions", () => {
+    const code = `
+      variable calculadora = {resultado: 0}
+      variable a = 10
+      variable b = 5
+      calculadora.resultado = a + b
+      mostrar calculadora.resultado
+      calculadora.resultado = calculadora.resultado * 2
+      mostrar calculadora.resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15", "30"],
+      "Property assignment with expressions should work",
+    );
+  });
+
+  // Test 42: Complex example with all features including objects and property assignment
+  test("Complex example - calculator with functions, arrays, for loops, comments, objects and property assignment", () => {
     const code = `
       // Función para calcular operaciones básicas
       funcion calcular(a, b) {
@@ -747,6 +826,14 @@ function runTests() {
       mostrar "Información del cálculo:"
       mostrar info.resultado
       mostrar info.operacion
+      
+      // Modificar el objeto después de crearlo
+      info.operacion = "suma modificada"
+      info.extra = "información adicional"
+      mostrar "Operación modificada:"
+      mostrar info.operacion
+      mostrar "Extra:"
+      mostrar info.extra
     `;
 
     const output = run(code);
@@ -763,6 +850,10 @@ function runTests() {
       "Información del cálculo:",
       "15",
       "suma de array",
+      "Operación modificada:",
+      "suma modificada",
+      "Extra:",
+      "información adicional",
     ];
     assertEquals(
       output,

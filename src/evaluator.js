@@ -212,6 +212,9 @@ class Evaluator {
       case "PropertyAccess":
         return this.evaluatePropertyAccess(expression);
 
+      case "PropertyAssign":
+        return this.evaluatePropertyAssign(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -491,6 +494,23 @@ class Evaluator {
     }
 
     return object[expression.name];
+  }
+
+  /**
+   * Evaluates property assignment
+   * @param {Object} expression - Property assignment expression
+   * @returns {any} Assigned value
+   */
+  evaluatePropertyAssign(expression) {
+    const object = this.evaluateExpression(expression.object);
+    const value = this.evaluateExpression(expression.value);
+
+    if (typeof object !== "object" || object === null) {
+      throw new Error("Can only assign to properties of objects");
+    }
+
+    object[expression.name] = value;
+    return value;
   }
 
   /**

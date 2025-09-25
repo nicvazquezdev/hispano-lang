@@ -315,6 +315,15 @@ class Parser {
         };
       }
 
+      if (expr.type === "PropertyAccess") {
+        return {
+          type: "PropertyAssign",
+          object: expr.object,
+          name: expr.name,
+          value,
+        };
+      }
+
       throw new Error("Invalid assignment target");
     }
 

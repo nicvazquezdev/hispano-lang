@@ -56,8 +56,20 @@ variable persona = {
     activa: verdadero
 }
 
-mostrar "Información de la persona:"
+mostrar "Información inicial:"
+mostrar persona.nombre
 mostrar persona.edad
+
+// Modificar propiedades del objeto
+persona.edad = 30
+persona.profesion = "Senior Developer"
+persona.salario = 75000
+
+mostrar "Información actualizada:"
+mostrar persona.nombre
+mostrar persona.edad
+mostrar persona.profesion
+mostrar persona.salario
 `;
 
 console.log("Code to execute:");
