@@ -53,7 +53,12 @@ class Tokenizer {
         break;
 
       case "=":
-        this.addToken("EQUAL");
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("EQUAL_EQUAL");
+        } else {
+          this.addToken("EQUAL");
+        }
         break;
 
       case "+":
@@ -70,6 +75,41 @@ class Tokenizer {
 
       case "/":
         this.addToken("SLASH");
+        break;
+
+      case ">":
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("GREATER_EQUAL");
+        } else {
+          this.addToken("GREATER");
+        }
+        break;
+
+      case "<":
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("LESS_EQUAL");
+        } else {
+          this.addToken("LESS");
+        }
+        break;
+
+      case "!":
+        if (this.peek() === "=") {
+          this.advance();
+          this.addToken("BANG_EQUAL");
+        } else {
+          this.addToken("BANG");
+        }
+        break;
+
+      case "{":
+        this.addToken("LEFT_BRACE");
+        break;
+
+      case "}":
+        this.addToken("RIGHT_BRACE");
         break;
 
       case '"':
@@ -164,6 +204,10 @@ class Tokenizer {
     const keywords = {
       variable: "VARIABLE",
       mostrar: "MOSTRAR",
+      si: "SI",
+      sino: "SINO",
+      verdadero: "TRUE",
+      falso: "FALSE",
     };
 
     return keywords[text] || "IDENTIFIER";

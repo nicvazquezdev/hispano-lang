@@ -37,6 +37,10 @@ class Parser {
         return this.mostrarStatement();
       }
 
+      if (this.match("SI")) {
+        return this.ifStatement();
+      }
+
       return this.expressionStatement();
     } catch (error) {
       this.synchronize();
@@ -77,6 +81,45 @@ class Parser {
   }
 
   /**
+   * Parses an if statement
+   * @returns {Object} If statement
+   */
+  ifStatement() {
+    const condition = this.expression();
+    this.consume("LEFT_BRACE", "Expected { after condition");
+    const thenBranch = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after block");
+    let elseBranch = null;
+
+    if (this.match("SINO")) {
+      this.consume("LEFT_BRACE", "Expected { after else");
+      elseBranch = this.block();
+      this.consume("RIGHT_BRACE", "Expected } after else block");
+    }
+
+    return {
+      type: "IfStatement",
+      condition,
+      thenBranch,
+      elseBranch,
+    };
+  }
+
+  /**
+   * Parses a code block
+   * @returns {Array} List of statements in the block
+   */
+  block() {
+    const statements = [];
+
+    while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
+      statements.push(this.declaration());
+    }
+
+    return statements;
+  }
+
+  /**
    * Parses an expression statement
    * @returns {Object} Expression statement
    */
@@ -101,7 +144,7 @@ class Parser {
    * @returns {Object} Parsed assignment
    */
   assignment() {
-    const expr = this.primary();
+    const expr = this.equality();
 
     if (this.match("EQUAL")) {
       const equals = this.previous();
@@ -123,10 +166,114 @@ class Parser {
   }
 
   /**
+   * Parses an equality expression
+   * @returns {Object} Equality expression
+   */
+  equality() {
+    let expr = this.comparison();
+
+    while (this.match("EQUAL_EQUAL", "BANG_EQUAL")) {
+      const operator = this.previous();
+      const right = this.comparison();
+      expr = {
+        type: "Binary",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a comparison expression
+   * @returns {Object} Comparison expression
+   */
+  comparison() {
+    let expr = this.term();
+
+    while (this.match("GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL")) {
+      const operator = this.previous();
+      const right = this.term();
+      expr = {
+        type: "Binary",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a term expression
+   * @returns {Object} Term expression
+   */
+  term() {
+    let expr = this.factor();
+
+    while (this.match("MINUS", "PLUS")) {
+      const operator = this.previous();
+      const right = this.factor();
+      expr = {
+        type: "Binary",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a factor expression
+   * @returns {Object} Factor expression
+   */
+  factor() {
+    let expr = this.unary();
+
+    while (this.match("SLASH", "STAR")) {
+      const operator = this.previous();
+      const right = this.unary();
+      expr = {
+        type: "Binary",
+        left: expr,
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return expr;
+  }
+
+  /**
+   * Parses a unary expression
+   * @returns {Object} Unary expression
+   */
+  unary() {
+    if (this.match("BANG", "MINUS")) {
+      const operator = this.previous();
+      const right = this.unary();
+      return {
+        type: "Unary",
+        operator: operator.type,
+        right,
+      };
+    }
+
+    return this.primary();
+  }
+
+  /**
    * Parses a primary expression
    * @returns {Object} Primary expression
    */
   primary() {
+    if (this.match("FALSE")) return { type: "Literal", value: false };
+    if (this.match("TRUE")) return { type: "Literal", value: true };
     if (this.match("NUMBER", "STRING")) {
       return {
         type: "Literal",
@@ -226,6 +373,7 @@ class Parser {
       switch (this.peek().type) {
         case "VARIABLE":
         case "MOSTRAR":
+        case "SI":
           return;
       }
 

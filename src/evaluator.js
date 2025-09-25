@@ -38,8 +38,12 @@ class Evaluator {
         return this.executeVariableDeclaration(statement);
       case "MostrarStatement":
         return this.executeMostrarStatement(statement);
+      case "IfStatement":
+        return this.executeIfStatement(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
+      case "Block":
+        return this.executeBlock(statement);
     }
   }
 
@@ -68,6 +72,36 @@ class Evaluator {
   }
 
   /**
+   * Executes an if statement
+   * @param {Object} statement - If statement
+   */
+  executeIfStatement(statement) {
+    if (this.isTruthy(this.evaluateExpression(statement.condition))) {
+      this.executeBlock(statement.thenBranch);
+    } else if (statement.elseBranch !== null) {
+      this.executeBlock(statement.elseBranch);
+    }
+  }
+
+  /**
+   * Executes a block of statements
+   * @param {Array} statements - List of statements in the block
+   */
+  executeBlock(statements) {
+    const previous = this.environment;
+
+    try {
+      this.environment = new Environment(previous);
+
+      for (const statement of statements) {
+        this.execute(statement);
+      }
+    } finally {
+      this.environment = previous;
+    }
+  }
+
+  /**
    * Executes an expression statement
    * @param {Object} statement - Expression statement
    */
@@ -93,9 +127,144 @@ class Evaluator {
         this.environment.assign(expression.name, value);
         return value;
 
+      case "Unary":
+        const right = this.evaluateExpression(expression.right);
+        return this.evaluateUnaryExpression(expression.operator, right);
+
+      case "Binary":
+        const left = this.evaluateExpression(expression.left);
+        const rightOperand = this.evaluateExpression(expression.right);
+        return this.evaluateBinaryExpression(
+          left,
+          expression.operator,
+          rightOperand,
+        );
+
       default:
         throw new Error(`Unrecognized expression type: ${expression.type}`);
     }
+  }
+
+  /**
+   * Evaluates a unary expression
+   * @param {string} operator - Unary operator
+   * @param {any} right - Right operand
+   * @returns {any} Expression result
+   */
+  evaluateUnaryExpression(operator, right) {
+    switch (operator) {
+      case "MINUS":
+        this.checkNumberOperand(operator, right);
+        return -right;
+
+      case "BANG":
+        return !this.isTruthy(right);
+
+      default:
+        throw new Error(`Unrecognized unary operator: ${operator}`);
+    }
+  }
+
+  /**
+   * Evaluates a binary expression
+   * @param {any} left - Left operand
+   * @param {string} operator - Binary operator
+   * @param {any} right - Right operand
+   * @returns {any} Expression result
+   */
+  evaluateBinaryExpression(left, operator, right) {
+    switch (operator) {
+      case "MINUS":
+        this.checkNumberOperands(operator, left, right);
+        return left - right;
+
+      case "PLUS":
+        if (typeof left === "number" && typeof right === "number") {
+          return left + right;
+        }
+        // Convert numbers to strings for concatenation
+        const leftStr = this.stringify(left);
+        const rightStr = this.stringify(right);
+        return leftStr + rightStr;
+
+      case "SLASH":
+        this.checkNumberOperands(operator, left, right);
+        if (right === 0) {
+          throw new Error("Division by zero");
+        }
+        return left / right;
+
+      case "STAR":
+        this.checkNumberOperands(operator, left, right);
+        return left * right;
+
+      case "GREATER":
+        this.checkNumberOperands(operator, left, right);
+        return left > right;
+
+      case "GREATER_EQUAL":
+        this.checkNumberOperands(operator, left, right);
+        return left >= right;
+
+      case "LESS":
+        this.checkNumberOperands(operator, left, right);
+        return left < right;
+
+      case "LESS_EQUAL":
+        this.checkNumberOperands(operator, left, right);
+        return left <= right;
+
+      case "EQUAL_EQUAL":
+        return this.isEqual(left, right);
+
+      case "BANG_EQUAL":
+        return !this.isEqual(left, right);
+
+      default:
+        throw new Error(`Unrecognized binary operator: ${operator}`);
+    }
+  }
+
+  /**
+   * Checks if a value is truthy
+   * @param {any} value - Value to check
+   * @returns {boolean} True if it is truthy
+   */
+  isTruthy(value) {
+    if (value === null) return false;
+    if (typeof value === "boolean") return value;
+    return true;
+  }
+
+  /**
+   * Checks if two values are equal
+   * @param {any} left - Left value
+   * @param {any} right - Right value
+   * @returns {boolean} True if they are equal
+   */
+  isEqual(left, right) {
+    return left === right;
+  }
+
+  /**
+   * Checks that an operand is a number
+   * @param {string} operator - Operator
+   * @param {any} operand - Operand
+   */
+  checkNumberOperand(operator, operand) {
+    if (typeof operand === "number") return;
+    throw new Error(`Operator ${operator} requires a number`);
+  }
+
+  /**
+   * Checks that two operands are numbers
+   * @param {string} operator - Operator
+   * @param {any} left - Left operand
+   * @param {any} right - Right operand
+   */
+  checkNumberOperands(operator, left, right) {
+    if (typeof left === "number" && typeof right === "number") return;
+    throw new Error(`Operator ${operator} requires two numbers`);
   }
 
   /**

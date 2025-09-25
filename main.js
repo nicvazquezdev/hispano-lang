@@ -49,11 +49,13 @@ function clearVariables() {
 console.log("=== Educational Programming Language in Spanish ===\n");
 
 const exampleCode = `
-variable x = 10
-variable saludo = "hola mundo"
-mostrar x
-mostrar saludo
-mostrar "aprendiendo fundamentos"
+variable x = 12
+
+si x > 11 {
+  mostrar "x es mayor que 11"
+} sino {
+  mostrar "x es menor que 11"
+}
 `;
 
 console.log("Code to execute:");
