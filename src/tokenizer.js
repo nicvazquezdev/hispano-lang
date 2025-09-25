@@ -40,6 +40,16 @@ class Tokenizer {
    */
   scanToken() {
     this.startPos = this.current;
+
+    // Check for comments before advancing
+    if (
+      this.source[this.current] === "/" &&
+      this.source[this.current + 1] === "/"
+    ) {
+      this.comment();
+      return;
+    }
+
     const char = this.advance();
 
     switch (char) {
@@ -141,6 +151,14 @@ class Tokenizer {
         this.string();
         break;
 
+      case "/":
+        if (this.peek() === "/") {
+          this.comment();
+        } else {
+          this.addToken("SLASH");
+        }
+        break;
+
       default:
         if (this.isDigit(char)) {
           this.number();
@@ -174,6 +192,22 @@ class Tokenizer {
     // Extract the string value
     const value = this.source.substring(this.startPos + 1, this.current - 1);
     this.addToken("STRING", value);
+  }
+
+  /**
+   * Scans a comment
+   */
+  comment() {
+    // Consume the second '/'
+    this.advance();
+
+    // Skip until end of line
+    while (this.peek() !== "\n" && !this.isAtEnd()) {
+      this.advance();
+    }
+
+    // Don't add comment as a token - just skip it
+    // The comment is now fully consumed
   }
 
   /**

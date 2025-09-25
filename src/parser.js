@@ -293,11 +293,6 @@ class Parser {
   assignment() {
     let expr = this.equality();
 
-    // Handle array access
-    while (this.match("LEFT_BRACKET")) {
-      expr = this.finishArrayAccess(expr);
-    }
-
     if (this.match("EQUAL")) {
       const equals = this.previous();
       const value = this.assignment();
@@ -425,7 +420,25 @@ class Parser {
       };
     }
 
-    return this.primary();
+    return this.call();
+  }
+
+  /**
+   * Parses a call expression (function calls and array access)
+   * @returns {Object} Call expression
+   */
+  call() {
+    let expr = this.primary();
+
+    while (true) {
+      if (this.match("LEFT_BRACKET")) {
+        expr = this.finishArrayAccess(expr);
+      } else {
+        break;
+      }
+    }
+
+    return expr;
   }
 
   /**

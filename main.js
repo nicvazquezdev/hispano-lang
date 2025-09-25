@@ -57,6 +57,7 @@ para (variable i = 0; i < 5; i = i + 1) {
     mostrar numeros[i]
 }
 
+// soy un comentario!
 variable contador = 0
 para (; contador < 3; contador = contador + 1) {
     mostrar "Iteración: " + contador

@@ -555,9 +555,71 @@ function runTests() {
     assertEquals(simpleOutput, ["0", "1", "2"], "Simple for loop should work");
   });
 
-  // Test 29: Complex example with all features
-  test("Complex example - calculator with functions, arrays and for loops", () => {
+  // Test 29: Basic comments
+  test("Basic comments", () => {
     const code = `
+      // Este es un comentario
+      variable x = 10
+      mostrar x
+      // Otro comentario
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["10"], "Basic comments should be ignored");
+  });
+
+  // Test 30: Comments with code
+  test("Comments with code", () => {
+    const code = `
+      variable a = 5
+      // variable b = 10  // Esta línea está comentada
+      variable c = 15
+      mostrar a
+      mostrar c
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "15"],
+      "Comments should not affect code execution",
+    );
+  });
+
+  // Test 31: Comments in loops
+  test("Comments in loops", () => {
+    const code = `
+      // Bucle para mostrar números
+      para (variable i = 1; i <= 3; i = i + 1) {
+          // Mostrar el número actual
+          mostrar i
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["1", "2", "3"], "Comments in loops should work");
+  });
+
+  // Test 32: Comments in functions
+  test("Comments in functions", () => {
+    const code = `
+      funcion saludar(nombre) {
+          // Retornar saludo personalizado
+          retornar "Hola, " + nombre
+      }
+      
+      variable mensaje = saludar("Mundo")
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Hola, Mundo"], "Comments in functions should work");
+  });
+
+  // Test 33: Complex example with all features and comments
+  test("Complex example - calculator with functions, arrays, for loops and comments", () => {
+    const code = `
+      // Función para calcular operaciones básicas
       funcion calcular(a, b) {
           variable suma = a + b
           variable producto = a * b
@@ -576,6 +638,7 @@ function runTests() {
           mostrar "El resultado es mayor que 10"
       }
       
+      // Array de números para sumar
       variable numeros = [1, 2, 3, 4, 5]
       variable suma = 0
       para (variable i = 0; i < 5; i = i + 1) {
@@ -600,7 +663,7 @@ function runTests() {
     assertEquals(
       output,
       expectedOutput,
-      "Complex calculator with functions, arrays and for loops should work correctly",
+      "Complex calculator with functions, arrays, for loops and comments should work correctly",
     );
   });
 
