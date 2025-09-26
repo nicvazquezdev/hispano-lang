@@ -34,29 +34,31 @@ class Evaluator {
    */
   execute(statement) {
     switch (statement.type) {
-      case "VariableDeclaration":
+      case 'VariableDeclaration':
         return this.executeVariableDeclaration(statement);
-      case "FunctionDeclaration":
+      case 'FunctionDeclaration':
         return this.executeFunctionDeclaration(statement);
-      case "MostrarStatement":
+      case 'MostrarStatement':
         return this.executeMostrarStatement(statement);
-      case "IfStatement":
+      case 'LeerStatement':
+        return this.executeLeerStatement(statement);
+      case 'IfStatement':
         return this.executeIfStatement(statement);
-      case "WhileStatement":
+      case 'WhileStatement':
         return this.executeWhileStatement(statement);
-      case "ForStatement":
+      case 'ForStatement':
         return this.executeForStatement(statement);
-      case "ReturnStatement":
+      case 'ReturnStatement':
         return this.executeReturnStatement(statement);
-      case "BreakStatement":
+      case 'BreakStatement':
         return this.executeBreakStatement(statement);
-      case "ContinueStatement":
+      case 'ContinueStatement':
         return this.executeContinueStatement(statement);
-      case "TryCatch":
+      case 'TryCatch':
         return this.executeTryCatch(statement);
-      case "ExpressionStatement":
+      case 'ExpressionStatement':
         return this.executeExpressionStatement(statement);
-      case "Block":
+      case 'Block':
         return this.executeBlock(statement);
     }
   }
@@ -80,7 +82,7 @@ class Evaluator {
    */
   executeFunctionDeclaration(statement) {
     const functionObj = {
-      type: "Function",
+      type: 'Function',
       name: statement.name,
       parameters: statement.parameters,
       body: statement.body,
@@ -98,6 +100,58 @@ class Evaluator {
     const output = this.stringify(value);
     this.output.push(output);
     console.log(output);
+  }
+
+  /**
+   * Executes a read statement
+   * @param {Object} statement - Read statement
+   */
+  executeLeerStatement(statement) {
+    // Show prompt if provided
+    if (statement.prompt) {
+      console.log(statement.prompt);
+    }
+
+    // Try different methods for input
+    let input = '';
+
+    try {
+      // Method 1: Try readline-sync
+      const readlineSync = require('readline-sync');
+      input = readlineSync.question('');
+    } catch (error1) {
+      try {
+        // Method 2: Try fs.readFileSync with stdin
+        const fs = require('fs');
+        input = fs.readFileSync(0, 'utf8').trim();
+      } catch (error2) {
+        try {
+          // Method 3: Try process.stdin
+          const readline = require('readline');
+          const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+          });
+
+          // This is a simplified approach - in a real implementation
+          // you'd need to handle this asynchronously
+          input = '';
+        } catch (error3) {
+          // Fallback: use empty string
+          input = '';
+          console.log('(Entrada no disponible en este entorno)');
+        }
+      }
+    }
+
+    // Try to parse as number first, then as string
+    let value = input;
+    if (!isNaN(input) && input.trim() !== '') {
+      value = parseFloat(input);
+    }
+
+    // Store the value in the environment
+    this.environment.define(statement.variable, value);
   }
 
   /**
@@ -232,75 +286,75 @@ class Evaluator {
    */
   evaluateExpression(expression) {
     switch (expression.type) {
-      case "Literal":
+      case 'Literal':
         return expression.value;
 
-      case "Variable":
+      case 'Variable':
         return this.environment.get(expression.name);
 
-      case "AnonymousFunction":
+      case 'AnonymousFunction':
         return {
-          type: "Function",
+          type: 'Function',
           name: null,
           parameters: expression.parameters,
           body: expression.body,
         };
 
-      case "Assign":
+      case 'Assign':
         const value = this.evaluateExpression(expression.value);
         this.environment.assign(expression.name, value);
         return value;
 
-      case "ArrayLiteral":
+      case 'ArrayLiteral':
         return this.evaluateArrayLiteral(expression);
 
-      case "ArrayAccess":
+      case 'ArrayAccess':
         return this.evaluateArrayAccess(expression);
 
-      case "ArrayAssign":
+      case 'ArrayAssign':
         return this.evaluateArrayAssign(expression);
 
-      case "ObjectLiteral":
+      case 'ObjectLiteral':
         return this.evaluateObjectLiteral(expression);
 
-      case "PropertyAccess":
+      case 'PropertyAccess':
         return this.evaluatePropertyAccess(expression);
 
-      case "PropertyAssign":
+      case 'PropertyAssign':
         return this.evaluatePropertyAssign(expression);
 
-      case "CompoundAssign":
+      case 'CompoundAssign':
         return this.evaluateCompoundAssign(expression);
 
-      case "CompoundArrayAssign":
+      case 'CompoundArrayAssign':
         return this.evaluateCompoundArrayAssign(expression);
 
-      case "CompoundPropertyAssign":
+      case 'CompoundPropertyAssign':
         return this.evaluateCompoundPropertyAssign(expression);
 
-      case "Logical":
+      case 'Logical':
         return this.evaluateLogicalExpression(expression);
 
-      case "Postfix":
+      case 'Postfix':
         return this.evaluatePostfixExpression(expression);
 
-      case "Call":
+      case 'Call':
         return this.evaluateCallExpression(expression);
 
-      case "MethodCall":
+      case 'MethodCall':
         return this.evaluateMethodCall(expression);
 
-      case "Unary":
+      case 'Unary':
         const right = this.evaluateExpression(expression.right);
         return this.evaluateUnaryExpression(expression.operator, right);
 
-      case "Binary":
+      case 'Binary':
         const left = this.evaluateExpression(expression.left);
         const rightOperand = this.evaluateExpression(expression.right);
         return this.evaluateBinaryExpression(
           left,
           expression.operator,
-          rightOperand,
+          rightOperand
         );
 
       default:
@@ -316,11 +370,11 @@ class Evaluator {
    */
   evaluateUnaryExpression(operator, right) {
     switch (operator) {
-      case "MINUS":
+      case 'MINUS':
         this.checkNumberOperand(operator, right);
         return -right;
 
-      case "BANG":
+      case 'BANG':
         return !this.isTruthy(right);
 
       default:
@@ -337,12 +391,12 @@ class Evaluator {
    */
   evaluateBinaryExpression(left, operator, right) {
     switch (operator) {
-      case "MINUS":
+      case 'MINUS':
         this.checkNumberOperands(operator, left, right);
         return left - right;
 
-      case "PLUS":
-        if (typeof left === "number" && typeof right === "number") {
+      case 'PLUS':
+        if (typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
         // Convert numbers to strings for concatenation
@@ -350,56 +404,56 @@ class Evaluator {
         const rightStr = this.stringify(right);
         return leftStr + rightStr;
 
-      case "SLASH":
+      case 'SLASH':
         this.checkNumberOperands(operator, left, right);
         if (right === 0) {
-          throw new Error("Division by zero");
+          throw new Error('Division by zero');
         }
         return left / right;
 
-      case "STAR":
+      case 'STAR':
         this.checkNumberOperands(operator, left, right);
         return left * right;
 
-      case "PERCENT":
+      case 'PERCENT':
         this.checkNumberOperands(operator, left, right);
         if (right === 0) {
-          throw new Error("Modulo by zero");
+          throw new Error('Modulo by zero');
         }
         return left % right;
 
-      case "GREATER":
-        if (typeof left === "string" && typeof right === "string") {
+      case 'GREATER':
+        if (typeof left === 'string' && typeof right === 'string') {
           return left > right;
         }
         this.checkNumberOperands(operator, left, right);
         return left > right;
 
-      case "GREATER_EQUAL":
-        if (typeof left === "string" && typeof right === "string") {
+      case 'GREATER_EQUAL':
+        if (typeof left === 'string' && typeof right === 'string') {
           return left >= right;
         }
         this.checkNumberOperands(operator, left, right);
         return left >= right;
 
-      case "LESS":
-        if (typeof left === "string" && typeof right === "string") {
+      case 'LESS':
+        if (typeof left === 'string' && typeof right === 'string') {
           return left < right;
         }
         this.checkNumberOperands(operator, left, right);
         return left < right;
 
-      case "LESS_EQUAL":
-        if (typeof left === "string" && typeof right === "string") {
+      case 'LESS_EQUAL':
+        if (typeof left === 'string' && typeof right === 'string') {
           return left <= right;
         }
         this.checkNumberOperands(operator, left, right);
         return left <= right;
 
-      case "EQUAL_EQUAL":
+      case 'EQUAL_EQUAL':
         return this.isEqual(left, right);
 
-      case "BANG_EQUAL":
+      case 'BANG_EQUAL':
         return !this.isEqual(left, right);
 
       default:
@@ -414,8 +468,8 @@ class Evaluator {
    */
   isTruthy(value) {
     if (value === null) return false;
-    if (typeof value === "boolean") return value;
-    if (typeof value === "number") return value !== 0;
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value !== 0;
     return true;
   }
 
@@ -435,7 +489,7 @@ class Evaluator {
    * @param {any} operand - Operand
    */
   checkNumberOperand(operator, operand) {
-    if (typeof operand === "number") return;
+    if (typeof operand === 'number') return;
     throw new Error(`Operator ${operator} requires a number`);
   }
 
@@ -446,7 +500,7 @@ class Evaluator {
    * @param {any} right - Right operand
    */
   checkNumberOperands(operator, left, right) {
-    if (typeof left === "number" && typeof right === "number") return;
+    if (typeof left === 'number' && typeof right === 'number') return;
     throw new Error(`Operator ${operator} requires two numbers`);
   }
 
@@ -458,7 +512,7 @@ class Evaluator {
   evaluateCallExpression(expression) {
     // Check if it's a built-in mathematical function BEFORE evaluating the callee
     if (
-      expression.callee.type === "Variable" &&
+      expression.callee.type === 'Variable' &&
       this.isMathFunction(expression.callee.name)
     ) {
       const args = [];
@@ -475,13 +529,13 @@ class Evaluator {
       args.push(this.evaluateExpression(argument));
     }
 
-    if (callee.type !== "Function") {
-      throw new Error("Can only call functions");
+    if (callee.type !== 'Function') {
+      throw new Error('Can only call functions');
     }
 
     if (args.length !== callee.parameters.length) {
       throw new Error(
-        `Expected ${callee.parameters.length} arguments but got ${args.length}`,
+        `Expected ${callee.parameters.length} arguments but got ${args.length}`
       );
     }
 
@@ -519,24 +573,24 @@ class Evaluator {
       return this.evaluateArrayMethod(
         object,
         expression.method,
-        expression.arguments,
+        expression.arguments
       );
-    } else if (typeof object === "string") {
+    } else if (typeof object === 'string') {
       // Check if the method is valid for strings
       if (
-        expression.method === "agregar" ||
-        expression.method === "remover" ||
-        expression.method === "contiene" ||
-        expression.method === "recorrer"
+        expression.method === 'agregar' ||
+        expression.method === 'remover' ||
+        expression.method === 'contiene' ||
+        expression.method === 'recorrer'
       ) {
         throw new Error(
-          `Method ${expression.method}() can only be called on arrays`,
+          `Method ${expression.method}() can only be called on arrays`
         );
       }
       return this.evaluateStringMethod(object, expression.method);
     } else {
       throw new Error(
-        `Can only call methods on arrays or strings, got ${typeof object}`,
+        `Can only call methods on arrays or strings, got ${typeof object}`
       );
     }
   }
@@ -550,22 +604,22 @@ class Evaluator {
    */
   evaluateArrayMethod(array, method, args = []) {
     switch (method) {
-      case "longitud":
+      case 'longitud':
         return array.length;
 
-      case "primero":
+      case 'primero':
         if (array.length === 0) {
-          throw new Error("Cannot get first element of empty array");
+          throw new Error('Cannot get first element of empty array');
         }
         return array[0];
 
-      case "ultimo":
+      case 'ultimo':
         if (array.length === 0) {
-          throw new Error("Cannot get last element of empty array");
+          throw new Error('Cannot get last element of empty array');
         }
         return array[array.length - 1];
 
-      case "agregar":
+      case 'agregar':
         // Evaluate all arguments and add them to the array
         for (const arg of args) {
           const value = this.evaluateExpression(arg);
@@ -573,29 +627,29 @@ class Evaluator {
         }
         return array.length; // Return the new length
 
-      case "remover":
+      case 'remover':
         // Remove and return the last element
         if (array.length === 0) {
-          throw new Error("Cannot remove element from empty array");
+          throw new Error('Cannot remove element from empty array');
         }
         return array.pop(); // Return the removed element
 
-      case "contiene":
+      case 'contiene':
         // Check if array contains the specified element
         if (args.length !== 1) {
-          throw new Error("Method contiene() requires exactly one argument");
+          throw new Error('Method contiene() requires exactly one argument');
         }
         const searchElement = this.evaluateExpression(args[0]);
         return array.includes(searchElement);
 
-      case "recorrer":
+      case 'recorrer':
         // Iterate through array and call function for each element
         if (args.length !== 1) {
-          throw new Error("Method recorrer() requires exactly one argument");
+          throw new Error('Method recorrer() requires exactly one argument');
         }
         const callback = this.evaluateExpression(args[0]);
-        if (callback.type !== "Function") {
-          throw new Error("Method recorrer() requires a function as argument");
+        if (callback.type !== 'Function') {
+          throw new Error('Method recorrer() requires a function as argument');
         }
 
         // Call the function for each element
@@ -606,19 +660,19 @@ class Evaluator {
           // Handle function parameters
           if (callback.parameters.length === 0) {
             // No parameters - use automatic variables
-            callbackEnv.define("elemento", array[i]);
-            callbackEnv.define("indice", i);
+            callbackEnv.define('elemento', array[i]);
+            callbackEnv.define('indice', i);
           } else if (callback.parameters.length === 1) {
             // One parameter - element only
             callbackEnv.define(callback.parameters[0], array[i]);
-            callbackEnv.define("indice", i);
+            callbackEnv.define('indice', i);
           } else if (callback.parameters.length === 2) {
             // Two parameters - element and index
             callbackEnv.define(callback.parameters[0], array[i]);
             callbackEnv.define(callback.parameters[1], i);
           } else {
             throw new Error(
-              "Function in recorrer() can have at most 2 parameters",
+              'Function in recorrer() can have at most 2 parameters'
             );
           }
 
@@ -646,13 +700,13 @@ class Evaluator {
    */
   evaluateStringMethod(string, method) {
     switch (method) {
-      case "longitud":
+      case 'longitud':
         return string.length;
 
-      case "mayusculas":
+      case 'mayusculas':
         return string.toUpperCase();
 
-      case "minusculas":
+      case 'minusculas':
         return string.toLowerCase();
 
       default:
@@ -667,21 +721,21 @@ class Evaluator {
    */
   isMathFunction(name) {
     const mathFunctions = [
-      "raiz",
-      "potencia",
-      "seno",
-      "coseno",
-      "tangente",
-      "logaritmo",
-      "valorAbsoluto",
-      "redondear",
-      "techo",
-      "piso",
-      "aleatorio",
-      "maximo",
-      "minimo",
-      "suma",
-      "promedio",
+      'raiz',
+      'potencia',
+      'seno',
+      'coseno',
+      'tangente',
+      'logaritmo',
+      'valorAbsoluto',
+      'redondear',
+      'techo',
+      'piso',
+      'aleatorio',
+      'maximo',
+      'minimo',
+      'suma',
+      'promedio',
     ];
     return mathFunctions.includes(name);
   }
@@ -694,159 +748,159 @@ class Evaluator {
    */
   evaluateMathFunction(name, args) {
     switch (name) {
-      case "raiz":
+      case 'raiz':
         if (args.length !== 1) {
-          throw new Error("raiz() requires exactly 1 argument");
+          throw new Error('raiz() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("raiz() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('raiz() requires a number argument');
         }
         if (args[0] < 0) {
-          throw new Error("Cannot take square root of negative number");
+          throw new Error('Cannot take square root of negative number');
         }
         return Math.sqrt(args[0]);
 
-      case "potencia":
+      case 'potencia':
         if (args.length !== 2) {
-          throw new Error("potencia() requires exactly 2 arguments");
+          throw new Error('potencia() requires exactly 2 arguments');
         }
-        if (typeof args[0] !== "number" || typeof args[1] !== "number") {
-          throw new Error("potencia() requires number arguments");
+        if (typeof args[0] !== 'number' || typeof args[1] !== 'number') {
+          throw new Error('potencia() requires number arguments');
         }
         return Math.pow(args[0], args[1]);
 
-      case "seno":
+      case 'seno':
         if (args.length !== 1) {
-          throw new Error("seno() requires exactly 1 argument");
+          throw new Error('seno() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("seno() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('seno() requires a number argument');
         }
         return Math.sin(args[0]);
 
-      case "coseno":
+      case 'coseno':
         if (args.length !== 1) {
-          throw new Error("coseno() requires exactly 1 argument");
+          throw new Error('coseno() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("coseno() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('coseno() requires a number argument');
         }
         return Math.cos(args[0]);
 
-      case "tangente":
+      case 'tangente':
         if (args.length !== 1) {
-          throw new Error("tangente() requires exactly 1 argument");
+          throw new Error('tangente() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("tangente() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('tangente() requires a number argument');
         }
         return Math.tan(args[0]);
 
-      case "logaritmo":
+      case 'logaritmo':
         if (args.length !== 1) {
-          throw new Error("logaritmo() requires exactly 1 argument");
+          throw new Error('logaritmo() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("logaritmo() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('logaritmo() requires a number argument');
         }
         if (args[0] <= 0) {
-          throw new Error("Cannot take logarithm of non-positive number");
+          throw new Error('Cannot take logarithm of non-positive number');
         }
         return Math.log(args[0]);
 
-      case "valorAbsoluto":
+      case 'valorAbsoluto':
         if (args.length !== 1) {
-          throw new Error("valorAbsoluto() requires exactly 1 argument");
+          throw new Error('valorAbsoluto() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("valorAbsoluto() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('valorAbsoluto() requires a number argument');
         }
         return Math.abs(args[0]);
 
-      case "redondear":
+      case 'redondear':
         if (args.length !== 1) {
-          throw new Error("redondear() requires exactly 1 argument");
+          throw new Error('redondear() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("redondear() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('redondear() requires a number argument');
         }
         return Math.round(args[0]);
 
-      case "techo":
+      case 'techo':
         if (args.length !== 1) {
-          throw new Error("techo() requires exactly 1 argument");
+          throw new Error('techo() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("techo() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('techo() requires a number argument');
         }
         return Math.ceil(args[0]);
 
-      case "piso":
+      case 'piso':
         if (args.length !== 1) {
-          throw new Error("piso() requires exactly 1 argument");
+          throw new Error('piso() requires exactly 1 argument');
         }
-        if (typeof args[0] !== "number") {
-          throw new Error("piso() requires a number argument");
+        if (typeof args[0] !== 'number') {
+          throw new Error('piso() requires a number argument');
         }
         return Math.floor(args[0]);
 
-      case "aleatorio":
+      case 'aleatorio':
         if (args.length === 0) {
           return Math.random();
         } else if (args.length === 1) {
-          if (typeof args[0] !== "number") {
-            throw new Error("aleatorio() requires a number argument");
+          if (typeof args[0] !== 'number') {
+            throw new Error('aleatorio() requires a number argument');
           }
           return Math.random() * args[0];
         } else if (args.length === 2) {
-          if (typeof args[0] !== "number" || typeof args[1] !== "number") {
-            throw new Error("aleatorio() requires number arguments");
+          if (typeof args[0] !== 'number' || typeof args[1] !== 'number') {
+            throw new Error('aleatorio() requires number arguments');
           }
           return Math.random() * (args[1] - args[0]) + args[0];
         } else {
-          throw new Error("aleatorio() accepts 0, 1, or 2 arguments");
+          throw new Error('aleatorio() accepts 0, 1, or 2 arguments');
         }
 
-      case "maximo":
+      case 'maximo':
         if (args.length < 1) {
-          throw new Error("maximo() requires at least 1 argument");
+          throw new Error('maximo() requires at least 1 argument');
         }
         for (const arg of args) {
-          if (typeof arg !== "number") {
-            throw new Error("maximo() requires number arguments");
+          if (typeof arg !== 'number') {
+            throw new Error('maximo() requires number arguments');
           }
         }
         return Math.max(...args);
 
-      case "minimo":
+      case 'minimo':
         if (args.length < 1) {
-          throw new Error("minimo() requires at least 1 argument");
+          throw new Error('minimo() requires at least 1 argument');
         }
         for (const arg of args) {
-          if (typeof arg !== "number") {
-            throw new Error("minimo() requires number arguments");
+          if (typeof arg !== 'number') {
+            throw new Error('minimo() requires number arguments');
           }
         }
         return Math.min(...args);
 
-      case "suma":
+      case 'suma':
         if (args.length < 1) {
-          throw new Error("suma() requires at least 1 argument");
+          throw new Error('suma() requires at least 1 argument');
         }
         for (const arg of args) {
-          if (typeof arg !== "number") {
-            throw new Error("suma() requires number arguments");
+          if (typeof arg !== 'number') {
+            throw new Error('suma() requires number arguments');
           }
         }
         return args.reduce((sum, arg) => sum + arg, 0);
 
-      case "promedio":
+      case 'promedio':
         if (args.length < 1) {
-          throw new Error("promedio() requires at least 1 argument");
+          throw new Error('promedio() requires at least 1 argument');
         }
         for (const arg of args) {
-          if (typeof arg !== "number") {
-            throw new Error("promedio() requires number arguments");
+          if (typeof arg !== 'number') {
+            throw new Error('promedio() requires number arguments');
           }
         }
         return args.reduce((sum, arg) => sum + arg, 0) / args.length;
@@ -879,15 +933,15 @@ class Evaluator {
     const index = this.evaluateExpression(expression.index);
 
     if (!Array.isArray(array)) {
-      throw new Error("Can only access elements of arrays");
+      throw new Error('Can only access elements of arrays');
     }
 
-    if (typeof index !== "number") {
-      throw new Error("Array index must be a number");
+    if (typeof index !== 'number') {
+      throw new Error('Array index must be a number');
     }
 
     if (index < 0 || index >= array.length) {
-      throw new Error("Array index out of bounds");
+      throw new Error('Array index out of bounds');
     }
 
     return array[index];
@@ -904,15 +958,15 @@ class Evaluator {
     const value = this.evaluateExpression(expression.value);
 
     if (!Array.isArray(array)) {
-      throw new Error("Can only assign to elements of arrays");
+      throw new Error('Can only assign to elements of arrays');
     }
 
-    if (typeof index !== "number") {
-      throw new Error("Array index must be a number");
+    if (typeof index !== 'number') {
+      throw new Error('Array index must be a number');
     }
 
     if (index < 0 || index >= array.length) {
-      throw new Error("Array index out of bounds");
+      throw new Error('Array index out of bounds');
     }
 
     array[index] = value;
@@ -943,8 +997,8 @@ class Evaluator {
   evaluatePropertyAccess(expression) {
     const object = this.evaluateExpression(expression.object);
 
-    if (typeof object !== "object" || object === null) {
-      throw new Error("Can only access properties of objects");
+    if (typeof object !== 'object' || object === null) {
+      throw new Error('Can only access properties of objects');
     }
 
     return object[expression.name];
@@ -959,8 +1013,8 @@ class Evaluator {
     const object = this.evaluateExpression(expression.object);
     const value = this.evaluateExpression(expression.value);
 
-    if (typeof object !== "object" || object === null) {
-      throw new Error("Can only assign to properties of objects");
+    if (typeof object !== 'object' || object === null) {
+      throw new Error('Can only assign to properties of objects');
     }
 
     object[expression.name] = value;
@@ -975,7 +1029,7 @@ class Evaluator {
   evaluateLogicalExpression(expression) {
     const left = this.evaluateExpression(expression.left);
 
-    if (expression.operator === "OR") {
+    if (expression.operator === 'OR') {
       // Short-circuit evaluation for OR
       if (this.isTruthy(left)) {
         return left;
@@ -983,7 +1037,7 @@ class Evaluator {
       return this.evaluateExpression(expression.right);
     }
 
-    if (expression.operator === "AND") {
+    if (expression.operator === 'AND') {
       // Short-circuit evaluation for AND
       if (!this.isTruthy(left)) {
         return left;
@@ -1005,7 +1059,7 @@ class Evaluator {
     const newValue = this.performCompoundOperation(
       currentValue,
       expression.operator,
-      rightValue,
+      rightValue
     );
 
     this.environment.assign(expression.name, newValue);
@@ -1023,20 +1077,20 @@ class Evaluator {
     const rightValue = this.evaluateExpression(expression.value);
 
     if (!Array.isArray(array)) {
-      throw new Error("Can only assign to elements of arrays");
+      throw new Error('Can only assign to elements of arrays');
     }
-    if (typeof index !== "number") {
-      throw new Error("Array index must be a number");
+    if (typeof index !== 'number') {
+      throw new Error('Array index must be a number');
     }
     if (index < 0 || index >= array.length) {
-      throw new Error("Array index out of bounds");
+      throw new Error('Array index out of bounds');
     }
 
     const currentValue = array[index];
     const newValue = this.performCompoundOperation(
       currentValue,
       expression.operator,
-      rightValue,
+      rightValue
     );
 
     array[index] = newValue;
@@ -1052,15 +1106,15 @@ class Evaluator {
     const object = this.evaluateExpression(expression.object);
     const rightValue = this.evaluateExpression(expression.value);
 
-    if (typeof object !== "object" || object === null) {
-      throw new Error("Can only assign to properties of objects");
+    if (typeof object !== 'object' || object === null) {
+      throw new Error('Can only assign to properties of objects');
     }
 
     const currentValue = object[expression.name];
     const newValue = this.performCompoundOperation(
       currentValue,
       expression.operator,
-      rightValue,
+      rightValue
     );
 
     object[expression.name] = newValue;
@@ -1076,42 +1130,42 @@ class Evaluator {
    */
   performCompoundOperation(left, operator, right) {
     switch (operator) {
-      case "PLUS_EQUAL":
-        if (typeof left === "number" && typeof right === "number") {
+      case 'PLUS_EQUAL':
+        if (typeof left === 'number' && typeof right === 'number') {
           return left + right;
         }
-        if (typeof left === "string" || typeof right === "string") {
+        if (typeof left === 'string' || typeof right === 'string') {
           return String(left) + String(right);
         }
-        throw new Error("Cannot add non-numeric values");
+        throw new Error('Cannot add non-numeric values');
 
-      case "MINUS_EQUAL":
-        if (typeof left !== "number" || typeof right !== "number") {
-          throw new Error("Can only subtract numbers");
+      case 'MINUS_EQUAL':
+        if (typeof left !== 'number' || typeof right !== 'number') {
+          throw new Error('Can only subtract numbers');
         }
         return left - right;
 
-      case "STAR_EQUAL":
-        if (typeof left !== "number" || typeof right !== "number") {
-          throw new Error("Can only multiply numbers");
+      case 'STAR_EQUAL':
+        if (typeof left !== 'number' || typeof right !== 'number') {
+          throw new Error('Can only multiply numbers');
         }
         return left * right;
 
-      case "SLASH_EQUAL":
-        if (typeof left !== "number" || typeof right !== "number") {
-          throw new Error("Can only divide numbers");
+      case 'SLASH_EQUAL':
+        if (typeof left !== 'number' || typeof right !== 'number') {
+          throw new Error('Can only divide numbers');
         }
         if (right === 0) {
-          throw new Error("Division by zero");
+          throw new Error('Division by zero');
         }
         return left / right;
 
-      case "PERCENT_EQUAL":
-        if (typeof left !== "number" || typeof right !== "number") {
-          throw new Error("Can only modulo numbers");
+      case 'PERCENT_EQUAL':
+        if (typeof left !== 'number' || typeof right !== 'number') {
+          throw new Error('Can only modulo numbers');
         }
         if (right === 0) {
-          throw new Error("Modulo by zero");
+          throw new Error('Modulo by zero');
         }
         return left % right;
 
@@ -1128,71 +1182,71 @@ class Evaluator {
   evaluatePostfixExpression(expression) {
     const operand = this.evaluateExpression(expression.operand);
 
-    if (expression.operator === "PLUS_PLUS") {
-      if (typeof operand !== "number") {
-        throw new Error("Can only increment numbers");
+    if (expression.operator === 'PLUS_PLUS') {
+      if (typeof operand !== 'number') {
+        throw new Error('Can only increment numbers');
       }
       const newValue = operand + 1;
 
       // Update the variable if it's a variable reference
-      if (expression.operand.type === "Variable") {
+      if (expression.operand.type === 'Variable') {
         this.environment.assign(expression.operand.name, newValue);
-      } else if (expression.operand.type === "PropertyAccess") {
+      } else if (expression.operand.type === 'PropertyAccess') {
         const object = this.evaluateExpression(expression.operand.object);
-        if (typeof object !== "object" || object === null) {
-          throw new Error("Can only increment properties of objects");
+        if (typeof object !== 'object' || object === null) {
+          throw new Error('Can only increment properties of objects');
         }
         object[expression.operand.name] = newValue;
-      } else if (expression.operand.type === "ArrayAccess") {
+      } else if (expression.operand.type === 'ArrayAccess') {
         const array = this.evaluateExpression(expression.operand.array);
         const index = this.evaluateExpression(expression.operand.index);
         if (!Array.isArray(array)) {
-          throw new Error("Can only increment elements of arrays");
+          throw new Error('Can only increment elements of arrays');
         }
-        if (typeof index !== "number") {
-          throw new Error("Array index must be a number");
+        if (typeof index !== 'number') {
+          throw new Error('Array index must be a number');
         }
         if (index < 0 || index >= array.length) {
-          throw new Error("Array index out of bounds");
+          throw new Error('Array index out of bounds');
         }
         array[index] = newValue;
       } else {
-        throw new Error("Invalid increment target");
+        throw new Error('Invalid increment target');
       }
 
       return operand; // Return the original value (postfix behavior)
     }
 
-    if (expression.operator === "MINUS_MINUS") {
-      if (typeof operand !== "number") {
-        throw new Error("Can only decrement numbers");
+    if (expression.operator === 'MINUS_MINUS') {
+      if (typeof operand !== 'number') {
+        throw new Error('Can only decrement numbers');
       }
       const newValue = operand - 1;
 
       // Update the variable if it's a variable reference
-      if (expression.operand.type === "Variable") {
+      if (expression.operand.type === 'Variable') {
         this.environment.assign(expression.operand.name, newValue);
-      } else if (expression.operand.type === "PropertyAccess") {
+      } else if (expression.operand.type === 'PropertyAccess') {
         const object = this.evaluateExpression(expression.operand.object);
-        if (typeof object !== "object" || object === null) {
-          throw new Error("Can only decrement properties of objects");
+        if (typeof object !== 'object' || object === null) {
+          throw new Error('Can only decrement properties of objects');
         }
         object[expression.operand.name] = newValue;
-      } else if (expression.operand.type === "ArrayAccess") {
+      } else if (expression.operand.type === 'ArrayAccess') {
         const array = this.evaluateExpression(expression.operand.array);
         const index = this.evaluateExpression(expression.operand.index);
         if (!Array.isArray(array)) {
-          throw new Error("Can only decrement elements of arrays");
+          throw new Error('Can only decrement elements of arrays');
         }
-        if (typeof index !== "number") {
-          throw new Error("Array index must be a number");
+        if (typeof index !== 'number') {
+          throw new Error('Array index must be a number');
         }
         if (index < 0 || index >= array.length) {
-          throw new Error("Array index out of bounds");
+          throw new Error('Array index out of bounds');
         }
         array[index] = newValue;
       } else {
-        throw new Error("Invalid decrement target");
+        throw new Error('Invalid decrement target');
       }
 
       return operand; // Return the original value (postfix behavior)
@@ -1207,11 +1261,11 @@ class Evaluator {
    * @returns {string} String representation
    */
   stringify(value) {
-    if (value === null) return "null";
-    if (value === undefined) return "undefined";
-    if (typeof value === "string") return value;
+    if (value === null) return 'null';
+    if (value === undefined) return 'undefined';
+    if (typeof value === 'string') return value;
     if (Array.isArray(value)) {
-      return "[" + value.map((v) => this.stringify(v)).join(", ") + "]";
+      return '[' + value.map(v => this.stringify(v)).join(', ') + ']';
     }
     return value.toString();
   }
@@ -1311,7 +1365,7 @@ class ReturnException {
  */
 class BreakException {
   constructor() {
-    this.type = "break";
+    this.type = 'break';
   }
 }
 
@@ -1320,7 +1374,7 @@ class BreakException {
  */
 class ContinueException {
   constructor() {
-    this.type = "continue";
+    this.type = 'continue';
   }
 }
 
@@ -1329,7 +1383,7 @@ class ContinueException {
  */
 class TryCatchException {
   constructor(message) {
-    this.type = "try-catch";
+    this.type = 'try-catch';
     this.message = message;
   }
 }

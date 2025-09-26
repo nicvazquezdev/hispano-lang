@@ -36,5 +36,8 @@
   "homepage": "https://github.com/nicvazquezdev/hispano-lang#readme",
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10"
   }
 }

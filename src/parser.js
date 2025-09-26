@@ -20,7 +20,7 @@ class Parser {
       statements.push(this.declaration());
 
       // Consume semicolon if present between statements
-      if (this.match("SEMICOLON")) {
+      if (this.match('SEMICOLON')) {
         // Semicolon consumed
       }
     }
@@ -34,43 +34,47 @@ class Parser {
    */
   declaration() {
     try {
-      if (this.match("VARIABLE")) {
+      if (this.match('VARIABLE')) {
         return this.variableDeclaration();
       }
 
-      if (this.match("FUNCION")) {
+      if (this.match('FUNCION')) {
         return this.functionDeclaration();
       }
 
-      if (this.match("MOSTRAR")) {
+      if (this.match('MOSTRAR')) {
         return this.mostrarStatement();
       }
 
-      if (this.match("SI")) {
+      if (this.match('LEER')) {
+        return this.leerStatement();
+      }
+
+      if (this.match('SI')) {
         return this.ifStatement();
       }
 
-      if (this.match("MIENTRAS")) {
+      if (this.match('MIENTRAS')) {
         return this.whileStatement();
       }
 
-      if (this.match("PARA")) {
+      if (this.match('PARA')) {
         return this.forStatement();
       }
 
-      if (this.match("RETORNAR")) {
+      if (this.match('RETORNAR')) {
         return this.returnStatement();
       }
 
-      if (this.match("ROMPER")) {
+      if (this.match('ROMPER')) {
         return this.breakStatement();
       }
 
-      if (this.match("CONTINUAR")) {
+      if (this.match('CONTINUAR')) {
         return this.continueStatement();
       }
 
-      if (this.match("INTENTAR")) {
+      if (this.match('INTENTAR')) {
         return this.tryStatement();
       }
 
@@ -87,21 +91,21 @@ class Parser {
    */
   variableDeclaration() {
     let name;
-    if (this.match("IDENTIFIER")) {
+    if (this.match('IDENTIFIER')) {
       name = this.previous();
-    } else if (this.match("AND")) {
+    } else if (this.match('AND')) {
       name = this.previous();
     } else {
-      throw new Error("Expected variable name");
+      throw new Error('Expected variable name');
     }
 
     let initializer = null;
-    if (this.match("EQUAL")) {
+    if (this.match('EQUAL')) {
       initializer = this.expression();
     }
 
     return {
-      type: "VariableDeclaration",
+      type: 'VariableDeclaration',
       name: name.lexeme,
       initializer,
     };
@@ -112,34 +116,34 @@ class Parser {
    * @returns {Object} Function declaration
    */
   functionDeclaration() {
-    const name = this.consume("IDENTIFIER", "Expected function name");
-    this.consume("LEFT_PAREN", "Expected ( after function name");
+    const name = this.consume('IDENTIFIER', 'Expected function name');
+    this.consume('LEFT_PAREN', 'Expected ( after function name');
 
     const parameters = [];
-    if (!this.check("RIGHT_PAREN")) {
+    if (!this.check('RIGHT_PAREN')) {
       do {
         if (parameters.length >= 255) {
-          throw new Error("Cannot have more than 255 parameters");
+          throw new Error('Cannot have more than 255 parameters');
         }
         let param;
-        if (this.match("IDENTIFIER")) {
+        if (this.match('IDENTIFIER')) {
           param = this.previous();
-        } else if (this.match("AND")) {
+        } else if (this.match('AND')) {
           param = this.previous();
         } else {
-          throw new Error("Expected parameter name");
+          throw new Error('Expected parameter name');
         }
         parameters.push(param.lexeme);
-      } while (this.match("COMMA"));
+      } while (this.match('COMMA'));
     }
 
-    this.consume("RIGHT_PAREN", "Expected ) after parameters");
-    this.consume("LEFT_BRACE", "Expected { before function body");
+    this.consume('RIGHT_PAREN', 'Expected ) after parameters');
+    this.consume('LEFT_BRACE', 'Expected { before function body');
     const body = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after function body");
+    this.consume('RIGHT_BRACE', 'Expected } after function body');
 
     return {
-      type: "FunctionDeclaration",
+      type: 'FunctionDeclaration',
       name: name.lexeme,
       parameters,
       body,
@@ -154,8 +158,32 @@ class Parser {
     const value = this.expression();
 
     return {
-      type: "MostrarStatement",
+      type: 'MostrarStatement',
       expression: value,
+    };
+  }
+
+  /**
+   * Parses a read statement
+   * @returns {Object} Read statement
+   */
+  leerStatement() {
+    // Parse the variable name to store the input
+    const variableName = this.consume(
+      'IDENTIFIER',
+      'Expected variable name after leer'
+    );
+
+    // Optional prompt message
+    let prompt = null;
+    if (this.match('STRING')) {
+      prompt = this.previous().literal;
+    }
+
+    return {
+      type: 'LeerStatement',
+      variable: variableName.lexeme,
+      prompt: prompt,
     };
   }
 
@@ -165,19 +193,19 @@ class Parser {
    */
   ifStatement() {
     const condition = this.expression();
-    this.consume("LEFT_BRACE", "Expected { after condition");
+    this.consume('LEFT_BRACE', 'Expected { after condition');
     const thenBranch = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after block");
+    this.consume('RIGHT_BRACE', 'Expected } after block');
     let elseBranch = null;
 
-    if (this.match("SINO")) {
-      this.consume("LEFT_BRACE", "Expected { after else");
+    if (this.match('SINO')) {
+      this.consume('LEFT_BRACE', 'Expected { after else');
       elseBranch = this.block();
-      this.consume("RIGHT_BRACE", "Expected } after else block");
+      this.consume('RIGHT_BRACE', 'Expected } after else block');
     }
 
     return {
-      type: "IfStatement",
+      type: 'IfStatement',
       condition,
       thenBranch,
       elseBranch,
@@ -190,12 +218,12 @@ class Parser {
    */
   whileStatement() {
     const condition = this.expression();
-    this.consume("LEFT_BRACE", "Expected { after condition");
+    this.consume('LEFT_BRACE', 'Expected { after condition');
     const body = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after block");
+    this.consume('RIGHT_BRACE', 'Expected } after block');
 
     return {
-      type: "WhileStatement",
+      type: 'WhileStatement',
       condition,
       body,
     };
@@ -206,18 +234,18 @@ class Parser {
    * @returns {Object} For statement
    */
   forStatement() {
-    this.consume("LEFT_PAREN", "Expected ( after para");
+    this.consume('LEFT_PAREN', 'Expected ( after para');
 
     // Initializer (optional)
     let initializer = null;
-    if (!this.check("SEMICOLON")) {
-      if (this.match("VARIABLE")) {
+    if (!this.check('SEMICOLON')) {
+      if (this.match('VARIABLE')) {
         initializer = this.variableDeclaration();
       } else {
         initializer = this.expressionStatement();
       }
       // Consume the semicolon after initializer
-      this.consume("SEMICOLON", "Expected ; after for initializer");
+      this.consume('SEMICOLON', 'Expected ; after for initializer');
     } else {
       // Skip the first semicolon if no initializer
       this.advance();
@@ -225,24 +253,24 @@ class Parser {
 
     // Condition (optional)
     let condition = null;
-    if (!this.check("SEMICOLON")) {
+    if (!this.check('SEMICOLON')) {
       condition = this.expression();
     }
-    this.consume("SEMICOLON", "Expected ; after condition");
+    this.consume('SEMICOLON', 'Expected ; after condition');
 
     // Increment (optional)
     let increment = null;
-    if (!this.check("RIGHT_PAREN")) {
+    if (!this.check('RIGHT_PAREN')) {
       increment = this.expression();
     }
-    this.consume("RIGHT_PAREN", "Expected ) after for clause");
+    this.consume('RIGHT_PAREN', 'Expected ) after for clause');
 
-    this.consume("LEFT_BRACE", "Expected { after for clause");
+    this.consume('LEFT_BRACE', 'Expected { after for clause');
     const body = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after block");
+    this.consume('RIGHT_BRACE', 'Expected } after block');
 
     return {
-      type: "ForStatement",
+      type: 'ForStatement',
       initializer,
       condition,
       increment,
@@ -257,12 +285,12 @@ class Parser {
   returnStatement() {
     const keyword = this.previous();
     let value = null;
-    if (!this.check("RIGHT_BRACE")) {
+    if (!this.check('RIGHT_BRACE')) {
       value = this.expression();
     }
 
     return {
-      type: "ReturnStatement",
+      type: 'ReturnStatement',
       keyword,
       value,
     };
@@ -275,7 +303,7 @@ class Parser {
   breakStatement() {
     const keyword = this.previous();
     return {
-      type: "BreakStatement",
+      type: 'BreakStatement',
       keyword,
     };
   }
@@ -287,7 +315,7 @@ class Parser {
   continueStatement() {
     const keyword = this.previous();
     return {
-      type: "ContinueStatement",
+      type: 'ContinueStatement',
       keyword,
     };
   }
@@ -299,7 +327,7 @@ class Parser {
   block() {
     const statements = [];
 
-    while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
+    while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
       statements.push(this.declaration());
     }
 
@@ -313,7 +341,7 @@ class Parser {
   expressionStatement() {
     const expr = this.expression();
     return {
-      type: "ExpressionStatement",
+      type: 'ExpressionStatement',
       expression: expr,
     };
   }
@@ -333,7 +361,7 @@ class Parser {
   parseExpression() {
     let expr = this.equality();
 
-    while (this.match("LEFT_BRACKET")) {
+    while (this.match('LEFT_BRACKET')) {
       expr = this.finishArrayAccess(expr);
     }
 
@@ -347,66 +375,66 @@ class Parser {
   assignment() {
     let expr = this.logicalOr();
 
-    if (this.match("EQUAL")) {
+    if (this.match('EQUAL')) {
       const equals = this.previous();
       const value = this.logicalOr();
 
-      if (expr.type === "Variable") {
+      if (expr.type === 'Variable') {
         const name = expr.name;
         return {
-          type: "Assign",
+          type: 'Assign',
           name,
           value,
         };
       }
 
-      if (expr.type === "ArrayAccess") {
+      if (expr.type === 'ArrayAccess') {
         return {
-          type: "ArrayAssign",
+          type: 'ArrayAssign',
           array: expr.array,
           index: expr.index,
           value,
         };
       }
 
-      if (expr.type === "PropertyAccess") {
+      if (expr.type === 'PropertyAccess') {
         return {
-          type: "PropertyAssign",
+          type: 'PropertyAssign',
           object: expr.object,
           name: expr.name,
           value,
         };
       }
 
-      throw new Error("Invalid assignment target");
+      throw new Error('Invalid assignment target');
     }
 
     // Handle compound assignment operators
     if (
       this.match(
-        "PLUS_EQUAL",
-        "MINUS_EQUAL",
-        "STAR_EQUAL",
-        "SLASH_EQUAL",
-        "PERCENT_EQUAL",
+        'PLUS_EQUAL',
+        'MINUS_EQUAL',
+        'STAR_EQUAL',
+        'SLASH_EQUAL',
+        'PERCENT_EQUAL'
       )
     ) {
       const operator = this.previous();
       const value = this.logicalOr();
 
-      if (expr.type === "Variable") {
+      if (expr.type === 'Variable') {
         const name = expr.name;
         return {
-          type: "CompoundAssign",
+          type: 'CompoundAssign',
           name,
           operator: operator.type,
           value,
         };
       }
 
-      if (expr.type === "ArrayAccess") {
+      if (expr.type === 'ArrayAccess') {
         return {
-          type: "CompoundArrayAssign",
+          type: 'CompoundArrayAssign',
           array: expr.array,
           index: expr.index,
           operator: operator.type,
@@ -414,9 +442,9 @@ class Parser {
         };
       }
 
-      if (expr.type === "PropertyAccess") {
+      if (expr.type === 'PropertyAccess') {
         return {
-          type: "CompoundPropertyAssign",
+          type: 'CompoundPropertyAssign',
           object: expr.object,
           name: expr.name,
           operator: operator.type,
@@ -424,7 +452,7 @@ class Parser {
         };
       }
 
-      throw new Error("Invalid compound assignment target");
+      throw new Error('Invalid compound assignment target');
     }
 
     return expr;
@@ -437,11 +465,11 @@ class Parser {
   equality() {
     let expr = this.comparison();
 
-    while (this.match("EQUAL_EQUAL", "BANG_EQUAL")) {
+    while (this.match('EQUAL_EQUAL', 'BANG_EQUAL')) {
       const operator = this.previous();
       const right = this.comparison();
       expr = {
-        type: "Binary",
+        type: 'Binary',
         left: expr,
         operator: operator.type,
         right,
@@ -458,11 +486,11 @@ class Parser {
   logicalAnd() {
     let expr = this.equality();
 
-    while (this.match("AND")) {
+    while (this.match('AND')) {
       const operator = this.previous();
       const right = this.equality();
       expr = {
-        type: "Logical",
+        type: 'Logical',
         left: expr,
         operator: operator.type,
         right,
@@ -479,11 +507,11 @@ class Parser {
   logicalOr() {
     let expr = this.logicalAnd();
 
-    while (this.match("OR")) {
+    while (this.match('OR')) {
       const operator = this.previous();
       const right = this.logicalAnd();
       expr = {
-        type: "Logical",
+        type: 'Logical',
         left: expr,
         operator: operator.type,
         right,
@@ -500,11 +528,11 @@ class Parser {
   comparison() {
     let expr = this.term();
 
-    while (this.match("GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL")) {
+    while (this.match('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL')) {
       const operator = this.previous();
       const right = this.term();
       expr = {
-        type: "Binary",
+        type: 'Binary',
         left: expr,
         operator: operator.type,
         right,
@@ -521,11 +549,11 @@ class Parser {
   term() {
     let expr = this.factor();
 
-    while (this.match("MINUS", "PLUS")) {
+    while (this.match('MINUS', 'PLUS')) {
       const operator = this.previous();
       const right = this.factor();
       expr = {
-        type: "Binary",
+        type: 'Binary',
         left: expr,
         operator: operator.type,
         right,
@@ -542,11 +570,11 @@ class Parser {
   factor() {
     let expr = this.unary();
 
-    while (this.match("SLASH", "STAR", "PERCENT")) {
+    while (this.match('SLASH', 'STAR', 'PERCENT')) {
       const operator = this.previous();
       const right = this.unary();
       expr = {
-        type: "Binary",
+        type: 'Binary',
         left: expr,
         operator: operator.type,
         right,
@@ -561,11 +589,11 @@ class Parser {
    * @returns {Object} Unary expression
    */
   unary() {
-    if (this.match("BANG", "MINUS")) {
+    if (this.match('BANG', 'MINUS')) {
       const operator = this.previous();
       const right = this.unary();
       return {
-        type: "Unary",
+        type: 'Unary',
         operator: operator.type,
         right,
       };
@@ -581,10 +609,10 @@ class Parser {
   postfix() {
     let expr = this.call();
 
-    while (this.match("PLUS_PLUS", "MINUS_MINUS")) {
+    while (this.match('PLUS_PLUS', 'MINUS_MINUS')) {
       const operator = this.previous();
       expr = {
-        type: "Postfix",
+        type: 'Postfix',
         operator: operator.type,
         operand: expr,
       };
@@ -601,9 +629,9 @@ class Parser {
     let expr = this.primary();
 
     while (true) {
-      if (this.match("LEFT_BRACKET")) {
+      if (this.match('LEFT_BRACKET')) {
         expr = this.finishArrayAccess(expr);
-      } else if (this.match("DOT")) {
+      } else if (this.match('DOT')) {
         expr = this.finishPropertyAccess(expr);
       } else {
         break;
@@ -618,60 +646,60 @@ class Parser {
    * @returns {Object} Primary expression
    */
   primary() {
-    if (this.match("FALSE")) return { type: "Literal", value: false };
-    if (this.match("TRUE")) return { type: "Literal", value: true };
-    if (this.match("NULL")) return { type: "Literal", value: null };
-    if (this.match("UNDEFINED")) return { type: "Literal", value: undefined };
-    if (this.match("NUMBER", "STRING")) {
+    if (this.match('FALSE')) return { type: 'Literal', value: false };
+    if (this.match('TRUE')) return { type: 'Literal', value: true };
+    if (this.match('NULL')) return { type: 'Literal', value: null };
+    if (this.match('UNDEFINED')) return { type: 'Literal', value: undefined };
+    if (this.match('NUMBER', 'STRING')) {
       return {
-        type: "Literal",
+        type: 'Literal',
         value: this.previous().literal,
       };
     }
 
-    if (this.match("IDENTIFIER")) {
+    if (this.match('IDENTIFIER')) {
       const identifier = this.previous();
-      if (this.check("LEFT_PAREN")) {
+      if (this.check('LEFT_PAREN')) {
         this.advance(); // Consume the LEFT_PAREN
         return this.finishCall(identifier);
       }
       return {
-        type: "Variable",
+        type: 'Variable',
         name: identifier.lexeme,
       };
     }
 
-    if (this.match("AND")) {
+    if (this.match('AND')) {
       const identifier = this.previous();
-      if (this.check("LEFT_PAREN")) {
+      if (this.check('LEFT_PAREN')) {
         this.advance(); // Consume the LEFT_PAREN
         return this.finishCall(identifier);
       }
       return {
-        type: "Variable",
+        type: 'Variable',
         name: identifier.lexeme,
       };
     }
 
-    if (this.match("LEFT_PAREN")) {
+    if (this.match('LEFT_PAREN')) {
       const expr = this.expression();
-      this.consume("RIGHT_PAREN", "Expected ) after expression");
+      this.consume('RIGHT_PAREN', 'Expected ) after expression');
       return expr;
     }
 
-    if (this.match("LEFT_BRACKET")) {
+    if (this.match('LEFT_BRACKET')) {
       return this.arrayLiteral();
     }
 
-    if (this.match("LEFT_BRACE")) {
+    if (this.match('LEFT_BRACE')) {
       return this.objectLiteral();
     }
 
-    if (this.match("FUNCION")) {
+    if (this.match('FUNCION')) {
       return this.anonymousFunction();
     }
 
-    throw new Error("Expected expression");
+    throw new Error('Expected expression');
   }
 
   /**
@@ -679,33 +707,33 @@ class Parser {
    * @returns {Object} Anonymous function expression
    */
   anonymousFunction() {
-    this.consume("LEFT_PAREN", "Expected ( after funcion");
+    this.consume('LEFT_PAREN', 'Expected ( after funcion');
 
     const parameters = [];
-    if (!this.check("RIGHT_PAREN")) {
+    if (!this.check('RIGHT_PAREN')) {
       do {
         if (parameters.length >= 255) {
-          throw new Error("Cannot have more than 255 parameters");
+          throw new Error('Cannot have more than 255 parameters');
         }
         let param;
-        if (this.match("IDENTIFIER")) {
+        if (this.match('IDENTIFIER')) {
           param = this.previous();
-        } else if (this.match("AND")) {
+        } else if (this.match('AND')) {
           param = this.previous();
         } else {
-          throw new Error("Expected parameter name");
+          throw new Error('Expected parameter name');
         }
         parameters.push(param.lexeme);
-      } while (this.match("COMMA"));
+      } while (this.match('COMMA'));
     }
 
-    this.consume("RIGHT_PAREN", "Expected ) after parameters");
-    this.consume("LEFT_BRACE", "Expected { before function body");
+    this.consume('RIGHT_PAREN', 'Expected ) after parameters');
+    this.consume('LEFT_BRACE', 'Expected { before function body');
     const body = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after function body");
+    this.consume('RIGHT_BRACE', 'Expected } after function body');
 
     return {
-      type: "AnonymousFunction",
+      type: 'AnonymousFunction',
       parameters,
       body,
     };
@@ -718,10 +746,10 @@ class Parser {
    */
   finishArrayAccess(array) {
     const index = this.expression();
-    this.consume("RIGHT_BRACKET", "Expected ] after array index");
+    this.consume('RIGHT_BRACKET', 'Expected ] after array index');
 
     return {
-      type: "ArrayAccess",
+      type: 'ArrayAccess',
       array,
       index,
     };
@@ -733,63 +761,63 @@ class Parser {
    * @returns {Object} Property access expression
    */
   finishPropertyAccess(object) {
-    this.consume("IDENTIFIER", "Expected property name after .");
+    this.consume('IDENTIFIER', 'Expected property name after .');
     const name = this.previous();
 
     // Check if this is a method call (array or string)
     if (
-      name.lexeme === "longitud" ||
-      name.lexeme === "primero" ||
-      name.lexeme === "ultimo" ||
-      name.lexeme === "agregar" ||
-      name.lexeme === "remover" ||
-      name.lexeme === "contiene" ||
-      name.lexeme === "recorrer" ||
-      name.lexeme === "mayusculas" ||
-      name.lexeme === "minusculas"
+      name.lexeme === 'longitud' ||
+      name.lexeme === 'primero' ||
+      name.lexeme === 'ultimo' ||
+      name.lexeme === 'agregar' ||
+      name.lexeme === 'remover' ||
+      name.lexeme === 'contiene' ||
+      name.lexeme === 'recorrer' ||
+      name.lexeme === 'mayusculas' ||
+      name.lexeme === 'minusculas'
     ) {
       // Check if there are parentheses (method call syntax)
-      if (this.match("LEFT_PAREN")) {
+      if (this.match('LEFT_PAREN')) {
         // Consume the opening parenthesis
         // Check if there are arguments
-        if (!this.check("RIGHT_PAREN")) {
+        if (!this.check('RIGHT_PAREN')) {
           // Handle methods that accept arguments (like agregar, contiene, recorrer)
           if (
-            name.lexeme === "agregar" ||
-            name.lexeme === "contiene" ||
-            name.lexeme === "recorrer"
+            name.lexeme === 'agregar' ||
+            name.lexeme === 'contiene' ||
+            name.lexeme === 'recorrer'
           ) {
             const args = [];
             do {
               args.push(this.expression());
-            } while (this.match("COMMA"));
-            this.consume("RIGHT_PAREN", "Expected ) after method call");
+            } while (this.match('COMMA'));
+            this.consume('RIGHT_PAREN', 'Expected ) after method call');
 
             return {
-              type: "MethodCall",
+              type: 'MethodCall',
               object,
               method: name.lexeme,
               arguments: args,
             };
           } else {
             throw new Error(
-              `Method ${name.lexeme}() does not accept arguments`,
+              `Method ${name.lexeme}() does not accept arguments`
             );
           }
         }
         // Consume the closing parenthesis
-        this.consume("RIGHT_PAREN", "Expected ) after method call");
+        this.consume('RIGHT_PAREN', 'Expected ) after method call');
       }
 
       return {
-        type: "MethodCall",
+        type: 'MethodCall',
         object,
         method: name.lexeme,
       };
     }
 
     return {
-      type: "PropertyAccess",
+      type: 'PropertyAccess',
       object,
       name: name.lexeme,
     };
@@ -803,21 +831,21 @@ class Parser {
   finishCall(callee) {
     const args = [];
 
-    if (!this.check("RIGHT_PAREN")) {
+    if (!this.check('RIGHT_PAREN')) {
       do {
         if (args.length >= 255) {
-          throw new Error("Cannot have more than 255 arguments");
+          throw new Error('Cannot have more than 255 arguments');
         }
         args.push(this.expression());
-      } while (this.match("COMMA"));
+      } while (this.match('COMMA'));
     }
 
-    const paren = this.consume("RIGHT_PAREN", "Expected ) after arguments");
+    const paren = this.consume('RIGHT_PAREN', 'Expected ) after arguments');
 
     return {
-      type: "Call",
+      type: 'Call',
       callee: {
-        type: "Variable",
+        type: 'Variable',
         name: callee.lexeme,
       },
       arguments: args,
@@ -831,16 +859,16 @@ class Parser {
   arrayLiteral() {
     const elements = [];
 
-    if (!this.check("RIGHT_BRACKET")) {
+    if (!this.check('RIGHT_BRACKET')) {
       do {
         elements.push(this.expression());
-      } while (this.match("COMMA"));
+      } while (this.match('COMMA'));
     }
 
-    this.consume("RIGHT_BRACKET", "Expected ] after array elements");
+    this.consume('RIGHT_BRACKET', 'Expected ] after array elements');
 
     return {
-      type: "ArrayLiteral",
+      type: 'ArrayLiteral',
       elements,
     };
   }
@@ -852,33 +880,33 @@ class Parser {
   objectLiteral() {
     const properties = [];
 
-    if (!this.check("RIGHT_BRACE")) {
+    if (!this.check('RIGHT_BRACE')) {
       do {
         // Parse property name (identifier or string)
         let name;
-        if (this.match("IDENTIFIER")) {
+        if (this.match('IDENTIFIER')) {
           name = this.previous().lexeme;
-        } else if (this.match("STRING")) {
+        } else if (this.match('STRING')) {
           name = this.previous().literal;
         } else {
-          throw new Error("Expected property name");
+          throw new Error('Expected property name');
         }
 
-        this.consume("COLON", "Expected : after property name");
+        this.consume('COLON', 'Expected : after property name');
         const value = this.expression();
 
         properties.push({
-          type: "Property",
+          type: 'Property',
           name,
           value,
         });
-      } while (this.match("COMMA"));
+      } while (this.match('COMMA'));
     }
 
-    this.consume("RIGHT_BRACE", "Expected } after object properties");
+    this.consume('RIGHT_BRACE', 'Expected } after object properties');
 
     return {
-      type: "ObjectLiteral",
+      type: 'ObjectLiteral',
       properties,
     };
   }
@@ -922,7 +950,7 @@ class Parser {
    * @returns {boolean} True if we reached the end
    */
   isAtEnd() {
-    return this.peek().type === "EOF";
+    return this.peek().type === 'EOF';
   }
 
   /**
@@ -960,20 +988,21 @@ class Parser {
     this.advance();
 
     while (!this.isAtEnd()) {
-      if (this.previous().type === "EOF") return;
+      if (this.previous().type === 'EOF') return;
 
       switch (this.peek().type) {
-        case "VARIABLE":
-        case "FUNCION":
-        case "MOSTRAR":
-        case "SI":
-        case "MIENTRAS":
-        case "PARA":
-        case "RETORNAR":
-        case "ROMPER":
-        case "CONTINUAR":
-        case "INTENTAR":
-        case "CAPTURAR":
+        case 'VARIABLE':
+        case 'FUNCION':
+        case 'MOSTRAR':
+        case 'LEER':
+        case 'SI':
+        case 'MIENTRAS':
+        case 'PARA':
+        case 'RETORNAR':
+        case 'ROMPER':
+        case 'CONTINUAR':
+        case 'INTENTAR':
+        case 'CAPTURAR':
           return;
       }
 
@@ -987,33 +1016,33 @@ class Parser {
    */
   tryStatement() {
     // Parse the try block
-    this.consume("LEFT_BRACE", "Expected { after intentar");
+    this.consume('LEFT_BRACE', 'Expected { after intentar');
     const tryBlock = this.block();
-    this.consume("RIGHT_BRACE", "Expected } after intentar block");
+    this.consume('RIGHT_BRACE', 'Expected } after intentar block');
 
     // Look for catch block
-    if (this.match("CAPTURAR")) {
+    if (this.match('CAPTURAR')) {
       // Parse catch parameter (error variable name)
-      this.consume("LEFT_PAREN", "Expected ( after capturar");
+      this.consume('LEFT_PAREN', 'Expected ( after capturar');
       const errorVariable = this.consume(
-        "IDENTIFIER",
-        "Expected error variable name",
+        'IDENTIFIER',
+        'Expected error variable name'
       );
-      this.consume("RIGHT_PAREN", "Expected ) after error variable");
+      this.consume('RIGHT_PAREN', 'Expected ) after error variable');
 
       // Parse catch block
-      this.consume("LEFT_BRACE", "Expected { after capturar");
+      this.consume('LEFT_BRACE', 'Expected { after capturar');
       const catchBlock = this.block();
-      this.consume("RIGHT_BRACE", "Expected } after capturar block");
+      this.consume('RIGHT_BRACE', 'Expected } after capturar block');
 
       return {
-        type: "TryCatch",
+        type: 'TryCatch',
         tryBlock,
         catchBlock,
         errorVariable: errorVariable.lexeme,
       };
     } else {
-      throw new Error("Expected capturar after intentar block");
+      throw new Error('Expected capturar after intentar block');
     }
   }
 }

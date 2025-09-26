@@ -7,7 +7,7 @@
  * - Show: mostrar "texto" o mostrar variable
  */
 
-const Interpreter = require("./src/interpreter");
+const Interpreter = require('./src/interpreter');
 
 // Create an interpreter instance
 const interpreter = new Interpreter();
@@ -48,59 +48,31 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
- // Asignación directa
-variable a = nulo
-variable b = indefinido
-mostrar a
-mostrar b
+// Entrada básica
+leer nombre
+mostrar "Hola " + nombre
 
-// Comparaciones básicas
-mostrar a == nulo
-mostrar b == indefinido
-mostrar a == indefinido
-mostrar b == nulo
+// Entrada con mensaje
+leer edad "¿Cuál es tu edad?"
+mostrar "Tienes " + edad + " años"
 
-// Uso en condicionales
-si a == nulo {
-  mostrar "a es nulo"
-}
-
-si b == indefinido {
-  mostrar "b es indefinido"
-}
-
-// En arrays
-variable lista = [1, nulo, 3, indefinido, 5]
-mostrar lista
-mostrar lista.longitud()
-
-// En objetos
-variable objeto = {x: nulo, y: indefinido}
-mostrar objeto
-
-// Sobrescribir valores
-objeto.x = 42
-objeto.y = "texto"
-mostrar objeto
-
-// Comparaciones estrictas
-mostrar nulo == nulo
-mostrar indefinido == indefinido
-mostrar nulo != indefinido
-
+// Entrada numérica
+leer numero "Ingresa un número:"
+variable resultado = numero * 2
+mostrar "El doble es: " + resultado
 `;
 
-console.log("Code to execute:");
+console.log('Code to execute:');
 console.log(exampleCode);
-console.log("Result:");
+console.log('Result:');
 
 const result = interpret(exampleCode);
 
 if (result.success) {
-  console.log("✓ Execution successful");
-  console.log("Defined variables:", getVariables());
+  console.log('✓ Execution successful');
+  console.log('Defined variables:', getVariables());
 } else {
-  console.log("✗ Error:", result.error);
+  console.log('✗ Error:', result.error);
 }
 
 // Export functions for use in other modules
