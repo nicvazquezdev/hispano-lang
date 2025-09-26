@@ -63,6 +63,18 @@ variable edad = 25
 variable activo = verdadero
 ```
 
+### Entrada de datos
+
+```javascript
+// Entrada básica
+leer nombre
+mostrar "Hola " + nombre
+
+// Entrada con mensaje
+leer edad "¿Cuál es tu edad?"
+mostrar "Tienes " + edad + " años"
+```
+
 ### Condicionales
 
 ```javascript
