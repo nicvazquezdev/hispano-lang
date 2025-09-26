@@ -48,18 +48,7 @@ function clearVariables() {
 // Example usage
 
 const exampleCode = `
-// Entrada básica
-leer nombre
-mostrar "Hola " + nombre
-
-// Entrada con mensaje
-leer edad "¿Cuál es tu edad?"
-mostrar "Tienes " + edad + " años"
-
-// Entrada numérica
-leer numero "Ingresa un número:"
-variable resultado = numero * 2
-mostrar "El doble es: " + resultado
+mostrar "Hola mundo"
 `;
 
 console.log('Code to execute:');
