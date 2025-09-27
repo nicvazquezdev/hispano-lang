@@ -87,6 +87,93 @@ function runTests() {
     assertEquals(variables.booleano, true, 'Variable booleano should be true');
   });
 
+  // Test 1.1: Read functionality syntax validation
+  test('Read functionality syntax validation', () => {
+    // Test that the leer keyword is recognized in tokenization
+    const code = `leer variable`;
+
+    try {
+      const Interpreter = require('../src/interpreter.js');
+      const interpreter = new Interpreter();
+      const tokens = interpreter.tokenizer.tokenize(code);
+
+      // Check that LEER token is present
+      const leerToken = tokens.find(token => token.type === 'LEER');
+      assertTrue(leerToken !== undefined, 'LEER token should be found');
+      assertEquals(
+        leerToken.lexeme,
+        'leer',
+        'LEER token should have correct lexeme'
+      );
+    } catch (error) {
+      throw new Error(`Tokenization error: ${error.message}`);
+    }
+  });
+
+  // Test 1.2: Read with prompt syntax validation
+  test('Read with prompt syntax validation', () => {
+    // Test that leer with prompt is tokenized correctly
+    const code = `leer edad "¿Cuál es tu edad?"`;
+
+    try {
+      const Interpreter = require('../src/interpreter.js');
+      const interpreter = new Interpreter();
+      const tokens = interpreter.tokenizer.tokenize(code);
+
+      // Check that we have the expected tokens
+      assertTrue(tokens.length > 0, 'Should have tokens');
+
+      // Check that LEER token is present
+      const leerToken = tokens.find(token => token.type === 'LEER');
+      assertTrue(leerToken !== undefined, 'LEER token should be found');
+      assertEquals(
+        leerToken.lexeme,
+        'leer',
+        'LEER token should have correct lexeme'
+      );
+
+      // Check that we have an IDENTIFIER token for the variable
+      const identifierToken = tokens.find(token => token.type === 'IDENTIFIER');
+      assertTrue(
+        identifierToken !== undefined,
+        'IDENTIFIER token should be found'
+      );
+      assertEquals(
+        identifierToken.lexeme,
+        'edad',
+        'IDENTIFIER token should be "edad"'
+      );
+
+      // Check that we have a STRING token for the prompt
+      const stringToken = tokens.find(token => token.type === 'STRING');
+      assertTrue(stringToken !== undefined, 'STRING token should be found');
+      assertEquals(
+        stringToken.literal,
+        '¿Cuál es tu edad?',
+        'STRING token should contain the prompt'
+      );
+    } catch (error) {
+      throw new Error(`Tokenization error: ${error.message}`);
+    }
+  });
+
+  // Test 1.3: Read functionality with predefined variables
+  test('Read functionality with predefined variables', () => {
+    const code = `
+      variable nombre = "Juan"
+      variable edad = 25
+      mostrar "Hola " + nombre
+      mostrar "Tienes " + edad + " años"
+    `;
+
+    const result = interpret(code);
+    assertTrue(result.success, 'Code should execute without errors');
+
+    const variables = getVariables();
+    assertEquals(variables.nombre, 'Juan', 'Variable nombre should be Juan');
+    assertEquals(variables.edad, 25, 'Variable edad should be 25');
+  });
+
   // Test 2: Show values
   test('Show command with different types', () => {
     const code = `
