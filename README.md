@@ -1,9 +1,5 @@
 # HispanoLang
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/tests-182%20passed-brightgreen)](https://github.com/nicvazquezdev/hispano-lang)
-
 **HispanoLang** es un lenguaje de programación educativo diseñado en español para enseñar los fundamentos de la programación sin barreras de idioma.
 
 ## 🎯 ¿Por qué HispanoLang?
