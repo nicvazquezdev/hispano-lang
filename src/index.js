@@ -1,0 +1,55 @@
+/**
+ * HispanoLang
+ * A simple interpreter to teach programming without language barriers
+ *
+ * Features:
+ * - Variables: variable nombre = valor
+ * - Show: mostrar "texto" o mostrar variable
+ */
+
+const Interpreter = require('./interpreter');
+
+// Create an interpreter instance
+const interpreter = new Interpreter();
+
+/**
+ * Main function to interpret code
+ * @param {string} code - Source code in Spanish
+ * @returns {Object} Interpretation result
+ */
+function interpret(code) {
+  return interpreter.interpret(code);
+}
+
+/**
+ * Executes code and returns only the output
+ * @param {string} code - Source code in Spanish
+ * @returns {Array} List of outputs
+ */
+function run(code) {
+  return interpreter.run(code);
+}
+
+/**
+ * Gets the defined variables
+ * @returns {Object} Variables in the current environment
+ */
+function getVariables() {
+  return interpreter.getEnvironment();
+}
+
+/**
+ * Clears the variable environment
+ */
+function clearVariables() {
+  interpreter.clearEnvironment();
+}
+
+// Export functions for use in other modules
+module.exports = {
+  interpret,
+  run,
+  getVariables,
+  clearVariables,
+  Interpreter,
+};
