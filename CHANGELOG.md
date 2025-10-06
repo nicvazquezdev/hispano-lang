@@ -5,6 +5,38 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.7] - 06-10-2025
+
+### 🌍 Internacionalización
+- **Todos los mensajes de error** ahora están completamente en español
+- **Consistencia total** del lenguaje educativo en español
+- **Experiencia de usuario** 100% en español para estudiantes
+
+### 🔧 Mejorado
+- **Mensajes de error descriptivos** en español para mejor comprensión
+- **Consistencia del idioma** en toda la experiencia de programación
+- **Mejor experiencia educativa** para hispanohablantes
+
+### 🐛 Corregido
+- **117+ mensajes de error** traducidos al español
+- **Mensajes de validación** de tipos y operadores en español
+- **Errores de sintaxis** con descripciones claras en español
+- **Mensajes de runtime** completamente localizados
+
+### 📝 Detalles Técnicos
+- **Evaluator.js**: 105+ mensajes traducidos
+- **Parser.js**: 10+ mensajes traducidos
+- **Tokenizer.js**: 2+ mensajes traducidos
+- **Mensajes de CLI**: Ya estaban en español
+- **Mensajes de test**: Mantenidos en inglés para desarrollo
+
+### 🧪 Verificado
+- ✅ División por cero: "División por cero"
+- ✅ Operadores: "El operador X requiere dos números"
+- ✅ Caracteres: "Carácter inesperado: ^ en la línea 1"
+- ✅ Arrays: "Índice del arreglo fuera de rango"
+- ✅ Asignaciones: "Solo se pueden asignar elementos de arreglos"
+
 ## [1.0.0] - 06-10-2025
 
 ### ✨ Añadido
