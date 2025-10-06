@@ -96,7 +96,7 @@ class Parser {
     } else if (this.match('AND')) {
       name = this.previous();
     } else {
-      throw new Error('Expected variable name');
+      throw new Error('Se esperaba un nombre de variable');
     }
 
     let initializer = null;
@@ -123,7 +123,7 @@ class Parser {
     if (!this.check('RIGHT_PAREN')) {
       do {
         if (parameters.length >= 255) {
-          throw new Error('Cannot have more than 255 parameters');
+          throw new Error('No se pueden tener más de 255 parámetros');
         }
         let param;
         if (this.match('IDENTIFIER')) {
@@ -131,7 +131,7 @@ class Parser {
         } else if (this.match('AND')) {
           param = this.previous();
         } else {
-          throw new Error('Expected parameter name');
+          throw new Error('Se esperaba un nombre de parámetro');
         }
         parameters.push(param.lexeme);
       } while (this.match('COMMA'));
@@ -406,7 +406,7 @@ class Parser {
         };
       }
 
-      throw new Error('Invalid assignment target');
+      throw new Error('Objetivo de asignación inválido');
     }
 
     // Handle compound assignment operators
@@ -452,7 +452,7 @@ class Parser {
         };
       }
 
-      throw new Error('Invalid compound assignment target');
+      throw new Error('Objetivo de asignación compuesta inválido');
     }
 
     return expr;
@@ -699,7 +699,7 @@ class Parser {
       return this.anonymousFunction();
     }
 
-    throw new Error('Expected expression');
+    throw new Error('Se esperaba una expresión');
   }
 
   /**
@@ -713,7 +713,7 @@ class Parser {
     if (!this.check('RIGHT_PAREN')) {
       do {
         if (parameters.length >= 255) {
-          throw new Error('Cannot have more than 255 parameters');
+          throw new Error('No se pueden tener más de 255 parámetros');
         }
         let param;
         if (this.match('IDENTIFIER')) {
@@ -721,7 +721,7 @@ class Parser {
         } else if (this.match('AND')) {
           param = this.previous();
         } else {
-          throw new Error('Expected parameter name');
+          throw new Error('Se esperaba un nombre de parámetro');
         }
         parameters.push(param.lexeme);
       } while (this.match('COMMA'));
@@ -801,7 +801,7 @@ class Parser {
             };
           } else {
             throw new Error(
-              `Method ${name.lexeme}() does not accept arguments`
+              `El método ${name.lexeme}() no acepta argumentos`
             );
           }
         }
@@ -889,7 +889,7 @@ class Parser {
         } else if (this.match('STRING')) {
           name = this.previous().literal;
         } else {
-          throw new Error('Expected property name');
+          throw new Error('Se esperaba un nombre de propiedad');
         }
 
         this.consume('COLON', 'Expected : after property name');
@@ -978,7 +978,7 @@ class Parser {
   consume(type, message) {
     if (this.check(type)) return this.advance();
 
-    throw new Error(`${message} at line ${this.peek().line}`);
+    throw new Error(`${message} en la línea ${this.peek().line}`);
   }
 
   /**
@@ -1042,7 +1042,7 @@ class Parser {
         errorVariable: errorVariable.lexeme,
       };
     } else {
-      throw new Error('Expected capturar after intentar block');
+      throw new Error('Se esperaba capturar después del bloque intentar');
     }
   }
 }

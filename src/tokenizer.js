@@ -213,7 +213,7 @@ class Tokenizer {
           this.identifier();
         } else {
           throw new Error(
-            `Unexpected character: ${char} at line ${this.currentLine}`
+            `Carácter inesperado: ${char} en la línea ${this.currentLine}`
           );
         }
         break;
@@ -231,7 +231,7 @@ class Tokenizer {
     }
 
     if (this.isAtEnd()) {
-      throw new Error('Unterminated string');
+      throw new Error('Cadena no terminada');
     }
 
     // Consume the closing quote

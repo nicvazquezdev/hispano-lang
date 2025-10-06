@@ -22,7 +22,7 @@ class Evaluator {
         this.execute(statement);
       }
     } catch (error) {
-      throw new Error(`Execution error: ${error.message}`);
+      throw new Error(`Error de ejecución: ${error.message}`);
     }
 
     return this.output;
@@ -358,7 +358,7 @@ class Evaluator {
         );
 
       default:
-        throw new Error(`Unrecognized expression type: ${expression.type}`);
+        throw new Error(`Tipo de expresión no reconocido: ${expression.type}`);
     }
   }
 
@@ -378,7 +378,7 @@ class Evaluator {
         return !this.isTruthy(right);
 
       default:
-        throw new Error(`Unrecognized unary operator: ${operator}`);
+        throw new Error(`Operador unario no reconocido: ${operator}`);
     }
   }
 
@@ -407,7 +407,7 @@ class Evaluator {
       case 'SLASH':
         this.checkNumberOperands(operator, left, right);
         if (right === 0) {
-          throw new Error('Division by zero');
+          throw new Error('División por cero');
         }
         return left / right;
 
@@ -418,7 +418,7 @@ class Evaluator {
       case 'PERCENT':
         this.checkNumberOperands(operator, left, right);
         if (right === 0) {
-          throw new Error('Modulo by zero');
+          throw new Error('Módulo por cero');
         }
         return left % right;
 
@@ -457,7 +457,7 @@ class Evaluator {
         return !this.isEqual(left, right);
 
       default:
-        throw new Error(`Unrecognized binary operator: ${operator}`);
+        throw new Error(`Operador binario no reconocido: ${operator}`);
     }
   }
 
@@ -490,7 +490,7 @@ class Evaluator {
    */
   checkNumberOperand(operator, operand) {
     if (typeof operand === 'number') return;
-    throw new Error(`Operator ${operator} requires a number`);
+    throw new Error(`El operador ${operator} requiere un número`);
   }
 
   /**
@@ -501,7 +501,7 @@ class Evaluator {
    */
   checkNumberOperands(operator, left, right) {
     if (typeof left === 'number' && typeof right === 'number') return;
-    throw new Error(`Operator ${operator} requires two numbers`);
+    throw new Error(`El operador ${operator} requiere dos números`);
   }
 
   /**
@@ -530,12 +530,12 @@ class Evaluator {
     }
 
     if (callee.type !== 'Function') {
-      throw new Error('Can only call functions');
+      throw new Error('Solo se pueden llamar funciones');
     }
 
     if (args.length !== callee.parameters.length) {
       throw new Error(
-        `Expected ${callee.parameters.length} arguments but got ${args.length}`
+        `Se esperaban ${callee.parameters.length} argumentos pero se recibieron ${args.length}`
       );
     }
 
@@ -584,13 +584,13 @@ class Evaluator {
         expression.method === 'recorrer'
       ) {
         throw new Error(
-          `Method ${expression.method}() can only be called on arrays`
+          `El método ${expression.method}() solo se puede llamar en arreglos`
         );
       }
       return this.evaluateStringMethod(object, expression.method);
     } else {
       throw new Error(
-        `Can only call methods on arrays or strings, got ${typeof object}`
+        `Solo se pueden llamar métodos en arreglos o cadenas, se recibió ${typeof object}`
       );
     }
   }
@@ -609,13 +609,13 @@ class Evaluator {
 
       case 'primero':
         if (array.length === 0) {
-          throw new Error('Cannot get first element of empty array');
+          throw new Error('No se puede obtener el primer elemento de un arreglo vacío');
         }
         return array[0];
 
       case 'ultimo':
         if (array.length === 0) {
-          throw new Error('Cannot get last element of empty array');
+          throw new Error('No se puede obtener el último elemento de un arreglo vacío');
         }
         return array[array.length - 1];
 
@@ -630,14 +630,14 @@ class Evaluator {
       case 'remover':
         // Remove and return the last element
         if (array.length === 0) {
-          throw new Error('Cannot remove element from empty array');
+          throw new Error('No se puede eliminar un elemento de un arreglo vacío');
         }
         return array.pop(); // Return the removed element
 
       case 'contiene':
         // Check if array contains the specified element
         if (args.length !== 1) {
-          throw new Error('Method contiene() requires exactly one argument');
+          throw new Error('El método contiene() requiere exactamente un argumento');
         }
         const searchElement = this.evaluateExpression(args[0]);
         return array.includes(searchElement);
@@ -645,11 +645,11 @@ class Evaluator {
       case 'recorrer':
         // Iterate through array and call function for each element
         if (args.length !== 1) {
-          throw new Error('Method recorrer() requires exactly one argument');
+          throw new Error('El método recorrer() requiere exactamente un argumento');
         }
         const callback = this.evaluateExpression(args[0]);
         if (callback.type !== 'Function') {
-          throw new Error('Method recorrer() requires a function as argument');
+          throw new Error('El método recorrer() requiere una función como argumento');
         }
 
         // Call the function for each element
@@ -672,7 +672,7 @@ class Evaluator {
             callbackEnv.define(callback.parameters[1], i);
           } else {
             throw new Error(
-              'Function in recorrer() can have at most 2 parameters'
+              'La función en recorrer() puede tener máximo 2 parámetros'
             );
           }
 
@@ -688,7 +688,7 @@ class Evaluator {
         return null; // forEach doesn't return anything
 
       default:
-        throw new Error(`Unknown array method: ${method}`);
+        throw new Error(`Método de arreglo desconocido: ${method}`);
     }
   }
 
@@ -710,7 +710,7 @@ class Evaluator {
         return string.toLowerCase();
 
       default:
-        throw new Error(`Unknown string method: ${method}`);
+        throw new Error(`Método de cadena desconocido: ${method}`);
     }
   }
 
@@ -750,97 +750,97 @@ class Evaluator {
     switch (name) {
       case 'raiz':
         if (args.length !== 1) {
-          throw new Error('raiz() requires exactly 1 argument');
+          throw new Error('raiz() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('raiz() requires a number argument');
+          throw new Error('raiz() requiere un argumento numérico');
         }
         if (args[0] < 0) {
-          throw new Error('Cannot take square root of negative number');
+          throw new Error('No se puede calcular la raíz cuadrada de un número negativo');
         }
         return Math.sqrt(args[0]);
 
       case 'potencia':
         if (args.length !== 2) {
-          throw new Error('potencia() requires exactly 2 arguments');
+          throw new Error('potencia() requiere exactamente 2 argumentos');
         }
         if (typeof args[0] !== 'number' || typeof args[1] !== 'number') {
-          throw new Error('potencia() requires number arguments');
+          throw new Error('potencia() requiere argumentos numéricos');
         }
         return Math.pow(args[0], args[1]);
 
       case 'seno':
         if (args.length !== 1) {
-          throw new Error('seno() requires exactly 1 argument');
+          throw new Error('seno() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('seno() requires a number argument');
+          throw new Error('seno() requiere un argumento numérico');
         }
         return Math.sin(args[0]);
 
       case 'coseno':
         if (args.length !== 1) {
-          throw new Error('coseno() requires exactly 1 argument');
+          throw new Error('coseno() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('coseno() requires a number argument');
+          throw new Error('coseno() requiere un argumento numérico');
         }
         return Math.cos(args[0]);
 
       case 'tangente':
         if (args.length !== 1) {
-          throw new Error('tangente() requires exactly 1 argument');
+          throw new Error('tangente() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('tangente() requires a number argument');
+          throw new Error('tangente() requiere un argumento numérico');
         }
         return Math.tan(args[0]);
 
       case 'logaritmo':
         if (args.length !== 1) {
-          throw new Error('logaritmo() requires exactly 1 argument');
+          throw new Error('logaritmo() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('logaritmo() requires a number argument');
+          throw new Error('logaritmo() requiere un argumento numérico');
         }
         if (args[0] <= 0) {
-          throw new Error('Cannot take logarithm of non-positive number');
+          throw new Error('No se puede calcular el logaritmo de un número no positivo');
         }
         return Math.log(args[0]);
 
       case 'valorAbsoluto':
         if (args.length !== 1) {
-          throw new Error('valorAbsoluto() requires exactly 1 argument');
+          throw new Error('valorAbsoluto() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('valorAbsoluto() requires a number argument');
+          throw new Error('valorAbsoluto() requiere un argumento numérico');
         }
         return Math.abs(args[0]);
 
       case 'redondear':
         if (args.length !== 1) {
-          throw new Error('redondear() requires exactly 1 argument');
+          throw new Error('redondear() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('redondear() requires a number argument');
+          throw new Error('redondear() requiere un argumento numérico');
         }
         return Math.round(args[0]);
 
       case 'techo':
         if (args.length !== 1) {
-          throw new Error('techo() requires exactly 1 argument');
+          throw new Error('techo() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('techo() requires a number argument');
+          throw new Error('techo() requiere un argumento numérico');
         }
         return Math.ceil(args[0]);
 
       case 'piso':
         if (args.length !== 1) {
-          throw new Error('piso() requires exactly 1 argument');
+          throw new Error('piso() requiere exactamente 1 argumento');
         }
         if (typeof args[0] !== 'number') {
-          throw new Error('piso() requires a number argument');
+          throw new Error('piso() requiere un argumento numérico');
         }
         return Math.floor(args[0]);
 
@@ -849,64 +849,64 @@ class Evaluator {
           return Math.random();
         } else if (args.length === 1) {
           if (typeof args[0] !== 'number') {
-            throw new Error('aleatorio() requires a number argument');
+            throw new Error('aleatorio() requiere un argumento numérico');
           }
           return Math.random() * args[0];
         } else if (args.length === 2) {
           if (typeof args[0] !== 'number' || typeof args[1] !== 'number') {
-            throw new Error('aleatorio() requires number arguments');
+            throw new Error('aleatorio() requiere argumentos numéricos');
           }
           return Math.random() * (args[1] - args[0]) + args[0];
         } else {
-          throw new Error('aleatorio() accepts 0, 1, or 2 arguments');
+          throw new Error('aleatorio() acepta 0, 1, o 2 argumentos');
         }
 
       case 'maximo':
         if (args.length < 1) {
-          throw new Error('maximo() requires at least 1 argument');
+          throw new Error('maximo() requiere al menos 1 argumento');
         }
         for (const arg of args) {
           if (typeof arg !== 'number') {
-            throw new Error('maximo() requires number arguments');
+            throw new Error('maximo() requiere argumentos numéricos');
           }
         }
         return Math.max(...args);
 
       case 'minimo':
         if (args.length < 1) {
-          throw new Error('minimo() requires at least 1 argument');
+          throw new Error('minimo() requiere al menos 1 argumento');
         }
         for (const arg of args) {
           if (typeof arg !== 'number') {
-            throw new Error('minimo() requires number arguments');
+            throw new Error('minimo() requiere argumentos numéricos');
           }
         }
         return Math.min(...args);
 
       case 'suma':
         if (args.length < 1) {
-          throw new Error('suma() requires at least 1 argument');
+          throw new Error('suma() requiere al menos 1 argumento');
         }
         for (const arg of args) {
           if (typeof arg !== 'number') {
-            throw new Error('suma() requires number arguments');
+            throw new Error('suma() requiere argumentos numéricos');
           }
         }
         return args.reduce((sum, arg) => sum + arg, 0);
 
       case 'promedio':
         if (args.length < 1) {
-          throw new Error('promedio() requires at least 1 argument');
+          throw new Error('promedio() requiere al menos 1 argumento');
         }
         for (const arg of args) {
           if (typeof arg !== 'number') {
-            throw new Error('promedio() requires number arguments');
+            throw new Error('promedio() requiere argumentos numéricos');
           }
         }
         return args.reduce((sum, arg) => sum + arg, 0) / args.length;
 
       default:
-        throw new Error(`Unknown mathematical function: ${name}`);
+        throw new Error(`Función matemática desconocida: ${name}`);
     }
   }
 
@@ -933,15 +933,15 @@ class Evaluator {
     const index = this.evaluateExpression(expression.index);
 
     if (!Array.isArray(array)) {
-      throw new Error('Can only access elements of arrays');
+      throw new Error('Solo se pueden acceder elementos de arreglos');
     }
 
     if (typeof index !== 'number') {
-      throw new Error('Array index must be a number');
+      throw new Error('El índice del arreglo debe ser un número');
     }
 
     if (index < 0 || index >= array.length) {
-      throw new Error('Array index out of bounds');
+      throw new Error('Índice del arreglo fuera de rango');
     }
 
     return array[index];
@@ -958,15 +958,15 @@ class Evaluator {
     const value = this.evaluateExpression(expression.value);
 
     if (!Array.isArray(array)) {
-      throw new Error('Can only assign to elements of arrays');
+      throw new Error('Solo se pueden asignar elementos de arreglos');
     }
 
     if (typeof index !== 'number') {
-      throw new Error('Array index must be a number');
+      throw new Error('El índice del arreglo debe ser un número');
     }
 
     if (index < 0 || index >= array.length) {
-      throw new Error('Array index out of bounds');
+      throw new Error('Índice del arreglo fuera de rango');
     }
 
     array[index] = value;
@@ -998,7 +998,7 @@ class Evaluator {
     const object = this.evaluateExpression(expression.object);
 
     if (typeof object !== 'object' || object === null) {
-      throw new Error('Can only access properties of objects');
+      throw new Error('Solo se pueden acceder propiedades de objetos');
     }
 
     return object[expression.name];
@@ -1014,7 +1014,7 @@ class Evaluator {
     const value = this.evaluateExpression(expression.value);
 
     if (typeof object !== 'object' || object === null) {
-      throw new Error('Can only assign to properties of objects');
+      throw new Error('Solo se pueden asignar propiedades de objetos');
     }
 
     object[expression.name] = value;
@@ -1045,7 +1045,7 @@ class Evaluator {
       return this.evaluateExpression(expression.right);
     }
 
-    throw new Error(`Unknown logical operator: ${expression.operator}`);
+    throw new Error(`Operador lógico desconocido: ${expression.operator}`);
   }
 
   /**
@@ -1077,13 +1077,13 @@ class Evaluator {
     const rightValue = this.evaluateExpression(expression.value);
 
     if (!Array.isArray(array)) {
-      throw new Error('Can only assign to elements of arrays');
+      throw new Error('Solo se pueden asignar elementos de arreglos');
     }
     if (typeof index !== 'number') {
-      throw new Error('Array index must be a number');
+      throw new Error('El índice del arreglo debe ser un número');
     }
     if (index < 0 || index >= array.length) {
-      throw new Error('Array index out of bounds');
+      throw new Error('Índice del arreglo fuera de rango');
     }
 
     const currentValue = array[index];
@@ -1107,7 +1107,7 @@ class Evaluator {
     const rightValue = this.evaluateExpression(expression.value);
 
     if (typeof object !== 'object' || object === null) {
-      throw new Error('Can only assign to properties of objects');
+      throw new Error('Solo se pueden asignar propiedades de objetos');
     }
 
     const currentValue = object[expression.name];
@@ -1137,40 +1137,40 @@ class Evaluator {
         if (typeof left === 'string' || typeof right === 'string') {
           return String(left) + String(right);
         }
-        throw new Error('Cannot add non-numeric values');
+        throw new Error('No se pueden sumar valores no numéricos');
 
       case 'MINUS_EQUAL':
         if (typeof left !== 'number' || typeof right !== 'number') {
-          throw new Error('Can only subtract numbers');
+          throw new Error('Solo se pueden restar números');
         }
         return left - right;
 
       case 'STAR_EQUAL':
         if (typeof left !== 'number' || typeof right !== 'number') {
-          throw new Error('Can only multiply numbers');
+          throw new Error('Solo se pueden multiplicar números');
         }
         return left * right;
 
       case 'SLASH_EQUAL':
         if (typeof left !== 'number' || typeof right !== 'number') {
-          throw new Error('Can only divide numbers');
+          throw new Error('Solo se pueden dividir números');
         }
         if (right === 0) {
-          throw new Error('Division by zero');
+          throw new Error('División por cero');
         }
         return left / right;
 
       case 'PERCENT_EQUAL':
         if (typeof left !== 'number' || typeof right !== 'number') {
-          throw new Error('Can only modulo numbers');
+          throw new Error('Solo se puede hacer módulo con números');
         }
         if (right === 0) {
-          throw new Error('Modulo by zero');
+          throw new Error('Módulo por cero');
         }
         return left % right;
 
       default:
-        throw new Error(`Unknown compound operator: ${operator}`);
+        throw new Error(`Operador compuesto desconocido: ${operator}`);
     }
   }
 
@@ -1184,7 +1184,7 @@ class Evaluator {
 
     if (expression.operator === 'PLUS_PLUS') {
       if (typeof operand !== 'number') {
-        throw new Error('Can only increment numbers');
+        throw new Error('Solo se pueden incrementar números');
       }
       const newValue = operand + 1;
 
@@ -1194,24 +1194,24 @@ class Evaluator {
       } else if (expression.operand.type === 'PropertyAccess') {
         const object = this.evaluateExpression(expression.operand.object);
         if (typeof object !== 'object' || object === null) {
-          throw new Error('Can only increment properties of objects');
+          throw new Error('Solo se pueden incrementar propiedades de objetos');
         }
         object[expression.operand.name] = newValue;
       } else if (expression.operand.type === 'ArrayAccess') {
         const array = this.evaluateExpression(expression.operand.array);
         const index = this.evaluateExpression(expression.operand.index);
         if (!Array.isArray(array)) {
-          throw new Error('Can only increment elements of arrays');
+          throw new Error('Solo se pueden incrementar elementos de arreglos');
         }
         if (typeof index !== 'number') {
-          throw new Error('Array index must be a number');
+          throw new Error('El índice del arreglo debe ser un número');
         }
         if (index < 0 || index >= array.length) {
-          throw new Error('Array index out of bounds');
+          throw new Error('Índice del arreglo fuera de rango');
         }
         array[index] = newValue;
       } else {
-        throw new Error('Invalid increment target');
+        throw new Error('Objetivo de incremento inválido');
       }
 
       return operand; // Return the original value (postfix behavior)
@@ -1219,7 +1219,7 @@ class Evaluator {
 
     if (expression.operator === 'MINUS_MINUS') {
       if (typeof operand !== 'number') {
-        throw new Error('Can only decrement numbers');
+        throw new Error('Solo se pueden decrementar números');
       }
       const newValue = operand - 1;
 
@@ -1229,30 +1229,30 @@ class Evaluator {
       } else if (expression.operand.type === 'PropertyAccess') {
         const object = this.evaluateExpression(expression.operand.object);
         if (typeof object !== 'object' || object === null) {
-          throw new Error('Can only decrement properties of objects');
+          throw new Error('Solo se pueden decrementar propiedades de objetos');
         }
         object[expression.operand.name] = newValue;
       } else if (expression.operand.type === 'ArrayAccess') {
         const array = this.evaluateExpression(expression.operand.array);
         const index = this.evaluateExpression(expression.operand.index);
         if (!Array.isArray(array)) {
-          throw new Error('Can only decrement elements of arrays');
+          throw new Error('Solo se pueden decrementar elementos de arreglos');
         }
         if (typeof index !== 'number') {
-          throw new Error('Array index must be a number');
+          throw new Error('El índice del arreglo debe ser un número');
         }
         if (index < 0 || index >= array.length) {
-          throw new Error('Array index out of bounds');
+          throw new Error('Índice del arreglo fuera de rango');
         }
         array[index] = newValue;
       } else {
-        throw new Error('Invalid decrement target');
+        throw new Error('Objetivo de decremento inválido');
       }
 
       return operand; // Return the original value (postfix behavior)
     }
 
-    throw new Error(`Unknown postfix operator: ${expression.operator}`);
+    throw new Error(`Operador postfijo desconocido: ${expression.operator}`);
   }
 
   /**
@@ -1330,7 +1330,7 @@ class Environment {
       return;
     }
 
-    throw new Error(`Undefined variable: ${name}`);
+    throw new Error(`Variable no definida: ${name}`);
   }
 
   /**
@@ -1347,7 +1347,7 @@ class Environment {
       return this.enclosing.get(name);
     }
 
-    throw new Error(`Undefined variable: ${name}`);
+    throw new Error(`Variable no definida: ${name}`);
   }
 }
 
