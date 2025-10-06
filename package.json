@@ -22,7 +22,7 @@
     "format": "prettier --write src/ test/ *.js",
     "coverage": "echo 'Coverage not configured yet'",
     "build": "npm run build:types && npm run build:js",
-    "build:js": "mkdir -p dist && cp -r src/* dist/ && cp main.js dist/index.js",
+    "build:js": "mkdir -p dist && cp -r src/* dist/",
     "build:types": "mkdir -p dist && node scripts/generate-types.js",
     "demo": "node main.js",
     "prepublishOnly": "npm run build",
