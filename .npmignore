@@ -1,0 +1,42 @@
+# Source files (not needed in npm package)
+src/
+scripts/
+test/
+
+# Development files
+.eslintrc.js
+.prettierrc
+.gitignore
+.npmignore
+
+# Documentation (keep README.md and LICENSE)
+docs/
+*.md
+!README.md
+
+# Development dependencies
+node_modules/
+package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/

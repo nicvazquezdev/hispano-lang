@@ -2,16 +2,31 @@
   "name": "hispano-lang",
   "version": "1.0.0",
   "description": "Un lenguaje de programación educativo en español para enseñar programación sin barreras de idioma",
-  "main": "main.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "hispano": "./bin/hispano.js",
+    "hispano-lang": "./bin/hispano.js"
+  },
+  "files": [
+    "dist/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node main.js",
     "test": "node test/test.js",
     "dev": "nodemon main.js",
-    "lint": "echo 'Linting not configured yet'",
-    "format": "echo 'Formatting not configured yet'",
+    "lint": "eslint src/ test/ --ext .js",
+    "format": "prettier --write src/ test/ *.js",
     "coverage": "echo 'Coverage not configured yet'",
-    "build": "echo 'Build not needed for interpreter'",
-    "demo": "node main.js"
+    "build": "npm run build:types && npm run build:js",
+    "build:js": "mkdir -p dist && cp -r src/* dist/ && cp main.js dist/index.js",
+    "build:types": "mkdir -p dist && node scripts/generate-types.js",
+    "demo": "node main.js",
+    "prepublishOnly": "npm run build",
+    "prepack": "npm run build"
   },
   "keywords": [
     "programming-language",
@@ -19,25 +34,39 @@
     "spanish",
     "interpreter",
     "javascript",
-    "learning"
+    "learning",
+    "español",
+    "lenguaje-programacion",
+    "educativo",
+    "intérprete"
   ],
-  "author": "Nicolas Vazquez",
+  "author": {
+    "name": "Nicolas Vazquez",
+    "email": "nicorvazquezs@gmail.com",
+    "url": "https://github.com/nicvazquezdev"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nicvazquezdev/hispano-lang"
+    "url": "https://github.com/nicvazquezdev/hispano-lang.git"
   },
   "bugs": {
     "url": "https://github.com/nicvazquezdev/hispano-lang/issues"
   },
   "homepage": "https://github.com/nicvazquezdev/hispano-lang#readme",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
   },
   "dependencies": {
     "readline-sync": "^1.4.10"
+  },
+  "preferGlobal": true,
+  "publishConfig": {
+    "access": "public"
   }
 }
