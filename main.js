@@ -45,8 +45,8 @@ function clearVariables() {
   interpreter.clearEnvironment();
 }
 
-// Example usage
-
+// Example usage (commented out to avoid execution when imported)
+/*
 const exampleCode = `
 mostrar "Hola mundo"
 `;
@@ -63,6 +63,7 @@ if (result.success) {
 } else {
   console.log('✗ Error:', result.error);
 }
+*/
 
 // Export functions for use in other modules
 module.exports = {

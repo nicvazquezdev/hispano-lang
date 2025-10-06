@@ -191,7 +191,11 @@ class Tokenizer {
         break;
 
       case '"':
-        this.string();
+        this.string('"');
+        break;
+
+      case "'":
+        this.string("'");
         break;
 
       case '/':
@@ -218,9 +222,10 @@ class Tokenizer {
 
   /**
    * Processes a string literal
+   * @param {string} quoteType - Type of quote (' or ")
    */
-  string() {
-    while (this.peek() !== '"' && !this.isAtEnd()) {
+  string(quoteType = '"') {
+    while (this.peek() !== quoteType && !this.isAtEnd()) {
       if (this.peek() === '\n') this.currentLine++;
       this.advance();
     }
