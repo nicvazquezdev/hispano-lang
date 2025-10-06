@@ -20,10 +20,20 @@ try {
   } catch (error2) {
     try {
       // Try from current directory (fallback)
-    hispanoLang = require('./index.js');
+      hispanoLang = require('./index.js');
     } catch (error3) {
-      console.error('❌ Error: No se pudo cargar HispanoLang. Verifica la instalación.');
-      process.exit(1);
+      try {
+        // Try from node_modules (when installed globally)
+        hispanoLang = require('hispano-lang');
+      } catch (error4) {
+        console.error('❌ Error: No se pudo cargar HispanoLang. Verifica la instalación.');
+        console.error('Rutas intentadas:');
+        console.error('  - ../dist/index.js');
+        console.error('  - ../main.js');
+        console.error('  - ./index.js');
+        console.error('  - hispano-lang');
+        process.exit(1);
+      }
     }
   }
 }
