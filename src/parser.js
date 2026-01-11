@@ -46,6 +46,10 @@ class Parser {
         return this.functionDeclaration();
       }
 
+      if (this.match("CLASE")) {
+        return this.classDeclaration();
+      }
+
       if (this.match("MOSTRAR")) {
         return this.mostrarStatement();
       }
@@ -188,6 +192,109 @@ class Parser {
       name: name.lexeme,
       parameters,
       body,
+    };
+  }
+
+  /**
+   * Parses a class declaration
+   * @returns {Object} Class declaration
+   */
+  classDeclaration() {
+    const name = this.consume("IDENTIFIER", "Se esperaba un nombre de clase");
+
+    // Check for inheritance
+    let superclass = null;
+    if (this.match("EXTIENDE")) {
+      this.consume("IDENTIFIER", "Se esperaba el nombre de la clase padre");
+      superclass = this.previous().lexeme;
+    }
+
+    this.consume("LEFT_BRACE", "Se esperaba { después del nombre de clase");
+
+    // Parse class body (constructor and methods)
+    let constructor = null;
+    const methods = [];
+
+    while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
+      if (this.match("CONSTRUCTOR")) {
+        // Parse constructor
+        this.consume("LEFT_PAREN", "Se esperaba ( después de constructor");
+        const parameters = [];
+        if (!this.check("RIGHT_PAREN")) {
+          do {
+            if (parameters.length >= 255) {
+              throw new Error("No se pueden tener más de 255 parámetros");
+            }
+            const param = this.consume(
+              "IDENTIFIER",
+              "Se esperaba nombre de parámetro",
+            );
+            parameters.push(param.lexeme);
+          } while (this.match("COMMA"));
+        }
+        this.consume("RIGHT_PAREN", "Se esperaba ) después de parámetros");
+        this.consume(
+          "LEFT_BRACE",
+          "Se esperaba { antes del cuerpo del constructor",
+        );
+        const body = this.block();
+        this.consume(
+          "RIGHT_BRACE",
+          "Se esperaba } después del cuerpo del constructor",
+        );
+
+        constructor = {
+          parameters,
+          body,
+        };
+      } else if (this.match("IDENTIFIER")) {
+        // Parse method
+        const methodName = this.previous().lexeme;
+        this.consume(
+          "LEFT_PAREN",
+          "Se esperaba ( después del nombre del método",
+        );
+        const parameters = [];
+        if (!this.check("RIGHT_PAREN")) {
+          do {
+            if (parameters.length >= 255) {
+              throw new Error("No se pueden tener más de 255 parámetros");
+            }
+            const param = this.consume(
+              "IDENTIFIER",
+              "Se esperaba nombre de parámetro",
+            );
+            parameters.push(param.lexeme);
+          } while (this.match("COMMA"));
+        }
+        this.consume("RIGHT_PAREN", "Se esperaba ) después de parámetros");
+        this.consume("LEFT_BRACE", "Se esperaba { antes del cuerpo del método");
+        const body = this.block();
+        this.consume(
+          "RIGHT_BRACE",
+          "Se esperaba } después del cuerpo del método",
+        );
+
+        methods.push({
+          name: methodName,
+          parameters,
+          body,
+        });
+      } else {
+        throw new Error(
+          "Se esperaba constructor o método en el cuerpo de la clase",
+        );
+      }
+    }
+
+    this.consume("RIGHT_BRACE", "Se esperaba } después del cuerpo de la clase");
+
+    return {
+      type: "ClassDeclaration",
+      name: name.lexeme,
+      superclass,
+      constructor,
+      methods,
     };
   }
 
@@ -447,6 +554,14 @@ class Parser {
         };
       }
 
+      if (expr.type === "ThisPropertyAccess") {
+        return {
+          type: "ThisPropertyAssign",
+          property: expr.property,
+          value,
+        };
+      }
+
       throw new Error("Objetivo de asignación inválido");
     }
 
@@ -674,6 +789,40 @@ class Parser {
         expr = this.finishArrayAccess(expr);
       } else if (this.match("DOT")) {
         expr = this.finishPropertyAccess(expr);
+      } else if (this.match("LEFT_PAREN")) {
+        // Handle method/function calls on PropertyAccess or ThisPropertyAccess
+        if (expr.type === "PropertyAccess") {
+          const args = [];
+          if (!this.check("RIGHT_PAREN")) {
+            do {
+              args.push(this.expression());
+            } while (this.match("COMMA"));
+          }
+          this.consume("RIGHT_PAREN", "Expected ) after method arguments");
+          expr = {
+            type: "MethodCall",
+            object: expr.object,
+            method: expr.name,
+            arguments: args,
+          };
+        } else if (expr.type === "ThisPropertyAccess") {
+          const args = [];
+          if (!this.check("RIGHT_PAREN")) {
+            do {
+              args.push(this.expression());
+            } while (this.match("COMMA"));
+          }
+          this.consume("RIGHT_PAREN", "Expected ) after method arguments");
+          expr = {
+            type: "ThisMethodCall",
+            method: expr.property,
+            arguments: args,
+          };
+        } else {
+          // Put back the LEFT_PAREN for other handlers
+          this.current--;
+          break;
+        }
       } else {
         break;
       }
@@ -744,7 +893,92 @@ class Parser {
       return this.anonymousFunction();
     }
 
+    if (this.match("NUEVO")) {
+      return this.newExpression();
+    }
+
+    if (this.match("ESTE")) {
+      return this.thisExpression();
+    }
+
+    if (this.match("SUPER")) {
+      return this.superExpression();
+    }
+
     throw new Error("Se esperaba una expresión");
+  }
+
+  /**
+   * Parses a new expression for class instantiation
+   * @returns {Object} New expression
+   */
+  newExpression() {
+    const className = this.consume(
+      "IDENTIFIER",
+      "Se esperaba el nombre de la clase después de 'nuevo'",
+    );
+    this.consume("LEFT_PAREN", "Se esperaba ( después del nombre de la clase");
+
+    const args = [];
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        args.push(this.expression());
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_PAREN", "Se esperaba ) después de los argumentos");
+
+    return {
+      type: "NewExpression",
+      className: className.lexeme,
+      arguments: args,
+    };
+  }
+
+  /**
+   * Parses 'este' (this) expression
+   * @returns {Object} This expression
+   */
+  thisExpression() {
+    // Check if accessing a property
+    if (this.match("DOT")) {
+      const property = this.consume(
+        "IDENTIFIER",
+        "Se esperaba el nombre de la propiedad después de 'este.'",
+      );
+      return {
+        type: "ThisPropertyAccess",
+        property: property.lexeme,
+      };
+    }
+    return {
+      type: "This",
+    };
+  }
+
+  /**
+   * Parses 'super' expression for parent class calls
+   * @returns {Object} Super expression
+   */
+  superExpression() {
+    this.consume("LEFT_PAREN", "Se esperaba ( después de 'super'");
+
+    const args = [];
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        args.push(this.expression());
+      } while (this.match("COMMA"));
+    }
+
+    this.consume(
+      "RIGHT_PAREN",
+      "Se esperaba ) después de los argumentos de super",
+    );
+
+    return {
+      type: "SuperCall",
+      arguments: args,
+    };
   }
 
   /**
@@ -1101,6 +1335,7 @@ class Parser {
         case "VARIABLE":
         case "CONSTANTE":
         case "FUNCION":
+        case "CLASE":
         case "MOSTRAR":
         case "LEER":
         case "SI":

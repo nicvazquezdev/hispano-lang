@@ -24,7 +24,7 @@ La mayoría de los lenguajes de programación utilizan palabras clave en inglés
 - 🎓 **Minimalista** - Pensado para aprender lógica sin distracciones
 - 📚 **Educativo** - Enfoque en conceptos fundamentales
 - 🔧 **CLI Tool** - Interfaz de línea de comandos intuitiva
-- 🧪 **Suite de tests** - 210+ tests para garantizar calidad
+- 🧪 **Suite de tests** - 290+ tests para garantizar calidad
 - 📦 **NPM Package** - Fácil instalación y distribución
 - 🔄 **REPL Interactivo** - Modo interactivo para experimentar
 - 📝 **TypeScript Support** - Definiciones de tipos incluidas
@@ -416,9 +416,80 @@ num.aTexto()           // "42"
 (3.14).aTexto()        // "3.14"
 ```
 
+### Programación Orientada a Objetos
+
+HispanoLang soporta clases con constructores, métodos y herencia.
+
+```javascript
+// Definición de clase básica
+clase Persona {
+  constructor(nombre, edad) {
+    este.nombre = nombre
+    este.edad = edad
+  }
+
+  saludar() {
+    retornar "Hola, soy " + este.nombre
+  }
+
+  cumplir() {
+    este.edad = este.edad + 1
+  }
+}
+
+// Crear instancias
+variable p = nuevo Persona("Juan", 25)
+mostrar p.nombre           // Juan
+mostrar p.saludar()        // Hola, soy Juan
+
+// Modificar propiedades via métodos
+p.cumplir()
+mostrar p.edad             // 26
+
+// Herencia con extiende
+clase Estudiante extiende Persona {
+  constructor(nombre, edad, carrera) {
+    super(nombre, edad)    // Llamar constructor padre
+    este.carrera = carrera
+  }
+
+  estudiar() {
+    retornar este.nombre + " está estudiando " + este.carrera
+  }
+}
+
+variable e = nuevo Estudiante("María", 20, "Ingeniería")
+mostrar e.saludar()        // Hola, soy María (método heredado)
+mostrar e.estudiar()       // María está estudiando Ingeniería
+mostrar e.carrera          // Ingeniería
+
+// Clase sin constructor
+clase Contador {
+  incrementar() {
+    si este.valor == indefinido {
+      este.valor = 0
+    }
+    este.valor = este.valor + 1
+  }
+
+  obtener() {
+    retornar este.valor
+  }
+}
+
+variable c = nuevo Contador()
+c.incrementar()
+c.incrementar()
+mostrar c.obtener()        // 2
+
+// tipo() retorna el nombre de la clase para instancias
+mostrar tipo(p)            // Persona
+mostrar tipo(e)            // Estudiante
+```
+
 ## 🧪 Testing
 
-El proyecto incluye una suite completa de tests con más de 170 casos:
+El proyecto incluye una suite completa de tests con más de 290 casos:
 
 ```bash
 npm test
@@ -437,7 +508,7 @@ bin/
 └── hispano.js      # CLI tool
 
 test/
-└── test.js         # Suite completa de tests (180+ casos)
+└── test.js         # Suite completa de tests (290+ casos)
 ```
 
 ## 🛠️ Desarrollo
@@ -537,7 +608,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📊 Estadísticas
 
-- 🧪 **210+ tests** cubriendo todas las funcionalidades
+- 🧪 **290+ tests** cubriendo todas las funcionalidades
 - 📦 **NPM package** listo para instalación global
 - 🔧 **CLI tool** con modo interactivo
 - 📝 **TypeScript support** con definiciones incluidas

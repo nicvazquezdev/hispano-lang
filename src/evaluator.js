@@ -7,6 +7,7 @@ class Evaluator {
   constructor() {
     this.environment = new Environment();
     this.output = [];
+    this.currentInstance = null; // For tracking 'este' (this)
   }
 
   /**
@@ -40,6 +41,8 @@ class Evaluator {
         return this.executeConstantDeclaration(statement);
       case "FunctionDeclaration":
         return this.executeFunctionDeclaration(statement);
+      case "ClassDeclaration":
+        return this.executeClassDeclaration(statement);
       case "MostrarStatement":
         return this.executeMostrarStatement(statement);
       case "LeerStatement":
@@ -106,6 +109,22 @@ class Evaluator {
     };
 
     this.environment.define(statement.name, functionObj);
+  }
+
+  /**
+   * Executes a class declaration
+   * @param {Object} statement - Class declaration
+   */
+  executeClassDeclaration(statement) {
+    const classObj = {
+      type: "Class",
+      name: statement.name,
+      superclass: statement.superclass,
+      constructor: statement.constructor,
+      methods: statement.methods,
+    };
+
+    this.environment.define(statement.name, classObj);
   }
 
   /**
@@ -364,6 +383,29 @@ class Evaluator {
       case "MethodCall":
         return this.evaluateMethodCall(expression);
 
+      case "NewExpression":
+        return this.evaluateNewExpression(expression);
+
+      case "This":
+        if (this.currentInstance === null) {
+          throw new Error(
+            "'este' solo se puede usar dentro de un método de clase",
+          );
+        }
+        return this.currentInstance;
+
+      case "ThisPropertyAccess":
+        return this.evaluateThisPropertyAccess(expression);
+
+      case "ThisPropertyAssign":
+        return this.evaluateThisPropertyAssign(expression);
+
+      case "ThisMethodCall":
+        return this.evaluateThisMethodCall(expression);
+
+      case "SuperCall":
+        return this.evaluateSuperCall(expression);
+
       case "Unary":
         const right = this.evaluateExpression(expression.right);
         return this.evaluateUnaryExpression(expression.operator, right);
@@ -593,14 +635,14 @@ class Evaluator {
   }
 
   /**
-   * Evaluates a method call (array or string)
+   * Evaluates a method call (array, string, number, or instance)
    * @param {Object} expression - Method call expression
    * @returns {any} Method result
    */
   evaluateMethodCall(expression) {
     const object = this.evaluateExpression(expression.object);
 
-    // Determine if it's an array, string, or number method based on the object type
+    // Determine if it's an array, string, number, or instance method
     if (Array.isArray(object)) {
       return this.evaluateArrayMethod(
         object,
@@ -631,10 +673,89 @@ class Evaluator {
         expression.method,
         expression.arguments,
       );
+    } else if (object && object.type === "Instance") {
+      return this.evaluateInstanceMethodCall(
+        object,
+        expression.method,
+        expression.arguments,
+      );
     } else {
       throw new Error(
-        `Solo se pueden llamar métodos en arreglos, cadenas o números, se recibió ${typeof object}`,
+        `Solo se pueden llamar métodos en arreglos, cadenas, números o instancias`,
       );
+    }
+  }
+
+  /**
+   * Evaluates an instance method call
+   * @param {Object} instance - The instance object
+   * @param {string} methodName - The method name
+   * @param {Array} args - Method arguments
+   * @returns {any} Method result
+   */
+  evaluateInstanceMethodCall(instance, methodName, args) {
+    // Find the method in the class
+    let method = null;
+    const classObj = instance.classObj;
+
+    for (const m of classObj.methods) {
+      if (m.name === methodName) {
+        method = m;
+        break;
+      }
+    }
+
+    // If not found, check parent class
+    if (!method && instance.parentClass) {
+      for (const m of instance.parentClass.methods) {
+        if (m.name === methodName) {
+          method = m;
+          break;
+        }
+      }
+    }
+
+    if (!method) {
+      throw new Error(
+        `Método '${methodName}' no encontrado en la clase '${instance.className}'`,
+      );
+    }
+
+    // Evaluate arguments
+    const evaluatedArgs = [];
+    for (const arg of args) {
+      evaluatedArgs.push(this.evaluateExpression(arg));
+    }
+
+    // Check argument count
+    if (method.parameters.length !== evaluatedArgs.length) {
+      throw new Error(
+        `El método '${methodName}' espera ${method.parameters.length} argumentos pero recibió ${evaluatedArgs.length}`,
+      );
+    }
+
+    // Set up method environment
+    const methodEnv = new Environment(this.environment);
+    for (let i = 0; i < evaluatedArgs.length; i++) {
+      methodEnv.define(method.parameters[i], evaluatedArgs[i]);
+    }
+
+    const previousInstance = this.currentInstance;
+    const previousEnv = this.environment;
+    this.currentInstance = instance;
+    this.environment = methodEnv;
+
+    try {
+      this.executeBlock(method.body);
+      return null;
+    } catch (returnValue) {
+      if (returnValue instanceof ReturnException) {
+        return returnValue.value;
+      }
+      throw returnValue;
+    } finally {
+      this.environment = previousEnv;
+      this.currentInstance = previousInstance;
     }
   }
 
@@ -1204,6 +1325,211 @@ class Evaluator {
   }
 
   /**
+   * Evaluates a new expression (class instantiation)
+   * @param {Object} expression - New expression
+   * @returns {Object} Instance object
+   */
+  evaluateNewExpression(expression) {
+    const className = expression.className;
+    const classObj = this.environment.get(className);
+
+    if (!classObj || classObj.type !== "Class") {
+      throw new Error(`'${className}' no es una clase`);
+    }
+
+    // Create a new instance
+    const instance = {
+      type: "Instance",
+      className: className,
+      classObj: classObj,
+      properties: {},
+    };
+
+    // Evaluate constructor arguments
+    const args = [];
+    for (const arg of expression.arguments) {
+      args.push(this.evaluateExpression(arg));
+    }
+
+    // If class extends another, get parent class
+    let parentClass = null;
+    if (classObj.superclass) {
+      parentClass = this.environment.get(classObj.superclass);
+      if (!parentClass || parentClass.type !== "Class") {
+        throw new Error(`Clase padre '${classObj.superclass}' no encontrada`);
+      }
+      instance.parentClass = parentClass;
+    }
+
+    // Execute constructor if present
+    if (classObj.constructor) {
+      const previousInstance = this.currentInstance;
+      this.currentInstance = instance;
+
+      const constructorEnv = new Environment(this.environment);
+
+      // Bind constructor parameters
+      if (classObj.constructor.parameters.length !== args.length) {
+        throw new Error(
+          `El constructor de '${className}' espera ${classObj.constructor.parameters.length} argumentos pero recibió ${args.length}`,
+        );
+      }
+      for (let i = 0; i < args.length; i++) {
+        constructorEnv.define(classObj.constructor.parameters[i], args[i]);
+      }
+
+      const previousEnv = this.environment;
+      this.environment = constructorEnv;
+
+      try {
+        this.executeBlock(classObj.constructor.body);
+      } catch (returnValue) {
+        if (!(returnValue instanceof ReturnException)) {
+          throw returnValue;
+        }
+      } finally {
+        this.environment = previousEnv;
+        this.currentInstance = previousInstance;
+      }
+    }
+
+    return instance;
+  }
+
+  /**
+   * Evaluates this property access (este.propiedad)
+   * @param {Object} expression - ThisPropertyAccess expression
+   * @returns {any} Property value
+   */
+  evaluateThisPropertyAccess(expression) {
+    if (this.currentInstance === null) {
+      throw new Error("'este' solo se puede usar dentro de un método de clase");
+    }
+
+    const property = expression.property;
+
+    // Check if it's a property
+    if (property in this.currentInstance.properties) {
+      return this.currentInstance.properties[property];
+    }
+
+    // Check if it's a method
+    const classObj = this.currentInstance.classObj;
+    for (const method of classObj.methods) {
+      if (method.name === property) {
+        // Return a bound method
+        return {
+          type: "BoundMethod",
+          method: method,
+          instance: this.currentInstance,
+        };
+      }
+    }
+
+    // Check parent class methods
+    if (this.currentInstance.parentClass) {
+      for (const method of this.currentInstance.parentClass.methods) {
+        if (method.name === property) {
+          return {
+            type: "BoundMethod",
+            method: method,
+            instance: this.currentInstance,
+          };
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Evaluates this property assignment (este.propiedad = valor)
+   * @param {Object} expression - ThisPropertyAssign expression
+   * @returns {any} Assigned value
+   */
+  evaluateThisPropertyAssign(expression) {
+    if (this.currentInstance === null) {
+      throw new Error("'este' solo se puede usar dentro de un método de clase");
+    }
+
+    const value = this.evaluateExpression(expression.value);
+    this.currentInstance.properties[expression.property] = value;
+    return value;
+  }
+
+  /**
+   * Evaluates this method call (este.metodo())
+   * @param {Object} expression - ThisMethodCall expression
+   * @returns {any} Method result
+   */
+  evaluateThisMethodCall(expression) {
+    if (this.currentInstance === null) {
+      throw new Error("'este' solo se puede usar dentro de un método de clase");
+    }
+
+    return this.evaluateInstanceMethodCall(
+      this.currentInstance,
+      expression.method,
+      expression.arguments,
+    );
+  }
+
+  /**
+   * Evaluates super() call
+   * @param {Object} expression - SuperCall expression
+   * @returns {any} Result of parent constructor
+   */
+  evaluateSuperCall(expression) {
+    if (this.currentInstance === null) {
+      throw new Error(
+        "'super' solo se puede usar dentro de un método de clase",
+      );
+    }
+
+    const parentClass = this.currentInstance.parentClass;
+    if (!parentClass) {
+      throw new Error(
+        "'super' solo se puede usar en clases que extienden otra clase",
+      );
+    }
+
+    // Evaluate arguments
+    const args = [];
+    for (const arg of expression.arguments) {
+      args.push(this.evaluateExpression(arg));
+    }
+
+    // Execute parent constructor
+    if (parentClass.constructor) {
+      const constructorEnv = new Environment(this.environment);
+
+      if (parentClass.constructor.parameters.length !== args.length) {
+        throw new Error(
+          `El constructor padre espera ${parentClass.constructor.parameters.length} argumentos pero recibió ${args.length}`,
+        );
+      }
+      for (let i = 0; i < args.length; i++) {
+        constructorEnv.define(parentClass.constructor.parameters[i], args[i]);
+      }
+
+      const previousEnv = this.environment;
+      this.environment = constructorEnv;
+
+      try {
+        this.executeBlock(parentClass.constructor.body);
+      } catch (returnValue) {
+        if (!(returnValue instanceof ReturnException)) {
+          throw returnValue;
+        }
+      } finally {
+        this.environment = previousEnv;
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Checks if a function name is a built-in mathematical function
    * @param {string} name - Function name
    * @returns {boolean} True if it's a math function
@@ -1500,6 +1826,9 @@ class Evaluator {
         if (Array.isArray(value)) return "arreglo";
         if (typeof value === "object" && value.type === "Function")
           return "funcion";
+        if (typeof value === "object" && value.type === "Instance")
+          return value.className;
+        if (typeof value === "object" && value.type === "Class") return "clase";
         if (typeof value === "object") return "objeto";
         return "desconocido";
 
@@ -1635,6 +1964,41 @@ class Evaluator {
       throw new Error("Solo se pueden acceder propiedades de objetos");
     }
 
+    // Handle Instance objects
+    if (object.type === "Instance") {
+      // Check if it's a property
+      if (expression.name in object.properties) {
+        return object.properties[expression.name];
+      }
+
+      // Check if it's a method (will be called later via MethodCall)
+      const classObj = object.classObj;
+      for (const method of classObj.methods) {
+        if (method.name === expression.name) {
+          return {
+            type: "BoundMethod",
+            method: method,
+            instance: object,
+          };
+        }
+      }
+
+      // Check parent class methods
+      if (object.parentClass) {
+        for (const method of object.parentClass.methods) {
+          if (method.name === expression.name) {
+            return {
+              type: "BoundMethod",
+              method: method,
+              instance: object,
+            };
+          }
+        }
+      }
+
+      return undefined;
+    }
+
     return object[expression.name];
   }
 
@@ -1649,6 +2013,12 @@ class Evaluator {
 
     if (typeof object !== "object" || object === null) {
       throw new Error("Solo se pueden asignar propiedades de objetos");
+    }
+
+    // Handle Instance objects
+    if (object.type === "Instance") {
+      object.properties[expression.name] = value;
+      return value;
     }
 
     object[expression.name] = value;

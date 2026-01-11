@@ -5475,6 +5475,302 @@ function runTests() {
     );
   });
 
+  // ==================== PROGRAMACIÓN ORIENTADA A OBJETOS ====================
+
+  test("Basic class declaration and instantiation", () => {
+    const code = `
+      clase Persona {
+        constructor(nombre) {
+          este.nombre = nombre
+        }
+      }
+
+      variable p = nuevo Persona("Juan")
+      mostrar p.nombre
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Juan"],
+      "Class should be instantiable with constructor",
+    );
+  });
+
+  test("Class with multiple properties", () => {
+    const code = `
+      clase Persona {
+        constructor(nombre, edad) {
+          este.nombre = nombre
+          este.edad = edad
+        }
+      }
+
+      variable p = nuevo Persona("María", 25)
+      mostrar p.nombre
+      mostrar p.edad
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["María", "25"],
+      "Class should support multiple constructor parameters",
+    );
+  });
+
+  test("Class with methods", () => {
+    const code = `
+      clase Persona {
+        constructor(nombre) {
+          este.nombre = nombre
+        }
+
+        saludar() {
+          retornar "Hola, soy " + este.nombre
+        }
+      }
+
+      variable p = nuevo Persona("Carlos")
+      mostrar p.saludar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Hola, soy Carlos"],
+      "Class methods should access instance properties",
+    );
+  });
+
+  test("Class with method that modifies properties", () => {
+    const code = `
+      clase Contador {
+        constructor() {
+          este.valor = 0
+        }
+
+        incrementar() {
+          este.valor = este.valor + 1
+        }
+
+        obtener() {
+          retornar este.valor
+        }
+      }
+
+      variable c = nuevo Contador()
+      mostrar c.obtener()
+      c.incrementar()
+      c.incrementar()
+      mostrar c.obtener()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["0", "2"],
+      "Methods should be able to modify instance properties",
+    );
+  });
+
+  test("Class with method parameters", () => {
+    const code = `
+      clase Calculadora {
+        constructor(base) {
+          este.base = base
+        }
+
+        sumar(n) {
+          retornar este.base + n
+        }
+
+        multiplicar(n) {
+          retornar este.base * n
+        }
+      }
+
+      variable calc = nuevo Calculadora(10)
+      mostrar calc.sumar(5)
+      mostrar calc.multiplicar(3)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15", "30"],
+      "Class methods should accept parameters",
+    );
+  });
+
+  test("Multiple instances are independent", () => {
+    const code = `
+      clase Persona {
+        constructor(nombre) {
+          este.nombre = nombre
+        }
+      }
+
+      variable p1 = nuevo Persona("Ana")
+      variable p2 = nuevo Persona("Luis")
+      mostrar p1.nombre
+      mostrar p2.nombre
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Ana", "Luis"],
+      "Multiple instances should be independent",
+    );
+  });
+
+  test("Class inheritance with extiende", () => {
+    const code = `
+      clase Animal {
+        constructor(nombre) {
+          este.nombre = nombre
+        }
+
+        hablar() {
+          retornar este.nombre + " hace un sonido"
+        }
+      }
+
+      clase Perro extiende Animal {
+        constructor(nombre) {
+          super(nombre)
+        }
+
+        hablar() {
+          retornar este.nombre + " ladra"
+        }
+      }
+
+      variable perro = nuevo Perro("Rex")
+      mostrar perro.hablar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Rex ladra"],
+      "Subclass should override parent methods",
+    );
+  });
+
+  test("Inheritance accesses parent properties", () => {
+    const code = `
+      clase Animal {
+        constructor(nombre) {
+          este.nombre = nombre
+          este.vivo = verdadero
+        }
+      }
+
+      clase Gato extiende Animal {
+        constructor(nombre, color) {
+          super(nombre)
+          este.color = color
+        }
+      }
+
+      variable g = nuevo Gato("Michi", "negro")
+      mostrar g.nombre
+      mostrar g.color
+      mostrar g.vivo
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Michi", "negro", "true"],
+      "Subclass should inherit parent properties",
+    );
+  });
+
+  test("Class without constructor", () => {
+    const code = `
+      clase Punto {
+        obtenerX() {
+          retornar este.x
+        }
+      }
+
+      variable p = nuevo Punto()
+      p.x = 10
+      mostrar p.obtenerX()
+    `;
+    const output = run(code);
+    assertEquals(output, ["10"], "Class without constructor should work");
+  });
+
+  test("Class method calling another method", () => {
+    const code = `
+      clase Rectangulo {
+        constructor(ancho, alto) {
+          este.ancho = ancho
+          este.alto = alto
+        }
+
+        area() {
+          retornar este.ancho * este.alto
+        }
+
+        perimetro() {
+          retornar 2 * (este.ancho + este.alto)
+        }
+
+        descripcion() {
+          retornar "Área: " + este.area() + ", Perímetro: " + este.perimetro()
+        }
+      }
+
+      variable r = nuevo Rectangulo(5, 3)
+      mostrar r.descripcion()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Área: 15, Perímetro: 16"],
+      "Methods should be able to call other methods",
+    );
+  });
+
+  test("Class with array property", () => {
+    const code = `
+      clase Lista {
+        constructor() {
+          este.items = []
+        }
+
+        agregar(item) {
+          este.items.agregar(item)
+        }
+
+        cantidad() {
+          retornar este.items.longitud()
+        }
+      }
+
+      variable lista = nuevo Lista()
+      lista.agregar("a")
+      lista.agregar("b")
+      mostrar lista.cantidad()
+    `;
+    const output = run(code);
+    assertEquals(output, ["2"], "Class should work with array properties");
+  });
+
+  test("tipo() returns clase for instances", () => {
+    const code = `
+      clase MiClase {
+        constructor() {}
+      }
+
+      variable obj = nuevo MiClase()
+      mostrar tipo(obj)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["MiClase"],
+      "tipo() should return class name for instances",
+    );
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

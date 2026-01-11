@@ -434,6 +434,12 @@ class Tokenizer {
       hacer: "HACER",
       cada: "CADA",
       en: "EN",
+      clase: "CLASE",
+      constructor: "CONSTRUCTOR",
+      este: "ESTE",
+      nuevo: "NUEVO",
+      extiende: "EXTIENDE",
+      super: "SUPER",
     };
 
     return keywords[text] || "IDENTIFIER";
