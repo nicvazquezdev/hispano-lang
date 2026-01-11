@@ -341,7 +341,7 @@ variable duplicar = funcion(x) {
 mostrar duplicar(5)  // 10
 ```
 
-#### Arrow Functions
+#### Funciones Flecha
 
 Sintaxis concisa para funciones anónimas:
 
@@ -366,7 +366,7 @@ mostrar suma(3, 4)     // 7
 mostrar factorial(5)   // 120
 ```
 
-Arrow functions son ideales para callbacks:
+Funciones flecha son ideales para callbacks:
 
 ```
 variable numeros = [1, 2, 3, 4, 5]
