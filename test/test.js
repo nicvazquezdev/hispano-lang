@@ -329,7 +329,7 @@ function runTests() {
     const result = interpret(code);
     assertTrue(!result.success, "Should fail when using undefined variable");
     assertTrue(
-      result.error.includes("Undefined variable"),
+      result.error.includes("Variable no definida"),
       "Error should mention undefined variable",
     );
   });
@@ -362,7 +362,7 @@ function runTests() {
     const result = interpret(code);
     assertTrue(!result.success, "Should fail when dividing by zero");
     assertTrue(
-      result.error.includes("Division by zero"),
+      result.error.includes("División por cero"),
       "Error should mention division by zero",
     );
   });
@@ -1469,7 +1469,7 @@ function runTests() {
   test("Error handling for empty array methods", () => {
     const code = `
       variable listaVacia = []
-      mostrar listaVacia.primero
+      mostrar listaVacia.primero()
     `;
 
     const result = interpret(code);
@@ -1478,7 +1478,7 @@ function runTests() {
       "Should fail when getting first element of empty array",
     );
     assertTrue(
-      result.error.includes("Cannot get first element of empty array"),
+      result.error.includes("arreglo vacío"),
       "Error should mention empty array",
     );
   });
@@ -1588,7 +1588,7 @@ function runTests() {
   test("Error handling for string length on non-strings", () => {
     const code = `
       variable numero = 123
-      mostrar numero.longitud
+      mostrar numero.longitud()
     `;
 
     const result = interpret(code);
@@ -1597,7 +1597,7 @@ function runTests() {
       "Should fail when calling length on non-string",
     );
     assertTrue(
-      result.error.includes("Can only call methods on arrays or strings"),
+      result.error.includes("Método de número desconocido"),
       "Error should mention method restrictions",
     );
   });
@@ -1785,7 +1785,7 @@ function runTests() {
   test("Error handling for string uppercase on non-strings", () => {
     const code = `
       variable numero = 123
-      mostrar numero.mayusculas
+      mostrar numero.mayusculas()
     `;
 
     const result = interpret(code);
@@ -1794,7 +1794,7 @@ function runTests() {
       "Should fail when calling uppercase on non-string",
     );
     assertTrue(
-      result.error.includes("Can only call methods on arrays or strings"),
+      result.error.includes("Método de número desconocido"),
       "Error should mention method restrictions",
     );
   });
@@ -1979,7 +1979,7 @@ function runTests() {
   test("Error handling for string lowercase on non-strings", () => {
     const code = `
       variable numero = 123
-      mostrar numero.minusculas
+      mostrar numero.minusculas()
     `;
 
     const result = interpret(code);
@@ -1988,7 +1988,7 @@ function runTests() {
       "Should fail when calling lowercase on non-string",
     );
     assertTrue(
-      result.error.includes("Can only call methods on arrays or strings"),
+      result.error.includes("Método de número desconocido"),
       "Error should mention method restrictions",
     );
   });
@@ -2491,7 +2491,7 @@ function runTests() {
       "Should fail when calling agregar on non-array",
     );
     assertTrue(
-      result.error.includes("Method agregar() can only be called on arrays"),
+      result.error.includes("solo se puede llamar en arreglos"),
       "Error should mention method restrictions",
     );
   });
@@ -2587,7 +2587,7 @@ function runTests() {
       "Should fail when calling remover on empty array",
     );
     assertTrue(
-      result.error.includes("Cannot remove element from empty array"),
+      result.error.includes("arreglo vacío"),
       "Error should mention empty array",
     );
   });
@@ -2723,7 +2723,7 @@ function runTests() {
       "Should fail when calling remover on non-array",
     );
     assertTrue(
-      result.error.includes("Method remover() can only be called on arrays"),
+      result.error.includes("solo se puede llamar en arreglos"),
       "Error should mention method restrictions",
     );
   });
@@ -2925,7 +2925,7 @@ function runTests() {
       "Should fail when calling contiene with no arguments",
     );
     assertTrue(
-      result.error.includes("Method contiene() requires exactly one argument"),
+      result.error.includes("requiere exactamente un argumento"),
       "Error should mention argument requirement",
     );
   });
@@ -2943,27 +2943,21 @@ function runTests() {
       "Should fail when calling contiene with multiple arguments",
     );
     assertTrue(
-      result.error.includes("Method contiene() requires exactly one argument"),
+      result.error.includes("requiere exactamente un argumento"),
       "Error should mention argument requirement",
     );
   });
 
-  // Test 148: Error handling for array contains on non-arrays
+  // Test 148: String contains method works (contiene is valid for strings too)
   test("Error handling for array contains on non-arrays", () => {
     const code = `
       variable texto = "hola"
       variable resultado = texto.contiene("o")
+      mostrar resultado
     `;
 
-    const result = interpret(code);
-    assertTrue(
-      !result.success,
-      "Should fail when calling contiene on non-array",
-    );
-    assertTrue(
-      result.error.includes("Method contiene() can only be called on arrays"),
-      "Error should mention method restrictions",
-    );
+    const output = run(code);
+    assertEquals(output, ["true"], "String contiene should work");
   });
 
   // Test 149: Array contains with complex expressions
@@ -3156,7 +3150,7 @@ function runTests() {
       "Should fail when calling recorrer with no arguments",
     );
     assertTrue(
-      result.error.includes("Method recorrer() requires exactly one argument"),
+      result.error.includes("requiere exactamente un argumento"),
       "Error should mention argument requirement",
     );
   });
@@ -3174,7 +3168,7 @@ function runTests() {
       "Should fail when calling recorrer with multiple arguments",
     );
     assertTrue(
-      result.error.includes("Method recorrer() requires exactly one argument"),
+      result.error.includes("requiere exactamente un argumento"),
       "Error should mention argument requirement",
     );
   });
@@ -3192,9 +3186,7 @@ function runTests() {
       "Should fail when calling recorrer with non-function argument",
     );
     assertTrue(
-      result.error.includes(
-        "Method recorrer() requires a function as argument",
-      ),
+      result.error.includes("requiere una función como argumento"),
       "Error should mention function requirement",
     );
   });
@@ -3212,7 +3204,7 @@ function runTests() {
       "Should fail when calling recorrer on non-array",
     );
     assertTrue(
-      result.error.includes("Method recorrer() can only be called on arrays"),
+      result.error.includes("solo se puede llamar en arreglos"),
       "Error should mention method restrictions",
     );
   });
@@ -3837,7 +3829,7 @@ function runTests() {
       throw new Error("Should have thrown an error for negative square root");
     }
 
-    if (!result.error.includes("Cannot take square root of negative number")) {
+    if (!result.error.includes("raíz cuadrada de un número negativo")) {
       throw new Error(
         `Expected specific error message for negative square root, got: ${result.error}`,
       );
@@ -4038,8 +4030,8 @@ function runTests() {
   test("String reemplazar method", () => {
     const code = `
       variable texto = "Hola mundo"
-      variable nuevo = texto.reemplazar("mundo", "amigo")
-      mostrar nuevo
+      variable resultado = texto.reemplazar("mundo", "amigo")
+      mostrar resultado
     `;
 
     const output = run(code);
@@ -4049,8 +4041,8 @@ function runTests() {
   test("String reemplazar multiple occurrences", () => {
     const code = `
       variable texto = "ana y ana"
-      variable nuevo = texto.reemplazar("ana", "maria")
-      mostrar nuevo
+      variable resultado = texto.reemplazar("ana", "maria")
+      mostrar resultado
     `;
 
     const output = run(code);
