@@ -341,6 +341,41 @@ variable duplicar = funcion(x) {
 mostrar duplicar(5)  // 10
 ```
 
+#### Arrow Functions
+
+Sintaxis concisa para funciones anónimas:
+
+```
+// Un parámetro (sin paréntesis)
+variable doble = x => x * 2
+
+// Múltiples parámetros
+variable suma = (a, b) => a + b
+
+// Sin parámetros
+variable saludar = () => "Hola mundo"
+
+// Con bloque de código
+variable factorial = n => {
+    si (n <= 1) { retornar 1 }
+    retornar n * factorial(n - 1)
+}
+
+mostrar doble(5)       // 10
+mostrar suma(3, 4)     // 7
+mostrar factorial(5)   // 120
+```
+
+Arrow functions son ideales para callbacks:
+
+```
+variable numeros = [1, 2, 3, 4, 5]
+
+numeros.mapear(x => x * 2)           // [2, 4, 6, 8, 10]
+numeros.filtrar(x => x > 2)          // [3, 4, 5]
+numeros.reducir((a, b) => a + b, 0)  // 15
+```
+
 #### Funciones como Parámetros
 
 ```

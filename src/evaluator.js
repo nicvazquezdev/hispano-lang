@@ -135,7 +135,6 @@ class Evaluator {
     const value = this.evaluateExpression(statement.expression);
     const output = this.stringify(value);
     this.output.push(output);
-    console.log(output);
   }
 
   /**
@@ -308,6 +307,28 @@ class Evaluator {
   }
 
   /**
+   * Executes a function body (handles both block and arrow expression bodies)
+   * @param {Object} func - Function object with body and isArrowExpression flag
+   * @returns {any} Result of the function execution
+   */
+  executeFunctionBody(func) {
+    if (func.isArrowExpression) {
+      return this.evaluateExpression(func.body);
+    }
+    try {
+      for (const statement of func.body) {
+        this.execute(statement);
+      }
+      return null;
+    } catch (returnValue) {
+      if (returnValue instanceof ReturnException) {
+        return returnValue.value;
+      }
+      throw returnValue;
+    }
+  }
+
+  /**
    * Executes an expression statement
    * @param {Object} statement - Expression statement
    */
@@ -337,6 +358,15 @@ class Evaluator {
           name: null,
           parameters: expression.parameters,
           body: expression.body,
+        };
+
+      case "ArrowFunction":
+        return {
+          type: "Function",
+          name: null,
+          parameters: expression.parameters,
+          body: expression.body,
+          isArrowExpression: expression.isExpression,
         };
 
       case "Assign":
@@ -622,6 +652,10 @@ class Evaluator {
     const previous = this.environment;
     try {
       this.environment = environment;
+      // Arrow functions with expression body return the expression directly
+      if (callee.isArrowExpression) {
+        return this.evaluateExpression(callee.body);
+      }
       this.executeBlock(callee.body);
       return null;
     } catch (returnValue) {
@@ -856,7 +890,7 @@ class Evaluator {
           const previousEnv = this.environment;
           this.environment = callbackEnv;
           try {
-            this.executeBlock(callback.body);
+            this.executeFunctionBody(callback);
           } finally {
             this.environment = previousEnv;
           }
@@ -884,14 +918,9 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = filterEnv;
           try {
-            this.executeBlock(filterCallback.body);
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              if (this.isTruthy(returnValue.value)) {
-                filteredArray.push(array[i]);
-              }
-            } else {
-              throw returnValue;
+            const result = this.executeFunctionBody(filterCallback);
+            if (this.isTruthy(result)) {
+              filteredArray.push(array[i]);
             }
           } finally {
             this.environment = prevEnv;
@@ -920,14 +949,8 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = mapEnv;
           try {
-            this.executeBlock(mapCallback.body);
-            mappedArray.push(null); // If no return, push null
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              mappedArray.push(returnValue.value);
-            } else {
-              throw returnValue;
-            }
+            const result = this.executeFunctionBody(mapCallback);
+            mappedArray.push(result);
           } finally {
             this.environment = prevEnv;
           }
@@ -962,13 +985,7 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = reduceEnv;
           try {
-            this.executeBlock(reduceCallback.body);
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              accumulator = returnValue.value;
-            } else {
-              throw returnValue;
-            }
+            accumulator = this.executeFunctionBody(reduceCallback);
           } finally {
             this.environment = prevEnv;
           }
@@ -1001,13 +1018,7 @@ class Evaluator {
             const prevEnv = this.environment;
             this.environment = sortEnv;
             try {
-              this.executeBlock(sortCallback.body);
-              return 0;
-            } catch (returnValue) {
-              if (returnValue instanceof ReturnException) {
-                return returnValue.value;
-              }
-              throw returnValue;
+              return this.executeFunctionBody(sortCallback) || 0;
             } finally {
               this.environment = prevEnv;
             }
@@ -1040,15 +1051,9 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = findEnv;
           try {
-            this.executeBlock(findCallback.body);
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              if (this.isTruthy(returnValue.value)) {
-                this.environment = prevEnv;
-                return array[i];
-              }
-            } else {
-              throw returnValue;
+            const result = this.executeFunctionBody(findCallback);
+            if (this.isTruthy(result)) {
+              return array[i];
             }
           } finally {
             this.environment = prevEnv;
@@ -1076,15 +1081,9 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = someEnv;
           try {
-            this.executeBlock(someCallback.body);
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              if (this.isTruthy(returnValue.value)) {
-                this.environment = prevEnv;
-                return true;
-              }
-            } else {
-              throw returnValue;
+            const result = this.executeFunctionBody(someCallback);
+            if (this.isTruthy(result)) {
+              return true;
             }
           } finally {
             this.environment = prevEnv;
@@ -1112,15 +1111,9 @@ class Evaluator {
           const prevEnv = this.environment;
           this.environment = everyEnv;
           try {
-            this.executeBlock(everyCallback.body);
-          } catch (returnValue) {
-            if (returnValue instanceof ReturnException) {
-              if (!this.isTruthy(returnValue.value)) {
-                this.environment = prevEnv;
-                return false;
-              }
-            } else {
-              throw returnValue;
+            const result = this.executeFunctionBody(everyCallback);
+            if (!this.isTruthy(result)) {
+              return false;
             }
           } finally {
             this.environment = prevEnv;

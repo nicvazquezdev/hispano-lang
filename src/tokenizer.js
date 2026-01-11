@@ -67,6 +67,9 @@ class Tokenizer {
         if (this.peek() === "=") {
           this.advance();
           this.addToken("EQUAL_EQUAL");
+        } else if (this.peek() === ">") {
+          this.advance();
+          this.addToken("ARROW");
         } else {
           this.addToken("EQUAL");
         }

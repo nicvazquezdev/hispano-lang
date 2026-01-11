@@ -5763,6 +5763,173 @@ function runTests() {
     );
   });
 
+  // ==================== ARROW FUNCTIONS ====================
+
+  test("Arrow function with single param expression body", () => {
+    const code = `
+      variable doble = x => x * 2
+      mostrar doble(5)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["10"],
+      "Arrow function with single param should work",
+    );
+  });
+
+  test("Arrow function with parentheses and expression body", () => {
+    const code = `
+      variable suma = (a, b) => a + b
+      mostrar suma(3, 4)
+    `;
+    const output = run(code);
+    assertEquals(output, ["7"], "Arrow function with parens should work");
+  });
+
+  test("Arrow function with no parameters", () => {
+    const code = `
+      variable saludar = () => "Hola mundo"
+      mostrar saludar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Hola mundo"],
+      "Arrow function with no params should work",
+    );
+  });
+
+  test("Arrow function with block body", () => {
+    const code = `
+      variable factorial = n => {
+        si (n <= 1) {
+          retornar 1
+        }
+        retornar n * factorial(n - 1)
+      }
+      mostrar factorial(5)
+    `;
+    const output = run(code);
+    assertEquals(output, ["120"], "Arrow function with block body should work");
+  });
+
+  test("Arrow function with block body and multiple params", () => {
+    const code = `
+      variable calcular = (a, b, op) => {
+        si (op == "suma") {
+          retornar a + b
+        }
+        si (op == "resta") {
+          retornar a - b
+        }
+        retornar 0
+      }
+      mostrar calcular(10, 3, "suma")
+      mostrar calcular(10, 3, "resta")
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["13", "7"],
+      "Arrow function with block body and params should work",
+    );
+  });
+
+  test("Arrow function with mapear", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4]
+      variable dobles = numeros.mapear(x => x * 2)
+      mostrar dobles
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[2, 4, 6, 8]"],
+      "Arrow functions should work with mapear",
+    );
+  });
+
+  test("Arrow function with filtrar", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5, 6]
+      variable pares = numeros.filtrar(x => x % 2 == 0)
+      mostrar pares
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[2, 4, 6]"],
+      "Arrow functions should work with filtrar",
+    );
+  });
+
+  test("Arrow function with reducir", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable suma = numeros.reducir((acc, x) => acc + x, 0)
+      mostrar suma
+    `;
+    const output = run(code);
+    assertEquals(output, ["15"], "Arrow functions should work with reducir");
+  });
+
+  test("Arrow function with algunos", () => {
+    const code = `
+      variable numeros = [1, 3, 5, 7]
+      mostrar numeros.algunos(x => x > 5)
+      mostrar numeros.algunos(x => x > 10)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false"],
+      "Arrow functions should work with algunos",
+    );
+  });
+
+  test("Arrow function with todos", () => {
+    const code = `
+      variable numeros = [2, 4, 6, 8]
+      mostrar numeros.todos(x => x % 2 == 0)
+      mostrar numeros.todos(x => x > 5)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "false"],
+      "Arrow functions should work with todos",
+    );
+  });
+
+  test("Arrow function method chaining", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5, 6]
+      variable resultado = numeros.filtrar(x => x % 2 == 0).mapear(x => x * 10)
+      mostrar resultado
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[20, 40, 60]"],
+      "Arrow functions should work with method chaining",
+    );
+  });
+
+  test("Arrow function as higher-order function argument", () => {
+    const code = `
+      variable triple = x => x * 3
+      variable aplicar = (fn, valor) => fn(valor)
+      mostrar aplicar(triple, 7)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["21"],
+      "Arrow functions should work as higher-order functions",
+    );
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

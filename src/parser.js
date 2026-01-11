@@ -853,6 +853,11 @@ class Parser {
 
     if (this.match("IDENTIFIER")) {
       const identifier = this.previous();
+      // Check for single-param arrow function: x => ...
+      if (this.check("ARROW")) {
+        this.advance(); // Consume the ARROW
+        return this.arrowFunctionBody([identifier.lexeme]);
+      }
       if (this.check("LEFT_PAREN")) {
         this.advance(); // Consume the LEFT_PAREN
         return this.finishCall(identifier);
@@ -876,6 +881,10 @@ class Parser {
     }
 
     if (this.match("LEFT_PAREN")) {
+      // Check if this could be arrow function params
+      if (this.isArrowFunctionParams()) {
+        return this.arrowFunctionWithParams();
+      }
       const expr = this.expression();
       this.consume("RIGHT_PAREN", "Expected ) after expression");
       return expr;
@@ -1039,6 +1048,109 @@ class Parser {
       type: "AnonymousFunction",
       parameters,
       body,
+    };
+  }
+
+  /**
+   * Checks if current position looks like arrow function parameters
+   * Looks ahead to find matching ) and checks for =>
+   * @returns {boolean} True if this looks like arrow function params
+   */
+  isArrowFunctionParams() {
+    // Save current position
+    const startPos = this.current;
+
+    // Empty params: () =>
+    if (this.check("RIGHT_PAREN")) {
+      // Check if next is =>
+      if (
+        this.tokens[this.current + 1] &&
+        this.tokens[this.current + 1].type === "ARROW"
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    // Try to match params pattern: identifier (comma identifier)*
+    let parenDepth = 1;
+    let pos = this.current;
+
+    while (pos < this.tokens.length && parenDepth > 0) {
+      const token = this.tokens[pos];
+      if (token.type === "LEFT_PAREN") {
+        parenDepth++;
+      } else if (token.type === "RIGHT_PAREN") {
+        parenDepth--;
+      }
+      pos++;
+    }
+
+    // pos is now after the matching )
+    // Check if next token is =>
+    if (pos < this.tokens.length && this.tokens[pos].type === "ARROW") {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Parses arrow function with parenthesized parameters
+   * Called after LEFT_PAREN has been consumed
+   * @returns {Object} Arrow function expression
+   */
+  arrowFunctionWithParams() {
+    const parameters = [];
+
+    // Parse parameters
+    if (!this.check("RIGHT_PAREN")) {
+      do {
+        if (parameters.length >= 255) {
+          throw new Error("No se pueden tener más de 255 parámetros");
+        }
+        const param = this.consume(
+          "IDENTIFIER",
+          "Se esperaba un nombre de parámetro",
+        );
+        parameters.push(param.lexeme);
+      } while (this.match("COMMA"));
+    }
+
+    this.consume("RIGHT_PAREN", "Se esperaba ) después de los parámetros");
+    this.consume("ARROW", "Se esperaba => después de los parámetros");
+
+    return this.arrowFunctionBody(parameters);
+  }
+
+  /**
+   * Parses arrow function body (expression or block)
+   * @param {Array} parameters - Function parameters
+   * @returns {Object} Arrow function expression
+   */
+  arrowFunctionBody(parameters) {
+    // Check if body is a block
+    if (this.match("LEFT_BRACE")) {
+      const body = this.block();
+      this.consume(
+        "RIGHT_BRACE",
+        "Se esperaba } después del cuerpo de la función",
+      );
+      return {
+        type: "ArrowFunction",
+        parameters,
+        body,
+        isExpression: false,
+      };
+    }
+
+    // Body is a single expression (implicit return)
+    const expression = this.expression();
+    return {
+      type: "ArrowFunction",
+      parameters,
+      body: expression,
+      isExpression: true,
     };
   }
 

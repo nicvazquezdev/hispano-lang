@@ -5,6 +5,25 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 11-01-2026
+
+### ✨ Arrow Functions
+- **Sintaxis concisa** para funciones anónimas con `=>`
+- **Un parámetro sin paréntesis**: `x => x * 2`
+- **Múltiples parámetros**: `(a, b) => a + b`
+- **Sin parámetros**: `() => "Hola"`
+- **Cuerpo de expresión** (retorno implícito): `x => x * 2`
+- **Cuerpo de bloque** (retorno explícito): `x => { retornar x * 2 }`
+- **Compatibilidad completa** con métodos de arrays (`mapear`, `filtrar`, `reducir`, etc.)
+
+### 🐛 Corregido
+- **Bug de doble impresión** - `mostrar` ya no imprime dos veces en la CLI
+
+### 🔧 Mejorado
+- **325 tests** cubriendo todas las funcionalidades (antes 313)
+
+---
+
 ## [2.0.0] - 11-01-2026
 
 ### ✨ Programación Orientada a Objetos (POO)
