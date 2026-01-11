@@ -1,41 +1,106 @@
-# HispanoLang
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nicvazquezdev/hispano-lang-website/main/public/hl-main-logo.png" alt="HispanoLang" width="180"/>
+</p>
 
-<div align="center">
+<p align="center">
+  <strong>El lenguaje de programación en español</strong>
+</p>
 
-**Un lenguaje de programación educativo en español para enseñar programación sin barreras de idioma**
+<p align="center">
+  Un lenguaje de programación moderno, expresivo y completamente en español.<br/>
+  Diseñado para eliminar las barreras del idioma en la educación tecnológica.
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hispano-lang?style=flat-square)](https://www.npmjs.com/package/hispano-lang)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/hispano-lang?style=flat-square)](https://nodejs.org/)
-[![Downloads](https://img.shields.io/npm/dm/hispano-lang?style=flat-square)](https://www.npmjs.com/package/hispano-lang)
+<p align="center">
+  <a href="https://www.npmjs.com/package/hispano-lang"><img src="https://img.shields.io/npm/v/hispano-lang?style=for-the-badge&logo=npm&logoColor=white&color=cb3837" alt="npm version"/></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT"/></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hispano-lang?style=for-the-badge&logo=node.js&logoColor=white&color=339933" alt="Node.js Version"/></a>
+  <a href="https://www.npmjs.com/package/hispano-lang"><img src="https://img.shields.io/npm/dm/hispano-lang?style=for-the-badge&color=blue" alt="Downloads"/></a>
+</p>
 
-[📖 Documentación](#documentación) • [🚀 Instalación](#instalación) • [💻 Uso](#uso) • [📚 Ejemplos](#ejemplos) • [🤝 Contribuir](#contribuir)
+<p align="center">
+  <a href="#inicio-rápido">Inicio Rápido</a> •
+  <a href="#instalación">Instalación</a> •
+  <a href="#referencia-del-lenguaje">Documentación</a> •
+  <a href="#ejemplos">Ejemplos</a> •
+  <a href="#contribuir">Contribuir</a>
+</p>
 
-</div>
+---
 
-## 🎯 ¿Por qué HispanoLang?
+## Tabla de Contenidos
 
-La mayoría de los lenguajes de programación utilizan palabras clave en inglés, lo que puede dificultar el aprendizaje para principiantes hispanohablantes. **HispanoLang** propone una sintaxis sencilla en español, enfocada en aprender conceptos esenciales de programación.
+- [Acerca de HispanoLang](#acerca-de-hispanolang)
+- [Inicio Rápido](#inicio-rápido)
+- [Instalación](#instalación)
+- [Referencia del Lenguaje](#referencia-del-lenguaje)
+  - [Variables y Constantes](#variables-y-constantes)
+  - [Tipos de Datos](#tipos-de-datos)
+  - [Operadores](#operadores)
+  - [Estructuras de Control](#estructuras-de-control)
+  - [Funciones](#funciones)
+  - [Programación Orientada a Objetos](#programación-orientada-a-objetos)
+  - [Colecciones](#colecciones)
+  - [Manejo de Errores](#manejo-de-errores)
+- [Ejemplos](#ejemplos)
+- [API de Node.js](#api-de-nodejs)
+- [Arquitectura](#arquitectura)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
 
-### ✨ Características principales:
+---
 
-- ✅ **Sintaxis 100% en español** - Sin barreras de idioma
-- ⚡ **Intérprete completo** - Implementado en JavaScript/Node.js
-- 🎓 **Minimalista** - Pensado para aprender lógica sin distracciones
-- 📚 **Educativo** - Enfoque en conceptos fundamentales
-- 🔧 **CLI Tool** - Interfaz de línea de comandos intuitiva
-- 🧪 **Suite de tests** - 310+ tests para garantizar calidad
-- 📦 **NPM Package** - Fácil instalación y distribución
-- 🔄 **REPL Interactivo** - Modo interactivo para experimentar
-- 📝 **TypeScript Support** - Definiciones de tipos incluidas
-- 🌍 **Open Source** - Libre para usar, modificar y contribuir
+## Acerca de HispanoLang
 
-## 🚀 Instalación
+HispanoLang es un lenguaje de programación interpretado con sintaxis completamente en español. Fue diseñado con un objetivo claro: **democratizar el acceso a la programación** para los más de 500 millones de hispanohablantes en el mundo.
 
-### Prerrequisitos
+### ¿Por qué HispanoLang?
 
-- **Node.js** >= 20.0.0
-- **npm** o **yarn**
+La mayoría de los lenguajes de programación utilizan palabras clave en inglés, creando una barrera adicional para quienes están aprendiendo a programar. HispanoLang elimina esta barrera, permitiendo que los estudiantes se concentren en los **conceptos fundamentales** de la programación sin tener que lidiar simultáneamente con un idioma extranjero.
+
+### Características
+
+| Característica                 | Descripción                                                            |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| **Sintaxis en Español**        | Palabras clave intuitivas como `variable`, `funcion`, `si`, `mientras` |
+| **Tipado Dinámico**            | Sistema de tipos flexible con conversiones automáticas                 |
+| **POO Completa**               | Clases, herencia, constructores y métodos                              |
+| **Funciones de Primera Clase** | Funciones como valores, closures y callbacks                           |
+| **Colecciones Ricas**          | Arrays y objetos con métodos funcionales integrados                    |
+| **REPL Interactivo**           | Experimenta con código en tiempo real                                  |
+| **Integración Node.js**        | Usa HispanoLang como módulo en proyectos JavaScript                    |
+| **TypeScript Ready**           | Definiciones de tipos incluidas                                        |
+
+---
+
+## Inicio Rápido
+
+```bash
+# Instalar globalmente
+npm install -g hispano-lang
+
+# Iniciar el REPL interactivo
+hispano
+
+# O ejecutar un archivo
+hispano mi_programa.hl
+```
+
+Tu primer programa en HispanoLang:
+
+```
+variable mensaje = "¡Hola, mundo!"
+mostrar mensaje
+```
+
+---
+
+## Instalación
+
+### Requisitos
+
+- Node.js 20.0.0 o superior
+- npm o yarn
 
 ### Instalación Global (Recomendada)
 
@@ -43,64 +108,575 @@ La mayoría de los lenguajes de programación utilizan palabras clave en inglés
 npm install -g hispano-lang
 ```
 
-### Instalación Local
+### Instalación como Dependencia
 
 ```bash
 npm install hispano-lang
 ```
 
-### Instalación desde Código Fuente
+### Desde el Código Fuente
 
 ```bash
 git clone https://github.com/nicvazquezdev/hispano-lang.git
 cd hispano-lang
 npm install
 npm run build
+npm link
 ```
 
-## 💻 Uso
-
-### CLI Tool
-
-Una vez instalado globalmente, puedes usar HispanoLang desde cualquier lugar:
+### Verificar Instalación
 
 ```bash
-# Modo interactivo (REPL)
-hispano
-
-# Ejecutar archivo
-hispano script.hl
-
-# Ejecutar código directamente
-hispano -e "mostrar 'Hola mundo'"
-
-# Ver ayuda
-hispano --help
-
-# Ejecutar tests
-hispano --test
+hispano --version
 ```
 
-### Como Módulo Node.js
+---
+
+## Referencia del Lenguaje
+
+### Variables y Constantes
+
+#### Variables
+
+Las variables se declaran con la palabra clave `variable` y pueden ser reasignadas:
+
+```
+variable nombre = "Ana"
+variable edad = 25
+variable activo = verdadero
+
+edad = 26  // Reasignación permitida
+```
+
+#### Constantes
+
+Las constantes se declaran con `constante` y no pueden ser reasignadas:
+
+```
+constante PI = 3.14159
+constante MAX_INTENTOS = 3
+constante VERSION = "2.0.0"
+
+PI = 3.14  // Error: No se puede reasignar la constante
+```
+
+---
+
+### Tipos de Datos
+
+| Tipo       | Ejemplo              | Descripción                    |
+| ---------- | -------------------- | ------------------------------ |
+| Número     | `42`, `3.14`, `-10`  | Enteros y decimales            |
+| Texto      | `"Hola"`, `'Mundo'`  | Cadenas de caracteres          |
+| Booleano   | `verdadero`, `falso` | Valores lógicos                |
+| Arreglo    | `[1, 2, 3]`          | Colección ordenada             |
+| Objeto     | `{ clave: valor }`   | Colección de pares clave-valor |
+| Nulo       | `nulo`               | Ausencia intencional de valor  |
+| Indefinido | `indefinido`         | Variable sin valor asignado    |
+| Función    | `funcion() {}`       | Bloque de código reutilizable  |
+| Clase      | `clase {}`           | Plantilla para crear objetos   |
+
+#### Conversión de Tipos
+
+```
+entero("42")        // 42
+entero(3.7)         // 3
+
+decimal("3.14")     // 3.14
+
+texto(123)          // "123"
+texto(verdadero)    // "verdadero"
+
+booleano(1)         // verdadero
+booleano("")        // falso
+
+tipo(42)            // "numero"
+tipo("hola")        // "texto"
+tipo([1, 2])        // "arreglo"
+```
+
+---
+
+### Operadores
+
+#### Aritméticos
+
+| Operador | Descripción    | Ejemplo        |
+| -------- | -------------- | -------------- |
+| `+`      | Suma           | `5 + 3` → `8`  |
+| `-`      | Resta          | `5 - 3` → `2`  |
+| `*`      | Multiplicación | `5 * 3` → `15` |
+| `/`      | División       | `6 / 2` → `3`  |
+| `%`      | Módulo         | `7 % 3` → `1`  |
+
+#### Comparación
+
+| Operador | Descripción   | Ejemplo                |
+| -------- | ------------- | ---------------------- |
+| `==`     | Igual a       | `5 == 5` → `verdadero` |
+| `!=`     | Diferente de  | `5 != 3` → `verdadero` |
+| `<`      | Menor que     | `3 < 5` → `verdadero`  |
+| `>`      | Mayor que     | `5 > 3` → `verdadero`  |
+| `<=`     | Menor o igual | `3 <= 3` → `verdadero` |
+| `>=`     | Mayor o igual | `5 >= 5` → `verdadero` |
+
+#### Lógicos
+
+| Operador | Descripción | Ejemplo                           |
+| -------- | ----------- | --------------------------------- |
+| `y`      | AND lógico  | `verdadero y falso` → `falso`     |
+| `o`      | OR lógico   | `verdadero o falso` → `verdadero` |
+| `!`      | NOT lógico  | `!verdadero` → `falso`            |
+
+#### Asignación Compuesta
+
+```
+variable x = 10
+x += 5   // x = 15
+x -= 3   // x = 12
+x *= 2   // x = 24
+x /= 4   // x = 6
+x %= 4   // x = 2
+```
+
+---
+
+### Estructuras de Control
+
+#### Condicional Si/Sino
+
+```
+si edad >= 18 {
+    mostrar "Mayor de edad"
+} sino {
+    mostrar "Menor de edad"
+}
+```
+
+#### Elegir/Caso (Switch)
+
+```
+elegir opcion {
+    caso 1: mostrar "Opción uno"
+    caso 2: mostrar "Opción dos"
+    caso 3: {
+        mostrar "Opción tres"
+        mostrar "Con múltiples líneas"
+    }
+    pordefecto: mostrar "Opción no válida"
+}
+```
+
+#### Bucle Mientras
+
+```
+variable i = 0
+mientras i < 5 {
+    mostrar i
+    i = i + 1
+}
+```
+
+#### Bucle Para
+
+```
+para (variable i = 0; i < 5; i = i + 1) {
+    mostrar i
+}
+```
+
+#### Bucle Hacer/Mientras
+
+```
+variable x = 0
+hacer {
+    mostrar x
+    x = x + 1
+} mientras x < 3
+```
+
+#### Bucle Para Cada
+
+```
+variable frutas = ["manzana", "banana", "naranja"]
+para cada fruta en frutas {
+    mostrar fruta
+}
+```
+
+#### Control de Flujo
+
+```
+mientras verdadero {
+    si condicion {
+        romper      // Sale del bucle
+    }
+    si otraCondicion {
+        continuar   // Salta a la siguiente iteración
+    }
+}
+```
+
+---
+
+### Funciones
+
+#### Declaración y Llamada
+
+```
+funcion saludar(nombre) {
+    retornar "Hola, " + nombre
+}
+
+mostrar saludar("María")  // "Hola, María"
+```
+
+#### Funciones Anónimas
+
+```
+variable duplicar = funcion(x) {
+    retornar x * 2
+}
+
+mostrar duplicar(5)  // 10
+```
+
+#### Funciones como Parámetros
+
+```
+funcion aplicar(valor, operacion) {
+    retornar operacion(valor)
+}
+
+variable resultado = aplicar(5, funcion(x) { retornar x * x })
+mostrar resultado  // 25
+```
+
+#### Funciones Matemáticas Integradas
+
+```
+raiz(16)           // 4
+potencia(2, 8)     // 256
+absoluto(-5)       // 5
+redondear(3.7)     // 4
+piso(3.7)          // 3
+techo(3.2)         // 4
+seno(0)            // 0
+coseno(0)          // 1
+tangente(0)        // 0
+aleatorio()        // Número entre 0 y 1
+```
+
+---
+
+### Programación Orientada a Objetos
+
+#### Definición de Clases
+
+```
+clase Persona {
+    constructor(nombre, edad) {
+        este.nombre = nombre
+        este.edad = edad
+    }
+
+    saludar() {
+        retornar "Hola, soy " + este.nombre
+    }
+
+    cumplirAnios() {
+        este.edad = este.edad + 1
+    }
+}
+```
+
+#### Instanciación
+
+```
+variable persona = nuevo Persona("Carlos", 30)
+mostrar persona.nombre      // "Carlos"
+mostrar persona.saludar()   // "Hola, soy Carlos"
+
+persona.cumplirAnios()
+mostrar persona.edad        // 31
+```
+
+#### Herencia
+
+```
+clase Empleado extiende Persona {
+    constructor(nombre, edad, cargo) {
+        super(nombre, edad)
+        este.cargo = cargo
+    }
+
+    presentarse() {
+        retornar este.saludar() + " y trabajo como " + este.cargo
+    }
+}
+
+variable emp = nuevo Empleado("Ana", 28, "Ingeniera")
+mostrar emp.presentarse()  // "Hola, soy Ana y trabajo como Ingeniera"
+```
+
+#### Verificación de Tipo
+
+```
+variable p = nuevo Persona("Luis", 25)
+mostrar tipo(p)  // "Persona"
+```
+
+---
+
+### Colecciones
+
+#### Arreglos
+
+```
+variable numeros = [1, 2, 3, 4, 5]
+
+// Acceso y modificación
+mostrar numeros[0]     // 1
+numeros[0] = 10
+
+// Propiedades y métodos básicos
+numeros.longitud()     // 5
+numeros.primero()      // 10
+numeros.ultimo()       // 5
+numeros.agregar(6)     // Añade al final
+numeros.remover()      // Remueve del final
+numeros.contiene(3)    // verdadero
+```
+
+#### Métodos Funcionales
+
+```
+variable nums = [1, 2, 3, 4, 5]
+
+// Transformación
+nums.mapear(funcion(x) { retornar x * 2 })
+// [2, 4, 6, 8, 10]
+
+// Filtrado
+nums.filtrar(funcion(x) { retornar x > 2 })
+// [3, 4, 5]
+
+// Reducción
+nums.reducir(funcion(acc, x) { retornar acc + x }, 0)
+// 15
+
+// Búsqueda
+nums.buscar(funcion(x) { retornar x > 3 })
+// 4
+
+// Verificación
+nums.algunos(funcion(x) { retornar x > 4 })  // verdadero
+nums.todos(funcion(x) { retornar x > 0 })    // verdadero
+
+// Ordenamiento
+nums.ordenar()      // [1, 2, 3, 4, 5]
+nums.invertir()     // [5, 4, 3, 2, 1]
+
+// Manipulación
+nums.cortar(1, 3)         // [2, 3]
+nums.insertar(2, 99)      // Inserta 99 en posición 2
+nums.unir(", ")           // "1, 2, 3, 4, 5"
+```
+
+#### Iteración
+
+```
+variable colores = ["rojo", "verde", "azul"]
+colores.recorrer(funcion() {
+    mostrar "Color: " + elemento + " en índice " + indice
+})
+```
+
+#### Objetos
+
+```
+variable persona = {
+    nombre: "Elena",
+    edad: 32,
+    ciudad: "Madrid"
+}
+
+mostrar persona.nombre     // "Elena"
+persona.edad = 33          // Modificar
+persona.profesion = "Dev"  // Añadir propiedad
+```
+
+#### Cadenas de Texto
+
+```
+variable texto = "Hola Mundo"
+
+// Propiedades
+texto.longitud()          // 10
+
+// Transformación
+texto.mayusculas()        // "HOLA MUNDO"
+texto.minusculas()        // "hola mundo"
+texto.recortar()          // Elimina espacios extremos
+texto.invertir()          // "odnuM aloH"
+
+// Búsqueda
+texto.incluye("Mundo")    // verdadero
+texto.empiezaCon("Hola")  // verdadero
+texto.terminaCon("Mundo") // verdadero
+
+// Extracción
+texto.caracter(0)         // "H"
+texto.subcadena(0, 4)     // "Hola"
+
+// Manipulación
+texto.dividir(" ")        // ["Hola", "Mundo"]
+texto.reemplazar("Mundo", "Amigo")  // "Hola Amigo"
+```
+
+#### Interpolación de Cadenas
+
+```
+variable nombre = "María"
+variable edad = 25
+
+mostrar `Hola ${nombre}, tienes ${edad} años`
+// "Hola María, tienes 25 años"
+
+mostrar `El doble de tu edad es ${edad * 2}`
+// "El doble de tu edad es 50"
+```
+
+#### Métodos Numéricos
+
+```
+variable n = 42
+
+n.esPar()        // verdadero
+n.esImpar()      // falso
+n.esPositivo()   // verdadero
+n.esNegativo()   // falso
+n.aTexto()       // "42"
+```
+
+---
+
+### Manejo de Errores
+
+```
+intentar {
+    variable resultado = operacionRiesgosa()
+    mostrar resultado
+} capturar (error) {
+    mostrar "Ocurrió un error: " + error
+}
+```
+
+---
+
+## Ejemplos
+
+### Calculadora Simple
+
+```
+funcion calculadora(a, b, operacion) {
+    elegir operacion {
+        caso "+": retornar a + b
+        caso "-": retornar a - b
+        caso "*": retornar a * b
+        caso "/": {
+            si b == 0 {
+                retornar "Error: División por cero"
+            }
+            retornar a / b
+        }
+        pordefecto: retornar "Operación no válida"
+    }
+}
+
+mostrar calculadora(10, 5, "+")  // 15
+mostrar calculadora(10, 5, "*")  // 50
+```
+
+### Fibonacci
+
+```
+funcion fibonacci(n) {
+    si n <= 1 {
+        retornar n
+    }
+    retornar fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+para (variable i = 0; i < 10; i = i + 1) {
+    mostrar fibonacci(i)
+}
+```
+
+### Sistema de Gestión
+
+```
+clase Producto {
+    constructor(nombre, precio) {
+        este.nombre = nombre
+        este.precio = precio
+    }
+}
+
+clase Carrito {
+    constructor() {
+        este.productos = []
+    }
+
+    agregar(producto) {
+        este.productos.agregar(producto)
+    }
+
+    total() {
+        retornar este.productos.reducir(
+            funcion(acc, p) { retornar acc + p.precio },
+            0
+        )
+    }
+
+    mostrarResumen() {
+        mostrar "=== Carrito de Compras ==="
+        para cada producto en este.productos {
+            mostrar `${producto.nombre}: $${producto.precio}`
+        }
+        mostrar `Total: $${este.total()}`
+    }
+}
+
+variable carrito = nuevo Carrito()
+carrito.agregar(nuevo Producto("Laptop", 999))
+carrito.agregar(nuevo Producto("Mouse", 29))
+carrito.agregar(nuevo Producto("Teclado", 79))
+carrito.mostrarResumen()
+```
+
+---
+
+## API de Node.js
+
+### Uso como Módulo
 
 ```javascript
-const { interpret, run, getVariables } = require("hispano-lang");
+const { interpret, run } = require("hispano-lang");
 
-// Interpretar código
+// Interpretar código y obtener resultado completo
 const result = interpret(`
-  variable nombre = "Juan"
-  mostrar "Hola " + nombre
+    variable x = 10
+    mostrar x * 2
 `);
 
-console.log(result.output); // ['Hola Juan']
+console.log(result.success); // true
+console.log(result.output); // ['20']
+console.log(result.error); // null
 
-// Ejecutar y obtener salidas
-const outputs = run(`
-  variable x = 10
-  mostrar x * 2
-`);
-
-console.log(outputs); // ['20']
+// Ejecutar y obtener solo la salida
+const output = run(`mostrar "Hola desde Node.js"`);
+console.log(output); // ['Hola desde Node.js']
 ```
 
 ### TypeScript
@@ -109,519 +685,105 @@ console.log(outputs); // ['20']
 import { interpret, InterpretationResult } from "hispano-lang";
 
 const result: InterpretationResult = interpret(`
-  variable edad = 25
-  si edad >= 18 {
-    mostrar "Es mayor de edad"
-  }
+    variable mensaje = "TypeScript + HispanoLang"
+    mostrar mensaje
 `);
 ```
 
-## 📚 Sintaxis de HispanoLang
+---
 
-### 🎯 Ejemplo Rápido
+## Arquitectura
 
-```javascript
-// Saludo personalizado
-variable nombre = "María"
-mostrar "¡Hola " + nombre + "!"
-
-// Calculadora simple
-variable a = 10
-variable b = 5
-variable suma = a + b
-mostrar "La suma es: " + suma
-
-// Condicional
-si suma > 10 {
-  mostrar "¡Es un número grande!"
-} sino {
-  mostrar "Es un número pequeño"
-}
-```
-
-### Variables
-
-```javascript
-variable nombre = "Juan"
-variable edad = 25
-variable activo = verdadero
-variable salario = 50000.50
-```
-
-### Constantes
-
-```javascript
-constante PI = 3.14159
-constante MAX_USUARIOS = 100
-constante NOMBRE_APP = "MiApp"
-
-// Las constantes no pueden ser reasignadas
-PI = 3.14  // Error: No se puede reasignar la constante: PI
-```
-
-### Entrada de datos
-
-```javascript
-// Entrada básica
-leer nombre
-mostrar "Hola " + nombre
-
-// Entrada con mensaje
-leer edad "¿Cuál es tu edad?"
-mostrar "Tienes " + edad + " años"
-```
-
-### Condicionales
-
-```javascript
-si edad >= 18 {
-  mostrar "Es mayor de edad"
-} sino {
-  mostrar "Es menor de edad"
-}
-```
-
-### Bucles
-
-```javascript
-// Bucle mientras
-variable i = 0
-mientras i < 5 {
-  mostrar i
-  i = i + 1
-}
-
-// Bucle para
-para variable j = 0; j < 3; j = j + 1 {
-  mostrar j
-}
-
-// Bucle hacer/mientras (ejecuta al menos una vez)
-variable x = 0
-hacer {
-  mostrar x
-  x = x + 1
-} mientras x < 3
-
-// Bucle para cada (for-each)
-variable frutas = ["manzana", "banana", "naranja"]
-para cada fruta en frutas {
-  mostrar fruta
-}
-```
-
-### Elegir/Caso (Switch)
-
-```javascript
-variable opcion = 2
-elegir opcion {
-  caso 1: mostrar "Opción uno"
-  caso 2: mostrar "Opción dos"
-  caso 3: mostrar "Opción tres"
-  pordefecto: mostrar "Opción no válida"
-}
-
-// Con bloques de código
-elegir opcion {
-  caso 1: {
-    mostrar "Seleccionaste uno"
-    mostrar "Buena elección"
-  }
-  caso 2: mostrar "Seleccionaste dos"
-  pordefecto: mostrar "Otra opción"
-}
-```
-
-### Funciones
-
-```javascript
-funcion saludar(nombre) {
-  retornar "Hola " + nombre
-}
-
-mostrar saludar("Mundo")
-```
-
-### Arrays
-
-```javascript
-variable frutas = ["manzana", "banana", "naranja"]
-mostrar frutas.longitud()  // 3
-mostrar frutas.primero()   // manzana
-mostrar frutas.ultimo()    // naranja
-
-// Métodos básicos de array
-frutas.agregar("uva")      // push
-frutas.remover()           // pop
-frutas.contiene("banana")  // includes
-
-// Métodos de transformación
-variable numeros = [1, 2, 3, 4, 5]
-
-// Filtrar elementos
-variable pares = numeros.filtrar(funcion(x) { retornar x % 2 == 0 })
-// [2, 4]
-
-// Transformar elementos
-variable dobles = numeros.mapear(funcion(x) { retornar x * 2 })
-// [2, 4, 6, 8, 10]
-
-// Reducir a un valor
-variable suma = numeros.reducir(funcion(acc, x) { retornar acc + x }, 0)
-// 15
-
-// Ordenar (números o strings)
-variable ordenados = numeros.ordenar()           // [1, 2, 3, 4, 5]
-variable palabras = ["banana", "manzana", "cereza"]
-variable ordenadas = palabras.ordenar()          // [banana, cereza, manzana]
-
-// Invertir orden
-variable invertidos = numeros.invertir()         // [5, 4, 3, 2, 1]
-
-// Buscar elemento
-variable encontrado = numeros.buscar(funcion(x) { retornar x > 3 })
-// 4
-
-// Verificar condiciones
-variable hayGrandes = numeros.algunos(funcion(x) { retornar x > 3 })
-// verdadero
-variable todosPares = numeros.todos(funcion(x) { retornar x % 2 == 0 })
-// falso
-
-// Unir en string
-variable texto = numeros.unir(", ")              // "1, 2, 3, 4, 5"
-
-// Cortar sublista
-variable sublista = numeros.cortar(1, 3)         // [2, 3]
-
-// Insertar en posición
-numeros.insertar(2, "nuevo")                     // [1, 2, "nuevo", 3, 4, 5]
-```
-
-### Objetos
-
-```javascript
-variable persona = {
-  nombre: "Juan",
-  edad: 30,
-  ciudad: "Madrid"
-}
-
-mostrar persona.nombre     // Juan
-persona.edad = 31         // Modificar propiedad
-```
-
-### Strings
-
-```javascript
-variable texto = "hola mundo"
-mostrar texto.longitud()      // 10
-mostrar texto.mayusculas()    // HOLA MUNDO
-mostrar texto.minusculas()    // hola mundo
-
-// Métodos adicionales
-texto.dividir(" ")            // ["hola", "mundo"]
-texto.reemplazar("o", "a")    // "hala munda"
-texto.recortar()              // Elimina espacios al inicio y final
-texto.incluye("mundo")        // verdadero
-texto.empiezaCon("hola")      // verdadero
-texto.terminaCon("mundo")     // verdadero
-texto.caracter(0)             // "h"
-texto.subcadena(0, 4)         // "hola"
-texto.subcadena(5)            // "mundo"
-texto.invertir()              // "odnum aloh"
-```
-
-### Interpolación de cadenas
-
-Usa backticks (\`) para crear cadenas con expresiones embebidas usando `${expresion}`:
-
-```javascript
-variable nombre = "María"
-variable edad = 25
-mostrar `Hola ${nombre}, tienes ${edad} años`
-// Resultado: Hola María, tienes 25 años
-```
-
-### Manejo de errores
-
-```javascript
-intentar {
-  variable x = 10 / 0
-} capturar (error) {
-  mostrar "Error: " + error
-}
-```
-
-### Valores especiales
-
-```javascript
-variable valorNulo = nulo
-variable valorIndefinido = indefinido
-```
-
-### Conversión de tipos
-
-```javascript
-// Convertir a entero
-entero("42")           // 42
-entero(3.7)            // 3
-entero(verdadero)      // 1
-
-// Convertir a decimal
-decimal("3.14")        // 3.14
-decimal(42)            // 42
-
-// Convertir a texto
-texto(123)             // "123"
-texto(verdadero)       // "verdadero"
-texto(nulo)            // "nulo"
-texto([1, 2, 3])       // "[1, 2, 3]"
-
-// Convertir a booleano
-booleano(1)            // verdadero
-booleano(0)            // falso
-booleano("hola")       // verdadero
-booleano("")           // falso
-
-// Obtener tipo de un valor
-tipo(42)               // "numero"
-tipo("hola")           // "texto"
-tipo(verdadero)        // "booleano"
-tipo([1, 2])           // "arreglo"
-tipo({ a: 1 })         // "objeto"
-tipo(nulo)             // "nulo"
-tipo(miFuncion)        // "funcion"
-```
-
-### Métodos numéricos
-
-```javascript
-variable num = 42
-
-// Verificar paridad
-num.esPar()            // verdadero
-num.esImpar()          // falso
-
-// Verificar signo
-num.esPositivo()       // verdadero
-num.esNegativo()       // falso
-
-// Convertir a texto
-num.aTexto()           // "42"
-
-// También funciona con literales (usando paréntesis)
-(7).esImpar()          // verdadero
-(-5).esNegativo()      // verdadero
-(3.14).aTexto()        // "3.14"
-```
-
-### Programación Orientada a Objetos
-
-HispanoLang soporta clases con constructores, métodos y herencia.
-
-```javascript
-// Definición de clase básica
-clase Persona {
-  constructor(nombre, edad) {
-    este.nombre = nombre
-    este.edad = edad
-  }
-
-  saludar() {
-    retornar "Hola, soy " + este.nombre
-  }
-
-  cumplir() {
-    este.edad = este.edad + 1
-  }
-}
-
-// Crear instancias
-variable p = nuevo Persona("Juan", 25)
-mostrar p.nombre           // Juan
-mostrar p.saludar()        // Hola, soy Juan
-
-// Modificar propiedades via métodos
-p.cumplir()
-mostrar p.edad             // 26
-
-// Herencia con extiende
-clase Estudiante extiende Persona {
-  constructor(nombre, edad, carrera) {
-    super(nombre, edad)    // Llamar constructor padre
-    este.carrera = carrera
-  }
-
-  estudiar() {
-    retornar este.nombre + " está estudiando " + este.carrera
-  }
-}
-
-variable e = nuevo Estudiante("María", 20, "Ingeniería")
-mostrar e.saludar()        // Hola, soy María (método heredado)
-mostrar e.estudiar()       // María está estudiando Ingeniería
-mostrar e.carrera          // Ingeniería
-
-// Clase sin constructor
-clase Contador {
-  incrementar() {
-    si este.valor == indefinido {
-      este.valor = 0
-    }
-    este.valor = este.valor + 1
-  }
-
-  obtener() {
-    retornar este.valor
-  }
-}
-
-variable c = nuevo Contador()
-c.incrementar()
-c.incrementar()
-mostrar c.obtener()        // 2
-
-// tipo() retorna el nombre de la clase para instancias
-mostrar tipo(p)            // Persona
-mostrar tipo(e)            // Estudiante
-```
-
-## 🧪 Testing
-
-El proyecto incluye una suite completa de tests con más de 310 casos:
-
-```bash
-npm test
-```
-
-## 🏗️ Arquitectura
+HispanoLang utiliza una arquitectura de intérprete clásica con tres fases:
 
 ```
-src/
-├── tokenizer.js    # Análisis léxico
-├── parser.js       # Análisis sintáctico
-├── evaluator.js    # Evaluación de expresiones
-└── interpreter.js  # Orquestador principal
-
-bin/
-└── hispano.js      # CLI tool
-
-test/
-└── test.js         # Suite completa de tests (310+ casos)
+┌─────────────┐     ┌────────────┐     ┌─────────────┐
+│  Tokenizer  │ ──▶ │   Parser   │ ──▶ │  Evaluator  │
+│  (Léxico)   │     │ (Sintaxis) │     │ (Ejecución) │
+└─────────────┘     └────────────┘     └─────────────┘
+      │                   │                   │
+      ▼                   ▼                   ▼
+   Tokens              AST               Resultado
 ```
 
-## 🛠️ Desarrollo
+### Estructura del Proyecto
 
-### Configuración del entorno
-
-```bash
-# Clonar el repositorio
-git clone https://github.com/nicvazquezdev/hispano-lang.git
-cd hispano-lang
-
-# Instalar dependencias
-npm install
-
-# Ejecutar en modo desarrollo
-npm run dev
-
-# Ejecutar tests
-npm test
-
-# Linting y formato
-npm run lint
-npm run format
-
-# Build para producción
-npm run build
 ```
-
-### Scripts disponibles
-
-- `npm start` - Ejecutar el intérprete
-- `npm test` - Ejecutar tests
-- `npm run dev` - Modo desarrollo con nodemon
-- `npm run lint` - Verificar código con ESLint
-- `npm run format` - Formatear código con Prettier
-- `npm run build` - Construir para producción
-- `npm run demo` - Ejecutar demo
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Este proyecto está abierto a la comunidad.
-
-### Cómo contribuir
-
-1. **Fork** el proyecto
-2. **Crea** una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** a la rama (`git push origin feature/AmazingFeature`)
-5. **Abre** un Pull Request
-
-### Guías de contribución
-
-- ✅ Sigue las convenciones de código existentes
-- ✅ Añade tests para nuevas funcionalidades
-- ✅ Actualiza la documentación si es necesario
-- ✅ Asegúrate de que todos los tests pasen
-- ✅ Usa `npm run lint` y `npm run format` antes de commitear
-
-### Áreas donde puedes contribuir
-
-- 🐛 **Bug fixes** - Reporta y arregla bugs
-- ✨ **Nuevas funcionalidades** - Propón mejoras
-- 📚 **Documentación** - Mejora ejemplos y guías
-- 🧪 **Tests** - Añade casos de prueba
-- 🌍 **Traducciones** - Ayuda con documentación en otros idiomas
-- 🎨 **UI/UX** - Mejora la experiencia del CLI
-
-## 🐛 Reportar bugs
-
-Si encuentras un bug, por favor:
-
-1. **Verifica** que no esté ya reportado en [Issues](https://github.com/nicvazquezdev/hispano-lang/issues)
-2. **Crea** un nuevo issue con:
-   - Descripción clara del problema
-   - Código que reproduce el error
-   - Versión de Node.js
-   - Sistema operativo
-   - Pasos para reproducir
-
-## 📄 Licencia
-
-Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## 👨‍💻 Autor
-
-**Nicolas Vazquez**
-
-- 🌐 GitHub: [@nicvazquezdev](https://github.com/nicvazquezdev)
-- 📧 Email: [nicorvazquezs@gmail.com](mailto:nicorvazquezs@gmail.com)
-
-## 🙏 Agradecimientos
-
-- 🌍 **Comunidad de desarrolladores hispanohablantes**
-- 🧪 **Contribuidores y testers del proyecto**
-- 📚 **Educadores que usan HispanoLang en sus clases**
-- 🎓 **Estudiantes que aprenden programación con HispanoLang**
-
-## 📊 Estadísticas
-
-- 🧪 **310+ tests** cubriendo todas las funcionalidades
-- 📦 **NPM package** listo para instalación global
-- 🔧 **CLI tool** con modo interactivo
-- 📝 **TypeScript support** con definiciones incluidas
-- 🌍 **100% en español** para educación sin barreras
+hispano-lang/
+├── src/
+│   ├── tokenizer.js    # Análisis léxico
+│   ├── parser.js       # Análisis sintáctico → AST
+│   ├── evaluator.js    # Evaluación del AST
+│   └── interpreter.js  # Orquestador principal
+├── bin/
+│   └── hispano.js      # CLI
+├── test/
+│   └── test.js         # Suite de tests (310+)
+└── dist/               # Build de producción
+```
 
 ---
 
-<div align="center">
+## Contribuir
 
-⭐ **Si te gusta este proyecto, ¡dale una estrella!**
+Las contribuciones son bienvenidas. Por favor, lee las siguientes guías antes de contribuir.
 
-[![GitHub stars](https://img.shields.io/github/stars/nicvazquezdev/hispano-lang?style=social)](https://github.com/nicvazquezdev/hispano-lang)
+### Configuración del Entorno
 
-**Hecho con ❤️ para la comunidad hispanohablante**
+```bash
+git clone https://github.com/nicvazquezdev/hispano-lang.git
+cd hispano-lang
+npm install
+npm test
+```
 
-</div>
+### Flujo de Trabajo
+
+1. Fork del repositorio
+2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
+3. Commit de cambios: `git commit -m 'Añadir nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Crear Pull Request
+
+### Estándares de Código
+
+- Ejecutar `npm run lint` antes de commit
+- Ejecutar `npm run format` para formatear código
+- Añadir tests para nuevas funcionalidades
+- Mantener cobertura de tests existente
+
+### Reportar Bugs
+
+Abre un [issue](https://github.com/nicvazquezdev/hispano-lang/issues) incluyendo:
+
+- Descripción del problema
+- Código para reproducir
+- Comportamiento esperado vs actual
+- Versión de Node.js y sistema operativo
+
+---
+
+## Licencia
+
+Distribuido bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más información.
+
+---
+
+## Autor
+
+**Nicolas Vazquez**
+
+- GitHub: [@nicvazquezdev](https://github.com/nicvazquezdev)
+- Email: nicorvazquezs@gmail.com
+
+---
+
+<p align="center">
+  <sub>Hecho con dedicación para la comunidad hispanohablante</sub>
+</p>
+
+<p align="center">
+  <a href="https://github.com/nicvazquezdev/hispano-lang">
+    <img src="https://img.shields.io/github/stars/nicvazquezdev/hispano-lang?style=social" alt="GitHub Stars"/>
+  </a>
+</p>
