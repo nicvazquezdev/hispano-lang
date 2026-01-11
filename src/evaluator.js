@@ -23,7 +23,7 @@ class Evaluator {
         this.execute(statement);
       }
     } catch (error) {
-      throw new Error(`Error de ejecución: ${error.message}`);
+      throw new Error(error.message);
     }
 
     return this.output;
