@@ -1,6 +1,6 @@
 {
   "name": "hispano-lang",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Un lenguaje de programación educativo en español para enseñar programación sin barreras de idioma",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
