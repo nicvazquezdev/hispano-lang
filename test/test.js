@@ -4243,6 +4243,298 @@ function runTests() {
     );
   });
 
+  // ============================================
+  // ADDITIONAL CONTROL STRUCTURES TESTS
+  // ============================================
+
+  // elegir/caso (switch/case) tests
+  test("elegir/caso basic functionality", () => {
+    const code = `
+      variable x = 2
+      elegir x {
+        caso 1: mostrar "uno"
+        caso 2: mostrar "dos"
+        caso 3: mostrar "tres"
+        pordefecto: mostrar "otro"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["dos"], "elegir should match case 2");
+  });
+
+  test("elegir/caso with default", () => {
+    const code = `
+      variable x = 5
+      elegir x {
+        caso 1: mostrar "uno"
+        caso 2: mostrar "dos"
+        pordefecto: mostrar "otro valor"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["otro valor"],
+      "elegir should use default when no match",
+    );
+  });
+
+  test("elegir/caso with string values", () => {
+    const code = `
+      variable color = "rojo"
+      elegir color {
+        caso "azul": mostrar "es azul"
+        caso "rojo": mostrar "es rojo"
+        caso "verde": mostrar "es verde"
+        pordefecto: mostrar "color desconocido"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["es rojo"], "elegir should work with strings");
+  });
+
+  test("elegir/caso with multiple statements in case", () => {
+    const code = `
+      variable x = 1
+      variable resultado = 0
+      elegir x {
+        caso 1: {
+          resultado = resultado + 10
+          resultado = resultado + 5
+          mostrar resultado
+        }
+        caso 2: mostrar "dos"
+        pordefecto: mostrar "otro"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15"],
+      "elegir should support block statements in cases",
+    );
+  });
+
+  test("elegir/caso without default", () => {
+    const code = `
+      variable x = 1
+      elegir x {
+        caso 1: mostrar "uno"
+        caso 2: mostrar "dos"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["uno"], "elegir should work without default");
+  });
+
+  test("elegir/caso no match without default", () => {
+    const code = `
+      variable x = 99
+      elegir x {
+        caso 1: mostrar "uno"
+        caso 2: mostrar "dos"
+      }
+      mostrar "fin"
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["fin"],
+      "elegir without match and no default should continue",
+    );
+  });
+
+  // hacer/mientras (do-while) tests
+  test("hacer/mientras basic functionality", () => {
+    const code = `
+      variable i = 0
+      hacer {
+        mostrar i
+        i = i + 1
+      } mientras i < 3
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["0", "1", "2"],
+      "hacer/mientras should execute and then check condition",
+    );
+  });
+
+  test("hacer/mientras executes at least once", () => {
+    const code = `
+      variable i = 10
+      hacer {
+        mostrar "ejecutado"
+      } mientras i < 5
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["ejecutado"],
+      "hacer/mientras should execute at least once even if condition is false",
+    );
+  });
+
+  test("hacer/mientras with break", () => {
+    const code = `
+      variable i = 0
+      hacer {
+        mostrar i
+        i = i + 1
+        si i == 2 {
+          romper
+        }
+      } mientras i < 10
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["0", "1"], "hacer/mientras should support break");
+  });
+
+  test("hacer/mientras with continue", () => {
+    const code = `
+      variable i = 0
+      variable contador = 0
+      hacer {
+        i = i + 1
+        si i == 2 {
+          continuar
+        }
+        mostrar i
+        contador = contador + 1
+      } mientras i < 4
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "3", "4"],
+      "hacer/mientras should support continue",
+    );
+  });
+
+  // para cada (for-each) tests
+  test("para cada basic functionality", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      para cada num en numeros {
+        mostrar num
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1", "2", "3"],
+      "para cada should iterate over array",
+    );
+  });
+
+  test("para cada with strings", () => {
+    const code = `
+      variable frutas = ["manzana", "banana", "naranja"]
+      para cada fruta en frutas {
+        mostrar fruta
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["manzana", "banana", "naranja"],
+      "para cada should work with string arrays",
+    );
+  });
+
+  test("para cada with empty array", () => {
+    const code = `
+      variable lista = []
+      para cada elemento en lista {
+        mostrar elemento
+      }
+      mostrar "fin"
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["fin"], "para cada should handle empty arrays");
+  });
+
+  test("para cada with break", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      para cada num en numeros {
+        si num == 3 {
+          romper
+        }
+        mostrar num
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["1", "2"], "para cada should support break");
+  });
+
+  test("para cada with continue", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4]
+      para cada num en numeros {
+        si num == 2 {
+          continuar
+        }
+        mostrar num
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["1", "3", "4"], "para cada should support continue");
+  });
+
+  test("para cada modifying external variable", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4]
+      variable suma = 0
+      para cada num en numeros {
+        suma = suma + num
+      }
+      mostrar suma
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["10"],
+      "para cada should allow modifying external variables",
+    );
+  });
+
+  test("para cada with objects in array", () => {
+    const code = `
+      variable personas = [
+        {nombre: "Juan", edad: 30},
+        {nombre: "Ana", edad: 25}
+      ]
+      para cada persona en personas {
+        mostrar persona.nombre
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Juan", "Ana"],
+      "para cada should work with objects in array",
+    );
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

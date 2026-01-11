@@ -24,7 +24,7 @@ La mayoría de los lenguajes de programación utilizan palabras clave en inglés
 - 🎓 **Minimalista** - Pensado para aprender lógica sin distracciones
 - 📚 **Educativo** - Enfoque en conceptos fundamentales
 - 🔧 **CLI Tool** - Interfaz de línea de comandos intuitiva
-- 🧪 **Suite de tests** - 195+ tests para garantizar calidad
+- 🧪 **Suite de tests** - 210+ tests para garantizar calidad
 - 📦 **NPM Package** - Fácil instalación y distribución
 - 🔄 **REPL Interactivo** - Modo interactivo para experimentar
 - 📝 **TypeScript Support** - Definiciones de tipos incluidas
@@ -183,6 +183,41 @@ mientras i < 5 {
 // Bucle para
 para variable j = 0; j < 3; j = j + 1 {
   mostrar j
+}
+
+// Bucle hacer/mientras (ejecuta al menos una vez)
+variable x = 0
+hacer {
+  mostrar x
+  x = x + 1
+} mientras x < 3
+
+// Bucle para cada (for-each)
+variable frutas = ["manzana", "banana", "naranja"]
+para cada fruta en frutas {
+  mostrar fruta
+}
+```
+
+### Elegir/Caso (Switch)
+
+```javascript
+variable opcion = 2
+elegir opcion {
+  caso 1: mostrar "Opción uno"
+  caso 2: mostrar "Opción dos"
+  caso 3: mostrar "Opción tres"
+  pordefecto: mostrar "Opción no válida"
+}
+
+// Con bloques de código
+elegir opcion {
+  caso 1: {
+    mostrar "Seleccionaste uno"
+    mostrar "Buena elección"
+  }
+  caso 2: mostrar "Seleccionaste dos"
+  pordefecto: mostrar "Otra opción"
 }
 ```
 
@@ -393,7 +428,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📊 Estadísticas
 
-- 🧪 **195+ tests** cubriendo todas las funcionalidades
+- 🧪 **210+ tests** cubriendo todas las funcionalidades
 - 📦 **NPM package** listo para instalación global
 - 🔧 **CLI tool** con modo interactivo
 - 📝 **TypeScript support** con definiciones incluidas

@@ -56,6 +56,12 @@ class Evaluator {
         return this.executeContinueStatement(statement);
       case "TryCatch":
         return this.executeTryCatch(statement);
+      case "ElegirStatement":
+        return this.executeElegirStatement(statement);
+      case "HacerMientrasStatement":
+        return this.executeHacerMientrasStatement(statement);
+      case "ForEachStatement":
+        return this.executeForEachStatement(statement);
       case "ExpressionStatement":
         return this.executeExpressionStatement(statement);
       case "Block":
@@ -1451,6 +1457,91 @@ class Evaluator {
 
       // Execute the catch block
       this.executeBlock(statement.catchBlock);
+    }
+  }
+
+  /**
+   * Executes an elegir (switch) statement
+   * @param {Object} statement - Elegir statement to execute
+   */
+  executeElegirStatement(statement) {
+    const discriminantValue = this.evaluateExpression(statement.discriminant);
+
+    // Try to find a matching case
+    for (const caseClause of statement.cases) {
+      const testValue = this.evaluateExpression(caseClause.test);
+      if (discriminantValue === testValue) {
+        // Execute the matching case
+        for (const stmt of caseClause.consequent) {
+          this.execute(stmt);
+        }
+        return; // Exit after executing the matching case (no fall-through)
+      }
+    }
+
+    // If no case matched, execute default if present
+    if (statement.defaultCase) {
+      for (const stmt of statement.defaultCase.consequent) {
+        this.execute(stmt);
+      }
+    }
+  }
+
+  /**
+   * Executes a hacer/mientras (do-while) statement
+   * @param {Object} statement - HacerMientras statement to execute
+   */
+  executeHacerMientrasStatement(statement) {
+    do {
+      try {
+        this.executeBlock(statement.body);
+      } catch (error) {
+        if (error instanceof BreakException) {
+          break;
+        }
+        if (error instanceof ContinueException) {
+          continue;
+        }
+        throw error;
+      }
+    } while (this.isTruthy(this.evaluateExpression(statement.condition)));
+  }
+
+  /**
+   * Executes a para cada (for-each) statement
+   * @param {Object} statement - ForEach statement to execute
+   */
+  executeForEachStatement(statement) {
+    const iterable = this.evaluateExpression(statement.iterable);
+
+    if (!Array.isArray(iterable)) {
+      throw new Error("para cada solo puede iterar sobre arreglos");
+    }
+
+    for (const element of iterable) {
+      // Create a new environment for each iteration
+      const loopEnv = new Environment(this.environment);
+      loopEnv.define(statement.iterator, element);
+
+      const previousEnv = this.environment;
+      this.environment = loopEnv;
+
+      try {
+        this.executeBlock(statement.body);
+      } catch (error) {
+        if (error instanceof BreakException) {
+          this.environment = previousEnv;
+          break;
+        }
+        if (error instanceof ContinueException) {
+          this.environment = previousEnv;
+          continue;
+        }
+        this.environment = previousEnv;
+        throw error;
+      }
+
+      this.environment = previousEnv;
     }
   }
 }

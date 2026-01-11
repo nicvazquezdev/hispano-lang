@@ -59,7 +59,19 @@ class Parser {
       }
 
       if (this.match("PARA")) {
+        // Check if it's "para cada" (for-each) or regular "para" (for)
+        if (this.match("CADA")) {
+          return this.forEachStatement();
+        }
         return this.forStatement();
+      }
+
+      if (this.match("ELEGIR")) {
+        return this.elegirStatement();
+      }
+
+      if (this.match("HACER")) {
+        return this.hacerMientrasStatement();
       }
 
       if (this.match("RETORNAR")) {
@@ -1086,6 +1098,108 @@ class Parser {
     } else {
       throw new Error("Se esperaba capturar después del bloque intentar");
     }
+  }
+
+  /**
+   * Parses an elegir (switch) statement
+   * @returns {Object} Elegir statement
+   */
+  elegirStatement() {
+    const discriminant = this.expression();
+    this.consume("LEFT_BRACE", "Expected { after elegir expression");
+
+    const cases = [];
+    let defaultCase = null;
+
+    while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
+      if (this.match("CASO")) {
+        const testValue = this.expression();
+        this.consume("COLON", "Expected : after caso value");
+
+        let consequent;
+        if (this.check("LEFT_BRACE")) {
+          this.advance();
+          consequent = this.block();
+          this.consume("RIGHT_BRACE", "Expected } after caso block");
+        } else {
+          consequent = [this.declaration()];
+        }
+
+        cases.push({
+          test: testValue,
+          consequent,
+        });
+      } else if (this.match("PORDEFECTO")) {
+        this.consume("COLON", "Expected : after pordefecto");
+
+        let consequent;
+        if (this.check("LEFT_BRACE")) {
+          this.advance();
+          consequent = this.block();
+          this.consume("RIGHT_BRACE", "Expected } after pordefecto block");
+        } else {
+          consequent = [this.declaration()];
+        }
+
+        defaultCase = {
+          consequent,
+        };
+      } else {
+        throw new Error("Se esperaba caso o pordefecto dentro de elegir");
+      }
+    }
+
+    this.consume("RIGHT_BRACE", "Expected } after elegir block");
+
+    return {
+      type: "ElegirStatement",
+      discriminant,
+      cases,
+      defaultCase,
+    };
+  }
+
+  /**
+   * Parses a hacer/mientras (do-while) statement
+   * @returns {Object} HacerMientras statement
+   */
+  hacerMientrasStatement() {
+    this.consume("LEFT_BRACE", "Expected { after hacer");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after hacer block");
+
+    this.consume("MIENTRAS", "Expected mientras after hacer block");
+    const condition = this.expression();
+
+    return {
+      type: "HacerMientrasStatement",
+      body,
+      condition,
+    };
+  }
+
+  /**
+   * Parses a para cada (for-each) statement
+   * @returns {Object} ForEach statement
+   */
+  forEachStatement() {
+    const iteratorName = this.consume(
+      "IDENTIFIER",
+      "Expected iterator variable name after cada",
+    );
+    this.consume("EN", "Expected en after iterator variable");
+    const iterable = this.expression();
+
+    this.consume("LEFT_BRACE", "Expected { after iterable");
+    const body = this.block();
+    this.consume("RIGHT_BRACE", "Expected } after para cada block");
+
+    return {
+      type: "ForEachStatement",
+      iterator: iteratorName.lexeme,
+      iterable,
+      body,
+    };
   }
 }
 

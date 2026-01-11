@@ -5,7 +5,7 @@
 
 class Tokenizer {
   constructor() {
-    this.source = '';
+    this.source = "";
     this.tokens = [];
     this.current = 0;
     this.startPos = 0;
@@ -27,8 +27,8 @@ class Tokenizer {
     }
 
     this.tokens.push({
-      type: 'EOF',
-      lexeme: '',
+      type: "EOF",
+      lexeme: "",
       literal: null,
       line: this.currentLine,
     });
@@ -43,8 +43,8 @@ class Tokenizer {
 
     // Check for comments before advancing
     if (
-      this.source[this.current] === '/' &&
-      this.source[this.current + 1] === '/'
+      this.source[this.current] === "/" &&
+      this.source[this.current + 1] === "/"
     ) {
       this.comment();
       return;
@@ -53,141 +53,141 @@ class Tokenizer {
     const char = this.advance();
 
     switch (char) {
-      case ' ':
-      case '\r':
-      case '\t':
+      case " ":
+      case "\r":
+      case "\t":
         // Ignore whitespace
         break;
 
-      case '\n':
+      case "\n":
         this.currentLine++;
         break;
 
-      case '=':
-        if (this.peek() === '=') {
+      case "=":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('EQUAL_EQUAL');
+          this.addToken("EQUAL_EQUAL");
         } else {
-          this.addToken('EQUAL');
+          this.addToken("EQUAL");
         }
         break;
 
-      case '*':
-        if (this.peek() === '=') {
+      case "*":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('STAR_EQUAL');
+          this.addToken("STAR_EQUAL");
         } else {
-          this.addToken('STAR');
+          this.addToken("STAR");
         }
         break;
 
-      case '/':
-        if (this.peek() === '=') {
+      case "/":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('SLASH_EQUAL');
+          this.addToken("SLASH_EQUAL");
         } else {
-          this.addToken('SLASH');
+          this.addToken("SLASH");
         }
         break;
 
-      case '%':
-        if (this.peek() === '=') {
+      case "%":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('PERCENT_EQUAL');
+          this.addToken("PERCENT_EQUAL");
         } else {
-          this.addToken('PERCENT');
+          this.addToken("PERCENT");
         }
         break;
 
-      case '>':
-        if (this.peek() === '=') {
+      case ">":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('GREATER_EQUAL');
+          this.addToken("GREATER_EQUAL");
         } else {
-          this.addToken('GREATER');
+          this.addToken("GREATER");
         }
         break;
 
-      case '<':
-        if (this.peek() === '=') {
+      case "<":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('LESS_EQUAL');
+          this.addToken("LESS_EQUAL");
         } else {
-          this.addToken('LESS');
+          this.addToken("LESS");
         }
         break;
 
-      case '!':
-        if (this.peek() === '=') {
+      case "!":
+        if (this.peek() === "=") {
           this.advance();
-          this.addToken('BANG_EQUAL');
+          this.addToken("BANG_EQUAL");
         } else {
-          this.addToken('BANG');
+          this.addToken("BANG");
         }
         break;
 
-      case '+':
-        if (this.peek() === '+') {
+      case "+":
+        if (this.peek() === "+") {
           this.advance();
-          this.addToken('PLUS_PLUS');
-        } else if (this.peek() === '=') {
+          this.addToken("PLUS_PLUS");
+        } else if (this.peek() === "=") {
           this.advance();
-          this.addToken('PLUS_EQUAL');
+          this.addToken("PLUS_EQUAL");
         } else {
-          this.addToken('PLUS');
+          this.addToken("PLUS");
         }
         break;
 
-      case '-':
-        if (this.peek() === '-') {
+      case "-":
+        if (this.peek() === "-") {
           this.advance();
-          this.addToken('MINUS_MINUS');
-        } else if (this.peek() === '=') {
+          this.addToken("MINUS_MINUS");
+        } else if (this.peek() === "=") {
           this.advance();
-          this.addToken('MINUS_EQUAL');
+          this.addToken("MINUS_EQUAL");
         } else {
-          this.addToken('MINUS');
+          this.addToken("MINUS");
         }
         break;
 
-      case '{':
-        this.addToken('LEFT_BRACE');
+      case "{":
+        this.addToken("LEFT_BRACE");
         break;
 
-      case '}':
-        this.addToken('RIGHT_BRACE');
+      case "}":
+        this.addToken("RIGHT_BRACE");
         break;
 
-      case '(':
-        this.addToken('LEFT_PAREN');
+      case "(":
+        this.addToken("LEFT_PAREN");
         break;
 
-      case ')':
-        this.addToken('RIGHT_PAREN');
+      case ")":
+        this.addToken("RIGHT_PAREN");
         break;
 
-      case ',':
-        this.addToken('COMMA');
+      case ",":
+        this.addToken("COMMA");
         break;
 
-      case ';':
-        this.addToken('SEMICOLON');
+      case ";":
+        this.addToken("SEMICOLON");
         break;
 
-      case ':':
-        this.addToken('COLON');
+      case ":":
+        this.addToken("COLON");
         break;
 
-      case '[':
-        this.addToken('LEFT_BRACKET');
+      case "[":
+        this.addToken("LEFT_BRACKET");
         break;
 
-      case ']':
-        this.addToken('RIGHT_BRACKET');
+      case "]":
+        this.addToken("RIGHT_BRACKET");
         break;
 
-      case '.':
-        this.addToken('DOT');
+      case ".":
+        this.addToken("DOT");
         break;
 
       case '"':
@@ -198,15 +198,15 @@ class Tokenizer {
         this.string("'");
         break;
 
-      case '`':
+      case "`":
         this.templateString();
         break;
 
-      case '/':
-        if (this.peek() === '/') {
+      case "/":
+        if (this.peek() === "/") {
           this.comment();
         } else {
-          this.addToken('SLASH');
+          this.addToken("SLASH");
         }
         break;
 
@@ -217,7 +217,7 @@ class Tokenizer {
           this.identifier();
         } else {
           throw new Error(
-            `Carácter inesperado: ${char} en la línea ${this.currentLine}`
+            `Carácter inesperado: ${char} en la línea ${this.currentLine}`,
           );
         }
         break;
@@ -230,12 +230,12 @@ class Tokenizer {
    */
   string(quoteType = '"') {
     while (this.peek() !== quoteType && !this.isAtEnd()) {
-      if (this.peek() === '\n') this.currentLine++;
+      if (this.peek() === "\n") this.currentLine++;
       this.advance();
     }
 
     if (this.isAtEnd()) {
-      throw new Error('Cadena no terminada');
+      throw new Error("Cadena no terminada");
     }
 
     // Consume the closing quote
@@ -243,7 +243,7 @@ class Tokenizer {
 
     // Extract the string value
     const value = this.source.substring(this.startPos + 1, this.current - 1);
-    this.addToken('STRING', value);
+    this.addToken("STRING", value);
   }
 
   /**
@@ -251,46 +251,46 @@ class Tokenizer {
    * Supports ${expression} syntax for embedding expressions
    */
   templateString() {
-    const parts = [];      // Literal string parts
+    const parts = []; // Literal string parts
     const expressions = []; // Expression source strings
-    let currentPart = '';
+    let currentPart = "";
 
     while (!this.isAtEnd()) {
       const char = this.peek();
 
-      if (char === '`') {
+      if (char === "`") {
         // End of template string
         this.advance();
         parts.push(currentPart);
-        this.addToken('TEMPLATE_STRING', { parts, expressions });
+        this.addToken("TEMPLATE_STRING", { parts, expressions });
         return;
       }
 
-      if (char === '$' && this.peekNext() === '{') {
+      if (char === "$" && this.peekNext() === "{") {
         // Start of interpolation
         parts.push(currentPart);
-        currentPart = '';
+        currentPart = "";
         this.advance(); // consume $
         this.advance(); // consume {
 
         // Extract the expression
         let braceCount = 1;
-        let expressionSource = '';
+        let expressionSource = "";
 
         while (!this.isAtEnd() && braceCount > 0) {
           const c = this.peek();
-          if (c === '{') {
+          if (c === "{") {
             braceCount++;
             expressionSource += c;
             this.advance();
-          } else if (c === '}') {
+          } else if (c === "}") {
             braceCount--;
             if (braceCount > 0) {
               expressionSource += c;
             }
             this.advance();
           } else {
-            if (c === '\n') this.currentLine++;
+            if (c === "\n") this.currentLine++;
             expressionSource += c;
             this.advance();
           }
@@ -298,13 +298,13 @@ class Tokenizer {
 
         expressions.push(expressionSource);
       } else {
-        if (char === '\n') this.currentLine++;
+        if (char === "\n") this.currentLine++;
         currentPart += char;
         this.advance();
       }
     }
 
-    throw new Error('Cadena de plantilla no terminada');
+    throw new Error("Cadena de plantilla no terminada");
   }
 
   /**
@@ -315,7 +315,7 @@ class Tokenizer {
     this.advance();
 
     // Skip until end of line
-    while (this.peek() !== '\n' && !this.isAtEnd()) {
+    while (this.peek() !== "\n" && !this.isAtEnd()) {
       this.advance();
     }
 
@@ -332,7 +332,7 @@ class Tokenizer {
     }
 
     // Look for decimal part
-    if (this.peek() === '.' && this.isDigit(this.peekNext())) {
+    if (this.peek() === "." && this.isDigit(this.peekNext())) {
       // Consume the dot
       this.advance();
 
@@ -342,7 +342,7 @@ class Tokenizer {
     }
 
     const value = this.source.substring(this.startPos, this.current);
-    this.addToken('NUMBER', parseFloat(value));
+    this.addToken("NUMBER", parseFloat(value));
   }
 
   /**
@@ -350,7 +350,7 @@ class Tokenizer {
    * @returns {string} Next character
    */
   peekNext() {
-    if (this.current + 1 >= this.source.length) return '\0';
+    if (this.current + 1 >= this.source.length) return "\0";
     return this.source[this.current + 1];
   }
 
@@ -365,36 +365,36 @@ class Tokenizer {
     const text = this.source.substring(this.startPos, this.current);
 
     // Special handling for 'y' - only treat as AND in logical contexts
-    if (text === 'y') {
+    if (text === "y") {
       // Check if this is a logical context by looking at previous tokens
       const prevToken = this.tokens[this.tokens.length - 1];
       if (
         prevToken &&
-        (prevToken.type === 'IDENTIFIER' ||
-          prevToken.type === 'NUMBER' ||
-          prevToken.type === 'STRING' ||
-          prevToken.type === 'TRUE' ||
-          prevToken.type === 'FALSE' ||
-          prevToken.type === 'RIGHT_PAREN' ||
-          prevToken.type === 'RIGHT_BRACKET')
+        (prevToken.type === "IDENTIFIER" ||
+          prevToken.type === "NUMBER" ||
+          prevToken.type === "STRING" ||
+          prevToken.type === "TRUE" ||
+          prevToken.type === "FALSE" ||
+          prevToken.type === "RIGHT_PAREN" ||
+          prevToken.type === "RIGHT_BRACKET")
       ) {
         // Check if the next token is a logical operator or end of expression
         const nextChar = this.peek();
         if (
-          nextChar === ' ' ||
-          nextChar === '\n' ||
-          nextChar === '\t' ||
-          nextChar === ')' ||
-          nextChar === '}' ||
-          nextChar === ';' ||
+          nextChar === " " ||
+          nextChar === "\n" ||
+          nextChar === "\t" ||
+          nextChar === ")" ||
+          nextChar === "}" ||
+          nextChar === ";" ||
           this.isAtEnd()
         ) {
-          this.addToken('AND');
+          this.addToken("AND");
         } else {
-          this.addToken('IDENTIFIER');
+          this.addToken("IDENTIFIER");
         }
       } else {
-        this.addToken('IDENTIFIER');
+        this.addToken("IDENTIFIER");
       }
     } else {
       const type = this.getKeywordType(text);
@@ -409,27 +409,33 @@ class Tokenizer {
    */
   getKeywordType(text) {
     const keywords = {
-      variable: 'VARIABLE',
-      mostrar: 'MOSTRAR',
-      leer: 'LEER',
-      si: 'SI',
-      sino: 'SINO',
-      mientras: 'MIENTRAS',
-      para: 'PARA',
-      funcion: 'FUNCION',
-      retornar: 'RETORNAR',
-      verdadero: 'TRUE',
-      falso: 'FALSE',
-      o: 'OR',
-      romper: 'ROMPER',
-      continuar: 'CONTINUAR',
-      intentar: 'INTENTAR',
-      capturar: 'CAPTURAR',
-      nulo: 'NULL',
-      indefinido: 'UNDEFINED',
+      variable: "VARIABLE",
+      mostrar: "MOSTRAR",
+      leer: "LEER",
+      si: "SI",
+      sino: "SINO",
+      mientras: "MIENTRAS",
+      para: "PARA",
+      funcion: "FUNCION",
+      retornar: "RETORNAR",
+      verdadero: "TRUE",
+      falso: "FALSE",
+      o: "OR",
+      romper: "ROMPER",
+      continuar: "CONTINUAR",
+      intentar: "INTENTAR",
+      capturar: "CAPTURAR",
+      nulo: "NULL",
+      indefinido: "UNDEFINED",
+      elegir: "ELEGIR",
+      caso: "CASO",
+      pordefecto: "PORDEFECTO",
+      hacer: "HACER",
+      cada: "CADA",
+      en: "EN",
     };
 
-    return keywords[text] || 'IDENTIFIER';
+    return keywords[text] || "IDENTIFIER";
   }
 
   /**
@@ -453,7 +459,7 @@ class Tokenizer {
    * @returns {string} Current character
    */
   peek() {
-    if (this.isAtEnd()) return '\0';
+    if (this.isAtEnd()) return "\0";
     return this.source[this.current];
   }
 
@@ -471,7 +477,7 @@ class Tokenizer {
    * @returns {boolean} True if it is a digit
    */
   isDigit(char) {
-    return char >= '0' && char <= '9';
+    return char >= "0" && char <= "9";
   }
 
   /**
@@ -481,9 +487,9 @@ class Tokenizer {
    */
   isAlpha(char) {
     return (
-      (char >= 'a' && char <= 'z') ||
-      (char >= 'A' && char <= 'Z') ||
-      char === '_'
+      (char >= "a" && char <= "z") ||
+      (char >= "A" && char <= "Z") ||
+      char === "_"
     );
   }
 
