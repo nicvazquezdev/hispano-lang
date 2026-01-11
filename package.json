@@ -26,7 +26,8 @@
     "build:types": "mkdir -p dist && node scripts/generate-types.js",
     "demo": "node main.js",
     "prepublishOnly": "npm run build",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "prepare": "husky"
   },
   "keywords": [
     "programming-language",
@@ -58,8 +59,10 @@
   },
   "homepage": "https://github.com/nicvazquezdev/hispano-lang#readme",
   "devDependencies": {
-    "nodemon": "^3.1.10",
     "eslint": "^8.57.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "nodemon": "^3.1.10",
     "prettier": "^3.2.5"
   },
   "dependencies": {
@@ -68,5 +71,11 @@
   "preferGlobal": true,
   "publishConfig": {
     "access": "public"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
