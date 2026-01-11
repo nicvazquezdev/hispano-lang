@@ -24,7 +24,7 @@ La mayoría de los lenguajes de programación utilizan palabras clave en inglés
 - 🎓 **Minimalista** - Pensado para aprender lógica sin distracciones
 - 📚 **Educativo** - Enfoque en conceptos fundamentales
 - 🔧 **CLI Tool** - Interfaz de línea de comandos intuitiva
-- 🧪 **Suite de tests** - 180+ tests para garantizar calidad
+- 🧪 **Suite de tests** - 195+ tests para garantizar calidad
 - 📦 **NPM Package** - Fácil instalación y distribución
 - 🔄 **REPL Interactivo** - Modo interactivo para experimentar
 - 📝 **TypeScript Support** - Definiciones de tipos incluidas
@@ -84,7 +84,7 @@ hispano --test
 ### Como Módulo Node.js
 
 ```javascript
-const { interpret, run, getVariables } = require('hispano-lang');
+const { interpret, run, getVariables } = require("hispano-lang");
 
 // Interpretar código
 const result = interpret(`
@@ -106,7 +106,7 @@ console.log(outputs); // ['20']
 ### TypeScript
 
 ```typescript
-import { interpret, InterpretationResult } from 'hispano-lang';
+import { interpret, InterpretationResult } from "hispano-lang";
 
 const result: InterpretationResult = interpret(`
   variable edad = 25
@@ -227,9 +227,21 @@ persona.edad = 31         // Modificar propiedad
 
 ```javascript
 variable texto = "hola mundo"
-mostrar texto.longitud()    // 10
-mostrar texto.mayusculas()  // HOLA MUNDO
-mostrar texto.minusculas()  // hola mundo
+mostrar texto.longitud()      // 10
+mostrar texto.mayusculas()    // HOLA MUNDO
+mostrar texto.minusculas()    // hola mundo
+
+// Métodos adicionales
+texto.dividir(" ")            // ["hola", "mundo"]
+texto.reemplazar("o", "a")    // "hala munda"
+texto.recortar()              // Elimina espacios al inicio y final
+texto.incluye("mundo")        // verdadero
+texto.empiezaCon("hola")      // verdadero
+texto.terminaCon("mundo")     // verdadero
+texto.caracter(0)             // "h"
+texto.subcadena(0, 4)         // "hola"
+texto.subcadena(5)            // "mundo"
+texto.invertir()              // "odnum aloh"
 ```
 
 ### Interpolación de cadenas
@@ -381,7 +393,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📊 Estadísticas
 
-- 🧪 **180+ tests** cubriendo todas las funcionalidades
+- 🧪 **195+ tests** cubriendo todas las funcionalidades
 - 📦 **NPM package** listo para instalación global
 - 🔧 **CLI tool** con modo interactivo
 - 📝 **TypeScript support** con definiciones incluidas
