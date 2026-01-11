@@ -5293,6 +5293,188 @@ function runTests() {
     assertEquals(output, ["42", "numero"], "Chained conversions should work");
   });
 
+  // ==================== MÉTODOS NUMÉRICOS ====================
+
+  test("numero.esPar() returns true for even numbers", () => {
+    const code = `
+      variable a = 4
+      mostrar a.esPar()
+      mostrar (10).esPar()
+      mostrar (0).esPar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "true"],
+      "esPar should return true for even numbers",
+    );
+  });
+
+  test("numero.esPar() returns false for odd numbers", () => {
+    const code = `
+      variable a = 3
+      mostrar a.esPar()
+      mostrar (7).esPar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "false"],
+      "esPar should return false for odd numbers",
+    );
+  });
+
+  test("numero.esImpar() returns true for odd numbers", () => {
+    const code = `
+      variable a = 5
+      mostrar a.esImpar()
+      mostrar (11).esImpar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true"],
+      "esImpar should return true for odd numbers",
+    );
+  });
+
+  test("numero.esImpar() returns false for even numbers", () => {
+    const code = `
+      variable a = 6
+      mostrar a.esImpar()
+      mostrar (0).esImpar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "false"],
+      "esImpar should return false for even numbers",
+    );
+  });
+
+  test("numero.esPositivo() returns true for positive numbers", () => {
+    const code = `
+      variable a = 5
+      mostrar a.esPositivo()
+      mostrar (100).esPositivo()
+      mostrar (0.5).esPositivo()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "true"],
+      "esPositivo should return true for positive numbers",
+    );
+  });
+
+  test("numero.esPositivo() returns false for zero and negative", () => {
+    const code = `
+      mostrar (0).esPositivo()
+      mostrar (-5).esPositivo()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "false"],
+      "esPositivo should return false for zero and negative",
+    );
+  });
+
+  test("numero.esNegativo() returns true for negative numbers", () => {
+    const code = `
+      variable a = -5
+      mostrar a.esNegativo()
+      mostrar (-100).esNegativo()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true"],
+      "esNegativo should return true for negative numbers",
+    );
+  });
+
+  test("numero.esNegativo() returns false for zero and positive", () => {
+    const code = `
+      mostrar (0).esNegativo()
+      mostrar (5).esNegativo()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "false"],
+      "esNegativo should return false for zero and positive",
+    );
+  });
+
+  test("numero.aTexto() converts number to string", () => {
+    const code = `
+      variable a = 42
+      mostrar a.aTexto()
+      mostrar tipo(a.aTexto())
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["42", "texto"],
+      "aTexto should convert number to string",
+    );
+  });
+
+  test("numero.aTexto() works with decimals", () => {
+    const code = `
+      variable a = 3.14159
+      mostrar a.aTexto()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3.14159"],
+      "aTexto should work with decimal numbers",
+    );
+  });
+
+  test("numero.aTexto() works with negative numbers", () => {
+    const code = `
+      mostrar (-42).aTexto()
+    `;
+    const output = run(code);
+    assertEquals(output, ["-42"], "aTexto should work with negative numbers");
+  });
+
+  test("Numeric methods with expressions", () => {
+    const code = `
+      variable x = 3 + 1
+      mostrar x.esPar()
+      variable y = 10 / 2
+      mostrar y.esImpar()
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true"],
+      "Numeric methods should work with expression results",
+    );
+  });
+
+  test("Numeric methods in conditions", () => {
+    const code = `
+      variable num = 7
+      si num.esImpar() {
+        mostrar "Es impar"
+      }
+      si num.esPositivo() {
+        mostrar "Es positivo"
+      }
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Es impar", "Es positivo"],
+      "Numeric methods should work in conditions",
+    );
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

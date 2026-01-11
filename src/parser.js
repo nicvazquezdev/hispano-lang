@@ -833,7 +833,7 @@ class Parser {
     this.consume("IDENTIFIER", "Expected property name after .");
     const name = this.previous();
 
-    // Check if this is a method call (array or string)
+    // Check if this is a method call (array, string, or number)
     if (
       name.lexeme === "longitud" ||
       name.lexeme === "primero" ||
@@ -862,7 +862,12 @@ class Parser {
       name.lexeme === "todos" ||
       name.lexeme === "unir" ||
       name.lexeme === "cortar" ||
-      name.lexeme === "insertar"
+      name.lexeme === "insertar" ||
+      name.lexeme === "esPar" ||
+      name.lexeme === "esImpar" ||
+      name.lexeme === "esPositivo" ||
+      name.lexeme === "esNegativo" ||
+      name.lexeme === "aTexto"
     ) {
       // Check if there are parentheses (method call syntax)
       if (this.match("LEFT_PAREN")) {

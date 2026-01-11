@@ -600,7 +600,7 @@ class Evaluator {
   evaluateMethodCall(expression) {
     const object = this.evaluateExpression(expression.object);
 
-    // Determine if it's an array or string method based on the object type
+    // Determine if it's an array, string, or number method based on the object type
     if (Array.isArray(object)) {
       return this.evaluateArrayMethod(
         object,
@@ -625,9 +625,15 @@ class Evaluator {
         expression.method,
         expression.arguments,
       );
+    } else if (typeof object === "number") {
+      return this.evaluateNumberMethod(
+        object,
+        expression.method,
+        expression.arguments,
+      );
     } else {
       throw new Error(
-        `Solo se pueden llamar métodos en arreglos o cadenas, se recibió ${typeof object}`,
+        `Solo se pueden llamar métodos en arreglos, cadenas o números, se recibió ${typeof object}`,
       );
     }
   }
@@ -1165,6 +1171,35 @@ class Evaluator {
 
       default:
         throw new Error(`Método de cadena desconocido: ${method}`);
+    }
+  }
+
+  /**
+   * Evaluates a number method
+   * @param {number} number - The number object
+   * @param {string} method - The method name
+   * @param {Array} args - Method arguments (optional)
+   * @returns {any} Method result
+   */
+  evaluateNumberMethod(number, method, args = []) {
+    switch (method) {
+      case "esPar":
+        return number % 2 === 0;
+
+      case "esImpar":
+        return number % 2 !== 0;
+
+      case "esPositivo":
+        return number > 0;
+
+      case "esNegativo":
+        return number < 0;
+
+      case "aTexto":
+        return String(number);
+
+      default:
+        throw new Error(`Método de número desconocido: ${method}`);
     }
   }
 

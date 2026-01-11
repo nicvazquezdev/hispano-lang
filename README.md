@@ -394,6 +394,28 @@ tipo(nulo)             // "nulo"
 tipo(miFuncion)        // "funcion"
 ```
 
+### Métodos numéricos
+
+```javascript
+variable num = 42
+
+// Verificar paridad
+num.esPar()            // verdadero
+num.esImpar()          // falso
+
+// Verificar signo
+num.esPositivo()       // verdadero
+num.esNegativo()       // falso
+
+// Convertir a texto
+num.aTexto()           // "42"
+
+// También funciona con literales (usando paréntesis)
+(7).esImpar()          // verdadero
+(-5).esNegativo()      // verdadero
+(3.14).aTexto()        // "3.14"
+```
+
 ## 🧪 Testing
 
 El proyecto incluye una suite completa de tests con más de 170 casos:
