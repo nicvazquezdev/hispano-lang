@@ -36,6 +36,8 @@ class Evaluator {
     switch (statement.type) {
       case "VariableDeclaration":
         return this.executeVariableDeclaration(statement);
+      case "ConstantDeclaration":
+        return this.executeConstantDeclaration(statement);
       case "FunctionDeclaration":
         return this.executeFunctionDeclaration(statement);
       case "MostrarStatement":
@@ -80,6 +82,15 @@ class Evaluator {
     }
 
     this.environment.define(statement.name, value);
+  }
+
+  /**
+   * Executes a constant declaration
+   * @param {Object} statement - Constant declaration
+   */
+  executeConstantDeclaration(statement) {
+    const value = this.evaluateExpression(statement.initializer);
+    this.environment.defineConstant(statement.name, value);
   }
 
   /**
@@ -1859,6 +1870,7 @@ class Evaluator {
 class Environment {
   constructor(enclosing = null) {
     this.values = {};
+    this.constants = new Set();
     this.enclosing = enclosing;
   }
 
@@ -1872,11 +1884,40 @@ class Environment {
   }
 
   /**
+   * Defines a constant in the environment
+   * @param {string} name - Constant name
+   * @param {any} value - Constant value
+   */
+  defineConstant(name, value) {
+    this.values[name] = value;
+    this.constants.add(name);
+  }
+
+  /**
+   * Checks if a name is a constant
+   * @param {string} name - Name to check
+   * @returns {boolean} True if it's a constant
+   */
+  isConstant(name) {
+    if (this.constants.has(name)) {
+      return true;
+    }
+    if (this.enclosing !== null) {
+      return this.enclosing.isConstant(name);
+    }
+    return false;
+  }
+
+  /**
    * Assigns a value to an existing variable
    * @param {string} name - Variable name
    * @param {any} value - Value to assign
    */
   assign(name, value) {
+    if (this.isConstant(name)) {
+      throw new Error(`No se puede reasignar la constante: ${name}`);
+    }
+
     if (name in this.values) {
       this.values[name] = value;
       return;

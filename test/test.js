@@ -4837,6 +4837,199 @@ function runTests() {
     assertEquals(output, ["[4, 8, 12]"], "Array methods should be chainable");
   });
 
+  // ==================== CONSTANTES ====================
+
+  test("Basic constant declaration", () => {
+    const code = `
+      constante PI = 3.14159
+      mostrar PI
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3.14159"],
+      "Constant should store and display value",
+    );
+  });
+
+  test("Constant with string value", () => {
+    const code = `
+      constante SALUDO = "Hola mundo"
+      mostrar SALUDO
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Hola mundo"], "Constant should work with strings");
+  });
+
+  test("Constant with boolean value", () => {
+    const code = `
+      constante ACTIVO = verdadero
+      mostrar ACTIVO
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["true"], "Constant should work with booleans");
+  });
+
+  test("Constant with expression", () => {
+    const code = `
+      constante DOBLE = 5 * 2
+      mostrar DOBLE
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["10"], "Constant should evaluate expressions");
+  });
+
+  test("Constant used in expressions", () => {
+    const code = `
+      constante BASE = 10
+      variable resultado = BASE * 5
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["50"], "Constant should be usable in expressions");
+  });
+
+  test("Multiple constants", () => {
+    const code = `
+      constante PI = 3.14159
+      constante E = 2.71828
+      mostrar PI
+      mostrar E
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3.14159", "2.71828"],
+      "Multiple constants should work",
+    );
+  });
+
+  test("Constant in condition", () => {
+    const code = `
+      constante MAX = 100
+      variable valor = 50
+      si valor < MAX {
+        mostrar "Dentro del límite"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Dentro del límite"],
+      "Constant should work in conditions",
+    );
+  });
+
+  test("Constant in loop", () => {
+    const code = `
+      constante LIMITE = 3
+      para (variable i = 0; i < LIMITE; i++) {
+        mostrar i
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["0", "1", "2"], "Constant should work in loops");
+  });
+
+  test("Constant with array", () => {
+    const code = `
+      constante COLORES = ["rojo", "verde", "azul"]
+      mostrar COLORES.longitud()
+      mostrar COLORES.primero()
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["3", "rojo"], "Constant should work with arrays");
+  });
+
+  test("Constant with object", () => {
+    const code = `
+      constante CONFIG = { version: "1.0", activo: verdadero }
+      mostrar CONFIG.version
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["1.0"], "Constant should work with objects");
+  });
+
+  test("Constant reassignment should fail", () => {
+    const code = `
+      constante PI = 3.14159
+      PI = 3.14
+    `;
+
+    const result = interpret(code);
+    assertTrue(!result.success, "Should fail when reassigning constant");
+    assertTrue(
+      result.error.includes("constante") || result.error.includes("reasignar"),
+      "Error should mention constant reassignment",
+    );
+  });
+
+  test("Constant with compound assignment should fail", () => {
+    const code = `
+      constante VALOR = 10
+      VALOR += 5
+    `;
+
+    const result = interpret(code);
+    assertTrue(
+      !result.success,
+      "Should fail when using compound assignment on constant",
+    );
+  });
+
+  test("Constant with increment should fail", () => {
+    const code = `
+      constante CONTADOR = 0
+      CONTADOR++
+    `;
+
+    const result = interpret(code);
+    assertTrue(!result.success, "Should fail when incrementing constant");
+  });
+
+  test("Constant in function", () => {
+    const code = `
+      constante MULTIPLICADOR = 10
+
+      funcion calcular(x) {
+        retornar x * MULTIPLICADOR
+      }
+
+      mostrar calcular(5)
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["50"], "Constant should be accessible in functions");
+  });
+
+  test("Constant and variable with different names", () => {
+    const code = `
+      constante MAX = 100
+      variable min = 0
+      mostrar MAX
+      mostrar min
+      min = 10
+      mostrar min
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["100", "0", "10"],
+      "Constants and variables should coexist",
+    );
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

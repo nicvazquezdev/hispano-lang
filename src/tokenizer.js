@@ -410,6 +410,7 @@ class Tokenizer {
   getKeywordType(text) {
     const keywords = {
       variable: "VARIABLE",
+      constante: "CONSTANTE",
       mostrar: "MOSTRAR",
       leer: "LEER",
       si: "SI",

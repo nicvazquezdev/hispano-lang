@@ -38,6 +38,10 @@ class Parser {
         return this.variableDeclaration();
       }
 
+      if (this.match("CONSTANTE")) {
+        return this.constantDeclaration();
+      }
+
       if (this.match("FUNCION")) {
         return this.functionDeclaration();
       }
@@ -118,6 +122,31 @@ class Parser {
 
     return {
       type: "VariableDeclaration",
+      name: name.lexeme,
+      initializer,
+    };
+  }
+
+  /**
+   * Parses a constant declaration
+   * @returns {Object} Constant declaration
+   */
+  constantDeclaration() {
+    let name;
+    if (this.match("IDENTIFIER")) {
+      name = this.previous();
+    } else {
+      throw new Error("Se esperaba un nombre de constante");
+    }
+
+    if (!this.match("EQUAL")) {
+      throw new Error("Las constantes deben ser inicializadas");
+    }
+
+    const initializer = this.expression();
+
+    return {
+      type: "ConstantDeclaration",
       name: name.lexeme,
       initializer,
     };
@@ -1065,6 +1094,7 @@ class Parser {
 
       switch (this.peek().type) {
         case "VARIABLE":
+        case "CONSTANTE":
         case "FUNCION":
         case "MOSTRAR":
         case "LEER":

@@ -148,6 +148,17 @@ variable activo = verdadero
 variable salario = 50000.50
 ```
 
+### Constantes
+
+```javascript
+constante PI = 3.14159
+constante MAX_USUARIOS = 100
+constante NOMBRE_APP = "MiApp"
+
+// Las constantes no pueden ser reasignadas
+PI = 3.14  // Error: No se puede reasignar la constante: PI
+```
+
 ### Entrada de datos
 
 ```javascript
