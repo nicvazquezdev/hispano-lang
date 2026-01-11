@@ -542,6 +542,18 @@ class Evaluator {
       return this.evaluateMathFunction(expression.callee.name, args);
     }
 
+    // Check if it's a built-in type conversion function
+    if (
+      expression.callee.type === "Variable" &&
+      this.isConversionFunction(expression.callee.name)
+    ) {
+      const args = [];
+      for (const argument of expression.arguments) {
+        args.push(this.evaluateExpression(argument));
+      }
+      return this.evaluateConversionFunction(expression.callee.name, args);
+    }
+
     const callee = this.evaluateExpression(expression.callee);
     const args = [];
 
@@ -1354,6 +1366,127 @@ class Evaluator {
       default:
         throw new Error(`Función matemática desconocida: ${name}`);
     }
+  }
+
+  /**
+   * Checks if a function name is a built-in type conversion function
+   * @param {string} name - Function name
+   * @returns {boolean} True if it's a conversion function
+   */
+  isConversionFunction(name) {
+    const conversionFunctions = [
+      "entero",
+      "decimal",
+      "texto",
+      "booleano",
+      "tipo",
+    ];
+    return conversionFunctions.includes(name);
+  }
+
+  /**
+   * Evaluates a type conversion function
+   * @param {string} name - Function name
+   * @param {Array} args - Function arguments
+   * @returns {any} Converted value
+   */
+  evaluateConversionFunction(name, args) {
+    if (args.length !== 1) {
+      throw new Error(`${name}() requiere exactamente 1 argumento`);
+    }
+
+    const value = args[0];
+
+    switch (name) {
+      case "entero":
+        // Convert to integer
+        if (typeof value === "number") {
+          return Math.trunc(value);
+        }
+        if (typeof value === "string") {
+          const parsed = parseInt(value, 10);
+          return isNaN(parsed) ? NaN : parsed;
+        }
+        if (typeof value === "boolean") {
+          return value ? 1 : 0;
+        }
+        if (value === null || value === undefined) {
+          return 0;
+        }
+        throw new Error("No se puede convertir a entero");
+
+      case "decimal":
+        // Convert to float
+        if (typeof value === "number") {
+          return value;
+        }
+        if (typeof value === "string") {
+          const parsed = parseFloat(value);
+          return isNaN(parsed) ? NaN : parsed;
+        }
+        if (typeof value === "boolean") {
+          return value ? 1 : 0;
+        }
+        if (value === null || value === undefined) {
+          return 0;
+        }
+        throw new Error("No se puede convertir a decimal");
+
+      case "texto":
+        // Convert to string (Spanish representation)
+        if (value === null) return "nulo";
+        if (value === undefined) return "indefinido";
+        if (typeof value === "boolean") return value ? "verdadero" : "falso";
+        if (typeof value === "string") return value;
+        if (Array.isArray(value)) {
+          return `[${value.map((v) => this.stringifyForTexto(v)).join(", ")}]`;
+        }
+        if (typeof value === "object") {
+          return "[objeto]";
+        }
+        return String(value);
+
+      case "booleano":
+        // Convert to boolean
+        if (value === null || value === undefined) return false;
+        if (typeof value === "boolean") return value;
+        if (typeof value === "number") return value !== 0;
+        if (typeof value === "string") return value.length > 0;
+        if (Array.isArray(value)) return value.length > 0;
+        return true;
+
+      case "tipo":
+        // Return type as Spanish string
+        if (value === null) return "nulo";
+        if (value === undefined) return "indefinido";
+        if (typeof value === "number") return "numero";
+        if (typeof value === "string") return "texto";
+        if (typeof value === "boolean") return "booleano";
+        if (Array.isArray(value)) return "arreglo";
+        if (typeof value === "object" && value.type === "Function")
+          return "funcion";
+        if (typeof value === "object") return "objeto";
+        return "desconocido";
+
+      default:
+        throw new Error(`Función de conversión desconocida: ${name}`);
+    }
+  }
+
+  /**
+   * Helper to stringify values for texto() function
+   * @param {any} value - Value to stringify
+   * @returns {string} String representation
+   */
+  stringifyForTexto(value) {
+    if (value === null) return "nulo";
+    if (value === undefined) return "indefinido";
+    if (typeof value === "boolean") return value ? "verdadero" : "falso";
+    if (typeof value === "string") return value;
+    if (Array.isArray(value)) {
+      return `[${value.map((v) => this.stringifyForTexto(v)).join(", ")}]`;
+    }
+    return String(value);
   }
 
   /**

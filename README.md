@@ -360,6 +360,40 @@ variable valorNulo = nulo
 variable valorIndefinido = indefinido
 ```
 
+### Conversión de tipos
+
+```javascript
+// Convertir a entero
+entero("42")           // 42
+entero(3.7)            // 3
+entero(verdadero)      // 1
+
+// Convertir a decimal
+decimal("3.14")        // 3.14
+decimal(42)            // 42
+
+// Convertir a texto
+texto(123)             // "123"
+texto(verdadero)       // "verdadero"
+texto(nulo)            // "nulo"
+texto([1, 2, 3])       // "[1, 2, 3]"
+
+// Convertir a booleano
+booleano(1)            // verdadero
+booleano(0)            // falso
+booleano("hola")       // verdadero
+booleano("")           // falso
+
+// Obtener tipo de un valor
+tipo(42)               // "numero"
+tipo("hola")           // "texto"
+tipo(verdadero)        // "booleano"
+tipo([1, 2])           // "arreglo"
+tipo({ a: 1 })         // "objeto"
+tipo(nulo)             // "nulo"
+tipo(miFuncion)        // "funcion"
+```
+
 ## 🧪 Testing
 
 El proyecto incluye una suite completa de tests con más de 170 casos:

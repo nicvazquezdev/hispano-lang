@@ -5030,6 +5030,269 @@ function runTests() {
     );
   });
 
+  // ==================== FUNCIONES DE CONVERSIÓN DE TIPOS ====================
+
+  test("entero() converts string to integer", () => {
+    const code = `
+      variable num = entero("42")
+      mostrar num
+    `;
+    const output = run(code);
+    assertEquals(output, ["42"], "entero should convert string to integer");
+  });
+
+  test("entero() converts decimal to integer", () => {
+    const code = `
+      variable num = entero(3.7)
+      mostrar num
+    `;
+    const output = run(code);
+    assertEquals(output, ["3"], "entero should truncate decimal to integer");
+  });
+
+  test("entero() converts boolean to integer", () => {
+    const code = `
+      mostrar entero(verdadero)
+      mostrar entero(falso)
+    `;
+    const output = run(code);
+    assertEquals(output, ["1", "0"], "entero should convert booleans to 1/0");
+  });
+
+  test("entero() with invalid string returns NaN indicator", () => {
+    const code = `
+      variable num = entero("abc")
+      mostrar num
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["NaN"],
+      "entero should return NaN for invalid strings",
+    );
+  });
+
+  test("decimal() converts string to float", () => {
+    const code = `
+      variable num = decimal("3.14159")
+      mostrar num
+    `;
+    const output = run(code);
+    assertEquals(output, ["3.14159"], "decimal should convert string to float");
+  });
+
+  test("decimal() converts integer to float", () => {
+    const code = `
+      variable num = decimal(42)
+      mostrar num
+    `;
+    const output = run(code);
+    assertEquals(output, ["42"], "decimal should handle integers");
+  });
+
+  test("decimal() converts boolean to float", () => {
+    const code = `
+      mostrar decimal(verdadero)
+      mostrar decimal(falso)
+    `;
+    const output = run(code);
+    assertEquals(output, ["1", "0"], "decimal should convert booleans to 1/0");
+  });
+
+  test("texto() converts number to string", () => {
+    const code = `
+      variable str = texto(123)
+      mostrar str
+      mostrar str + " es un número"
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["123", "123 es un número"],
+      "texto should convert number to string",
+    );
+  });
+
+  test("texto() converts boolean to string", () => {
+    const code = `
+      mostrar texto(verdadero)
+      mostrar texto(falso)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["verdadero", "falso"],
+      "texto should convert booleans to Spanish strings",
+    );
+  });
+
+  test("texto() converts null and undefined", () => {
+    const code = `
+      mostrar texto(nulo)
+      mostrar texto(indefinido)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["nulo", "indefinido"],
+      "texto should convert null/undefined to Spanish strings",
+    );
+  });
+
+  test("texto() converts array to string", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      mostrar texto(arr)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[1, 2, 3]"],
+      "texto should convert array to string representation",
+    );
+  });
+
+  test("booleano() converts truthy values", () => {
+    const code = `
+      mostrar booleano(1)
+      mostrar booleano("hola")
+      mostrar booleano(100)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true", "true", "true"],
+      "booleano should return true for truthy values",
+    );
+  });
+
+  test("booleano() converts falsy values", () => {
+    const code = `
+      mostrar booleano(0)
+      mostrar booleano("")
+      mostrar booleano(nulo)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false", "false", "false"],
+      "booleano should return false for falsy values",
+    );
+  });
+
+  test("tipo() returns number type", () => {
+    const code = `
+      mostrar tipo(42)
+      mostrar tipo(3.14)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["numero", "numero"],
+      "tipo should return 'numero' for numbers",
+    );
+  });
+
+  test("tipo() returns text type", () => {
+    const code = `
+      mostrar tipo("hola")
+      mostrar tipo("")
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["texto", "texto"],
+      "tipo should return 'texto' for strings",
+    );
+  });
+
+  test("tipo() returns boolean type", () => {
+    const code = `
+      mostrar tipo(verdadero)
+      mostrar tipo(falso)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["booleano", "booleano"],
+      "tipo should return 'booleano' for booleans",
+    );
+  });
+
+  test("tipo() returns array type", () => {
+    const code = `
+      mostrar tipo([1, 2, 3])
+      mostrar tipo([])
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["arreglo", "arreglo"],
+      "tipo should return 'arreglo' for arrays",
+    );
+  });
+
+  test("tipo() returns object type", () => {
+    const code = `
+      mostrar tipo({ nombre: "Juan" })
+    `;
+    const output = run(code);
+    assertEquals(output, ["objeto"], "tipo should return 'objeto' for objects");
+  });
+
+  test("tipo() returns null and undefined types", () => {
+    const code = `
+      mostrar tipo(nulo)
+      mostrar tipo(indefinido)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["nulo", "indefinido"],
+      "tipo should return 'nulo'/'indefinido' for null/undefined",
+    );
+  });
+
+  test("tipo() returns function type", () => {
+    const code = `
+      funcion saludar() {
+        mostrar "hola"
+      }
+      mostrar tipo(saludar)
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["funcion"],
+      "tipo should return 'funcion' for functions",
+    );
+  });
+
+  test("Type conversion in expressions", () => {
+    const code = `
+      variable a = entero("10") + 5
+      variable b = decimal("2.5") * 2
+      mostrar a
+      mostrar b
+    `;
+    const output = run(code);
+    assertEquals(
+      output,
+      ["15", "5"],
+      "Type conversions should work in expressions",
+    );
+  });
+
+  test("Chained type conversions", () => {
+    const code = `
+      variable num = entero(texto(42))
+      mostrar num
+      mostrar tipo(num)
+    `;
+    const output = run(code);
+    assertEquals(output, ["42", "numero"], "Chained conversions should work");
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);
