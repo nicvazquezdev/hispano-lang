@@ -2411,6 +2411,8 @@ class Environment {
    * @param {any} value - Variable value
    */
   define(name, value) {
+    // Remove from constants if it was previously defined as one
+    this.constants.delete(name);
     this.values[name] = value;
   }
 
