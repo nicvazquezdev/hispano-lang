@@ -5,6 +5,55 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 11-01-2026
+
+### ✨ Programación Orientada a Objetos (POO)
+- **Clases** con sintaxis `clase NombreClase { ... }`
+- **Constructores** con `constructor(parametros) { ... }`
+- **Métodos de instancia** definidos dentro de las clases
+- **Palabra clave `este`** para acceder a propiedades y métodos de la instancia
+- **Instanciación** con `nuevo NombreClase(argumentos)`
+- **Herencia** con `clase Hijo extiende Padre { ... }`
+- **Llamadas a super** con `super(argumentos)` para invocar el constructor padre
+- **`tipo()` mejorado** para retornar el nombre de la clase en instancias
+
+### ✨ Constantes
+- **Declaración de constantes** con `constante NOMBRE = valor`
+- **Protección contra reasignación** - error si se intenta modificar una constante
+- **Requerimiento de inicialización** - las constantes deben inicializarse al declararse
+
+### ✨ Funciones de Conversión de Tipos
+- **`entero(valor)`** - Convierte a número entero
+- **`decimal(valor)`** - Convierte a número decimal
+- **`texto(valor)`** - Convierte a cadena de texto
+- **`booleano(valor)`** - Convierte a valor booleano
+- **`tipo(valor)`** - Retorna el tipo del valor como string
+
+### ✨ Métodos Numéricos
+- **`numero.esPar()`** - Verifica si el número es par
+- **`numero.esImpar()`** - Verifica si el número es impar
+- **`numero.esPositivo()`** - Verifica si el número es positivo
+- **`numero.esNegativo()`** - Verifica si el número es negativo
+- **`numero.aTexto()`** - Convierte el número a texto
+
+### 🔧 Mejorado
+- **313 tests** cubriendo todas las funcionalidades (antes 210+)
+- **Mensajes de error** consistentes en español
+- **Parser mejorado** para soportar nuevas estructuras de POO
+- **Evaluator extendido** con soporte para clases e instancias
+
+### 🐛 Corregido
+- Tests actualizados para usar mensajes de error en español
+- Corrección de conflicto con palabra reservada `nuevo` en tests
+- Manejo correcto de propiedades y métodos en instancias de clases
+
+### 📝 Documentación
+- README actualizado con sección completa de POO
+- Ejemplos de clases, herencia y métodos
+- Documentación de constantes y funciones de conversión
+
+---
+
 ## [1.1.7] - 06-10-2025
 
 ### 🌍 Internacionalización
