@@ -713,6 +713,313 @@ class Evaluator {
         }
         return null; // forEach doesn't return anything
 
+      case "filtrar":
+        // Filter array elements based on a predicate function
+        if (args.length !== 1) {
+          throw new Error("filtrar() requiere exactamente 1 argumento");
+        }
+        const filterCallback = this.evaluateExpression(args[0]);
+        if (filterCallback.type !== "Function") {
+          throw new Error("filtrar() requiere una función como argumento");
+        }
+        const filteredArray = [];
+        for (let i = 0; i < array.length; i++) {
+          const filterEnv = new Environment(this.environment);
+          if (filterCallback.parameters.length >= 1) {
+            filterEnv.define(filterCallback.parameters[0], array[i]);
+          }
+          if (filterCallback.parameters.length >= 2) {
+            filterEnv.define(filterCallback.parameters[1], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = filterEnv;
+          try {
+            this.executeBlock(filterCallback.body);
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              if (this.isTruthy(returnValue.value)) {
+                filteredArray.push(array[i]);
+              }
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return filteredArray;
+
+      case "mapear":
+        // Transform each element using a function
+        if (args.length !== 1) {
+          throw new Error("mapear() requiere exactamente 1 argumento");
+        }
+        const mapCallback = this.evaluateExpression(args[0]);
+        if (mapCallback.type !== "Function") {
+          throw new Error("mapear() requiere una función como argumento");
+        }
+        const mappedArray = [];
+        for (let i = 0; i < array.length; i++) {
+          const mapEnv = new Environment(this.environment);
+          if (mapCallback.parameters.length >= 1) {
+            mapEnv.define(mapCallback.parameters[0], array[i]);
+          }
+          if (mapCallback.parameters.length >= 2) {
+            mapEnv.define(mapCallback.parameters[1], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = mapEnv;
+          try {
+            this.executeBlock(mapCallback.body);
+            mappedArray.push(null); // If no return, push null
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              mappedArray.push(returnValue.value);
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return mappedArray;
+
+      case "reducir":
+        // Reduce array to a single value
+        if (args.length < 1 || args.length > 2) {
+          throw new Error("reducir() requiere 1 o 2 argumentos");
+        }
+        const reduceCallback = this.evaluateExpression(args[0]);
+        if (reduceCallback.type !== "Function") {
+          throw new Error(
+            "reducir() requiere una función como primer argumento",
+          );
+        }
+        let accumulator =
+          args.length === 2 ? this.evaluateExpression(args[1]) : array[0];
+        const startIndex = args.length === 2 ? 0 : 1;
+        for (let i = startIndex; i < array.length; i++) {
+          const reduceEnv = new Environment(this.environment);
+          if (reduceCallback.parameters.length >= 1) {
+            reduceEnv.define(reduceCallback.parameters[0], accumulator);
+          }
+          if (reduceCallback.parameters.length >= 2) {
+            reduceEnv.define(reduceCallback.parameters[1], array[i]);
+          }
+          if (reduceCallback.parameters.length >= 3) {
+            reduceEnv.define(reduceCallback.parameters[2], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = reduceEnv;
+          try {
+            this.executeBlock(reduceCallback.body);
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              accumulator = returnValue.value;
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return accumulator;
+
+      case "ordenar":
+        // Sort array (optionally with comparison function)
+        if (args.length === 0) {
+          // Default sort (numeric or string)
+          return [...array].sort((a, b) => {
+            if (typeof a === "number" && typeof b === "number") {
+              return a - b;
+            }
+            return String(a).localeCompare(String(b));
+          });
+        } else if (args.length === 1) {
+          const sortCallback = this.evaluateExpression(args[0]);
+          if (sortCallback.type !== "Function") {
+            throw new Error("ordenar() requiere una función como argumento");
+          }
+          return [...array].sort((a, b) => {
+            const sortEnv = new Environment(this.environment);
+            if (sortCallback.parameters.length >= 1) {
+              sortEnv.define(sortCallback.parameters[0], a);
+            }
+            if (sortCallback.parameters.length >= 2) {
+              sortEnv.define(sortCallback.parameters[1], b);
+            }
+            const prevEnv = this.environment;
+            this.environment = sortEnv;
+            try {
+              this.executeBlock(sortCallback.body);
+              return 0;
+            } catch (returnValue) {
+              if (returnValue instanceof ReturnException) {
+                return returnValue.value;
+              }
+              throw returnValue;
+            } finally {
+              this.environment = prevEnv;
+            }
+          });
+        } else {
+          throw new Error("ordenar() acepta 0 o 1 argumentos");
+        }
+
+      case "invertir":
+        // Reverse array (returns new array)
+        return [...array].reverse();
+
+      case "buscar":
+        // Find first element matching predicate
+        if (args.length !== 1) {
+          throw new Error("buscar() requiere exactamente 1 argumento");
+        }
+        const findCallback = this.evaluateExpression(args[0]);
+        if (findCallback.type !== "Function") {
+          throw new Error("buscar() requiere una función como argumento");
+        }
+        for (let i = 0; i < array.length; i++) {
+          const findEnv = new Environment(this.environment);
+          if (findCallback.parameters.length >= 1) {
+            findEnv.define(findCallback.parameters[0], array[i]);
+          }
+          if (findCallback.parameters.length >= 2) {
+            findEnv.define(findCallback.parameters[1], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = findEnv;
+          try {
+            this.executeBlock(findCallback.body);
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              if (this.isTruthy(returnValue.value)) {
+                this.environment = prevEnv;
+                return array[i];
+              }
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return undefined;
+
+      case "algunos":
+        // Check if some elements match predicate
+        if (args.length !== 1) {
+          throw new Error("algunos() requiere exactamente 1 argumento");
+        }
+        const someCallback = this.evaluateExpression(args[0]);
+        if (someCallback.type !== "Function") {
+          throw new Error("algunos() requiere una función como argumento");
+        }
+        for (let i = 0; i < array.length; i++) {
+          const someEnv = new Environment(this.environment);
+          if (someCallback.parameters.length >= 1) {
+            someEnv.define(someCallback.parameters[0], array[i]);
+          }
+          if (someCallback.parameters.length >= 2) {
+            someEnv.define(someCallback.parameters[1], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = someEnv;
+          try {
+            this.executeBlock(someCallback.body);
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              if (this.isTruthy(returnValue.value)) {
+                this.environment = prevEnv;
+                return true;
+              }
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return false;
+
+      case "todos":
+        // Check if all elements match predicate
+        if (args.length !== 1) {
+          throw new Error("todos() requiere exactamente 1 argumento");
+        }
+        const everyCallback = this.evaluateExpression(args[0]);
+        if (everyCallback.type !== "Function") {
+          throw new Error("todos() requiere una función como argumento");
+        }
+        for (let i = 0; i < array.length; i++) {
+          const everyEnv = new Environment(this.environment);
+          if (everyCallback.parameters.length >= 1) {
+            everyEnv.define(everyCallback.parameters[0], array[i]);
+          }
+          if (everyCallback.parameters.length >= 2) {
+            everyEnv.define(everyCallback.parameters[1], i);
+          }
+          const prevEnv = this.environment;
+          this.environment = everyEnv;
+          try {
+            this.executeBlock(everyCallback.body);
+          } catch (returnValue) {
+            if (returnValue instanceof ReturnException) {
+              if (!this.isTruthy(returnValue.value)) {
+                this.environment = prevEnv;
+                return false;
+              }
+            } else {
+              throw returnValue;
+            }
+          } finally {
+            this.environment = prevEnv;
+          }
+        }
+        return true;
+
+      case "unir":
+        // Join array elements into string
+        if (args.length !== 1) {
+          throw new Error("unir() requiere exactamente 1 argumento");
+        }
+        const separator = this.evaluateExpression(args[0]);
+        if (typeof separator !== "string") {
+          throw new Error("unir() requiere un argumento de tipo cadena");
+        }
+        return array.join(separator);
+
+      case "cortar":
+        // Slice array (returns subarray)
+        if (args.length < 1 || args.length > 2) {
+          throw new Error("cortar() requiere 1 o 2 argumentos");
+        }
+        const sliceStart = this.evaluateExpression(args[0]);
+        if (typeof sliceStart !== "number") {
+          throw new Error("cortar() requiere argumentos numéricos");
+        }
+        if (args.length === 2) {
+          const sliceEnd = this.evaluateExpression(args[1]);
+          if (typeof sliceEnd !== "number") {
+            throw new Error("cortar() requiere argumentos numéricos");
+          }
+          return array.slice(sliceStart, sliceEnd);
+        }
+        return array.slice(sliceStart);
+
+      case "insertar":
+        // Insert element at position (modifies array)
+        if (args.length !== 2) {
+          throw new Error("insertar() requiere exactamente 2 argumentos");
+        }
+        const insertIndex = this.evaluateExpression(args[0]);
+        const insertValue = this.evaluateExpression(args[1]);
+        if (typeof insertIndex !== "number") {
+          throw new Error("insertar() requiere un índice numérico");
+        }
+        array.splice(insertIndex, 0, insertValue);
+        return array.length;
+
       default:
         throw new Error(`Método de arreglo desconocido: ${method}`);
     }

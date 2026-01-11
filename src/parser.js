@@ -823,7 +823,17 @@ class Parser {
       name.lexeme === "terminaCon" ||
       name.lexeme === "caracter" ||
       name.lexeme === "subcadena" ||
-      name.lexeme === "invertir"
+      name.lexeme === "invertir" ||
+      name.lexeme === "filtrar" ||
+      name.lexeme === "mapear" ||
+      name.lexeme === "reducir" ||
+      name.lexeme === "ordenar" ||
+      name.lexeme === "buscar" ||
+      name.lexeme === "algunos" ||
+      name.lexeme === "todos" ||
+      name.lexeme === "unir" ||
+      name.lexeme === "cortar" ||
+      name.lexeme === "insertar"
     ) {
       // Check if there are parentheses (method call syntax)
       if (this.match("LEFT_PAREN")) {
@@ -841,7 +851,16 @@ class Parser {
             name.lexeme === "empiezaCon" ||
             name.lexeme === "terminaCon" ||
             name.lexeme === "caracter" ||
-            name.lexeme === "subcadena"
+            name.lexeme === "subcadena" ||
+            name.lexeme === "filtrar" ||
+            name.lexeme === "mapear" ||
+            name.lexeme === "reducir" ||
+            name.lexeme === "buscar" ||
+            name.lexeme === "algunos" ||
+            name.lexeme === "todos" ||
+            name.lexeme === "unir" ||
+            name.lexeme === "cortar" ||
+            name.lexeme === "insertar"
           ) {
             const args = [];
             do {

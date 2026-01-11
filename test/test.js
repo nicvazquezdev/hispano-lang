@@ -4535,6 +4535,308 @@ function runTests() {
     );
   });
 
+  // ============================================
+  // ADDITIONAL ARRAY METHODS TESTS
+  // ============================================
+
+  test("Array filtrar method", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5, 6]
+      variable pares = numeros.filtrar(funcion(x) { retornar x % 2 == 0 })
+      mostrar pares
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["[2, 4, 6]"], "filtrar should filter array elements");
+  });
+
+  test("Array filtrar with empty result", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable resultado = numeros.filtrar(funcion(x) { retornar x > 10 })
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[]"],
+      "filtrar should return empty array when no matches",
+    );
+  });
+
+  test("Array mapear method", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable dobles = numeros.mapear(funcion(x) { retornar x * 2 })
+      mostrar dobles
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[2, 4, 6]"],
+      "mapear should transform array elements",
+    );
+  });
+
+  test("Array mapear with strings", () => {
+    const code = `
+      variable nombres = ["ana", "juan"]
+      variable mayusculas = nombres.mapear(funcion(x) { retornar x.mayusculas() })
+      mostrar mayusculas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[ANA, JUAN]"],
+      "mapear should work with string methods",
+    );
+  });
+
+  test("Array reducir method", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4]
+      variable suma = numeros.reducir(funcion(acc, x) { retornar acc + x }, 0)
+      mostrar suma
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["10"], "reducir should accumulate values");
+  });
+
+  test("Array reducir with initial value", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable producto = numeros.reducir(funcion(acc, x) { retornar acc * x }, 1)
+      mostrar producto
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["6"],
+      "reducir should work with different initial values",
+    );
+  });
+
+  test("Array ordenar method with numbers", () => {
+    const code = `
+      variable numeros = [3, 1, 4, 1, 5, 9, 2, 6]
+      variable ordenados = numeros.ordenar()
+      mostrar ordenados
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[1, 1, 2, 3, 4, 5, 6, 9]"],
+      "ordenar should sort numbers",
+    );
+  });
+
+  test("Array ordenar method with strings", () => {
+    const code = `
+      variable palabras = ["banana", "manzana", "cereza"]
+      variable ordenadas = palabras.ordenar()
+      mostrar ordenadas
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[banana, cereza, manzana]"],
+      "ordenar should sort strings",
+    );
+  });
+
+  test("Array invertir method", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable invertidos = numeros.invertir()
+      mostrar invertidos
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["[5, 4, 3, 2, 1]"], "invertir should reverse array");
+  });
+
+  test("Array buscar method", () => {
+    const code = `
+      variable numeros = [1, 5, 10, 15, 20]
+      variable encontrado = numeros.buscar(funcion(x) { retornar x > 8 })
+      mostrar encontrado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["10"], "buscar should find first matching element");
+  });
+
+  test("Array buscar method not found", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable encontrado = numeros.buscar(funcion(x) { retornar x > 10 })
+      mostrar encontrado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["undefined"],
+      "buscar should return undefined when not found",
+    );
+  });
+
+  test("Array algunos method true", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable hayMayor = numeros.algunos(funcion(x) { retornar x > 3 })
+      mostrar hayMayor
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["true"],
+      "algunos should return true when some match",
+    );
+  });
+
+  test("Array algunos method false", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable hayMayor = numeros.algunos(funcion(x) { retornar x > 10 })
+      mostrar hayMayor
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false"],
+      "algunos should return false when none match",
+    );
+  });
+
+  test("Array todos method true", () => {
+    const code = `
+      variable numeros = [2, 4, 6, 8]
+      variable todosPares = numeros.todos(funcion(x) { retornar x % 2 == 0 })
+      mostrar todosPares
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["true"], "todos should return true when all match");
+  });
+
+  test("Array todos method false", () => {
+    const code = `
+      variable numeros = [2, 4, 5, 8]
+      variable todosPares = numeros.todos(funcion(x) { retornar x % 2 == 0 })
+      mostrar todosPares
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["false"],
+      "todos should return false when not all match",
+    );
+  });
+
+  test("Array unir method", () => {
+    const code = `
+      variable palabras = ["Hola", "mundo", "cruel"]
+      variable frase = palabras.unir(" ")
+      mostrar frase
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Hola mundo cruel"],
+      "unir should join array elements",
+    );
+  });
+
+  test("Array unir with different separator", () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable csv = numeros.unir(", ")
+      mostrar csv
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["1, 2, 3"],
+      "unir should work with different separators",
+    );
+  });
+
+  test("Array cortar method", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable parte = numeros.cortar(1, 4)
+      mostrar parte
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["[2, 3, 4]"], "cortar should return slice of array");
+  });
+
+  test("Array cortar with one argument", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5]
+      variable parte = numeros.cortar(2)
+      mostrar parte
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[3, 4, 5]"],
+      "cortar with one arg should slice from index to end",
+    );
+  });
+
+  test("Array insertar method", () => {
+    const code = `
+      variable numeros = [1, 2, 4, 5]
+      numeros.insertar(2, 3)
+      mostrar numeros
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["[1, 2, 3, 4, 5]"],
+      "insertar should insert element at index",
+    );
+  });
+
+  test("Array insertar at beginning", () => {
+    const code = `
+      variable numeros = [2, 3, 4]
+      numeros.insertar(0, 1)
+      mostrar numeros
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["[1, 2, 3, 4]"], "insertar should work at beginning");
+  });
+
+  test("Array methods chaining", () => {
+    const code = `
+      variable numeros = [1, 2, 3, 4, 5, 6]
+      variable resultado = numeros.filtrar(funcion(x) { retornar x % 2 == 0 }).mapear(funcion(x) { retornar x * 2 })
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["[4, 8, 12]"], "Array methods should be chainable");
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

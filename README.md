@@ -239,10 +239,52 @@ mostrar frutas.longitud()  // 3
 mostrar frutas.primero()   // manzana
 mostrar frutas.ultimo()    // naranja
 
-// Métodos de array
+// Métodos básicos de array
 frutas.agregar("uva")      // push
 frutas.remover()           // pop
 frutas.contiene("banana")  // includes
+
+// Métodos de transformación
+variable numeros = [1, 2, 3, 4, 5]
+
+// Filtrar elementos
+variable pares = numeros.filtrar(funcion(x) { retornar x % 2 == 0 })
+// [2, 4]
+
+// Transformar elementos
+variable dobles = numeros.mapear(funcion(x) { retornar x * 2 })
+// [2, 4, 6, 8, 10]
+
+// Reducir a un valor
+variable suma = numeros.reducir(funcion(acc, x) { retornar acc + x }, 0)
+// 15
+
+// Ordenar (números o strings)
+variable ordenados = numeros.ordenar()           // [1, 2, 3, 4, 5]
+variable palabras = ["banana", "manzana", "cereza"]
+variable ordenadas = palabras.ordenar()          // [banana, cereza, manzana]
+
+// Invertir orden
+variable invertidos = numeros.invertir()         // [5, 4, 3, 2, 1]
+
+// Buscar elemento
+variable encontrado = numeros.buscar(funcion(x) { retornar x > 3 })
+// 4
+
+// Verificar condiciones
+variable hayGrandes = numeros.algunos(funcion(x) { retornar x > 3 })
+// verdadero
+variable todosPares = numeros.todos(funcion(x) { retornar x % 2 == 0 })
+// falso
+
+// Unir en string
+variable texto = numeros.unir(", ")              // "1, 2, 3, 4, 5"
+
+// Cortar sublista
+variable sublista = numeros.cortar(1, 3)         // [2, 3]
+
+// Insertar en posición
+numeros.insertar(2, "nuevo")                     // [1, 2, "nuevo", 3, 4, 5]
 ```
 
 ### Objetos
