@@ -657,6 +657,10 @@ class Parser {
       };
     }
 
+    if (this.match('TEMPLATE_STRING')) {
+      return this.templateStringExpression();
+    }
+
     if (this.match('IDENTIFIER')) {
       const identifier = this.previous();
       if (this.check('LEFT_PAREN')) {
@@ -700,6 +704,30 @@ class Parser {
     }
 
     throw new Error('Se esperaba una expresión');
+  }
+
+  /**
+   * Parses a template string expression
+   * @returns {Object} Template string expression with parsed expressions
+   */
+  templateStringExpression() {
+    const token = this.previous();
+    const { parts, expressions } = token.literal;
+    const Tokenizer = require('./tokenizer.js');
+
+    // Parse each expression string into an AST
+    const parsedExpressions = expressions.map(exprSource => {
+      const tokenizer = new Tokenizer();
+      const exprTokens = tokenizer.tokenize(exprSource);
+      const exprParser = new Parser(exprTokens);
+      return exprParser.expression();
+    });
+
+    return {
+      type: 'TemplateString',
+      parts,
+      expressions: parsedExpressions,
+    };
   }
 
   /**

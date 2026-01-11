@@ -198,6 +198,10 @@ class Tokenizer {
         this.string("'");
         break;
 
+      case '`':
+        this.templateString();
+        break;
+
       case '/':
         if (this.peek() === '/') {
           this.comment();
@@ -240,6 +244,67 @@ class Tokenizer {
     // Extract the string value
     const value = this.source.substring(this.startPos + 1, this.current - 1);
     this.addToken('STRING', value);
+  }
+
+  /**
+   * Processes a template string with interpolation (backticks)
+   * Supports ${expression} syntax for embedding expressions
+   */
+  templateString() {
+    const parts = [];      // Literal string parts
+    const expressions = []; // Expression source strings
+    let currentPart = '';
+
+    while (!this.isAtEnd()) {
+      const char = this.peek();
+
+      if (char === '`') {
+        // End of template string
+        this.advance();
+        parts.push(currentPart);
+        this.addToken('TEMPLATE_STRING', { parts, expressions });
+        return;
+      }
+
+      if (char === '$' && this.peekNext() === '{') {
+        // Start of interpolation
+        parts.push(currentPart);
+        currentPart = '';
+        this.advance(); // consume $
+        this.advance(); // consume {
+
+        // Extract the expression
+        let braceCount = 1;
+        let expressionSource = '';
+
+        while (!this.isAtEnd() && braceCount > 0) {
+          const c = this.peek();
+          if (c === '{') {
+            braceCount++;
+            expressionSource += c;
+            this.advance();
+          } else if (c === '}') {
+            braceCount--;
+            if (braceCount > 0) {
+              expressionSource += c;
+            }
+            this.advance();
+          } else {
+            if (c === '\n') this.currentLine++;
+            expressionSource += c;
+            this.advance();
+          }
+        }
+
+        expressions.push(expressionSource);
+      } else {
+        if (char === '\n') this.currentLine++;
+        currentPart += char;
+        this.advance();
+      }
+    }
+
+    throw new Error('Cadena de plantilla no terminada');
   }
 
   /**

@@ -289,6 +289,9 @@ class Evaluator {
       case 'Literal':
         return expression.value;
 
+      case 'TemplateString':
+        return this.evaluateTemplateString(expression);
+
       case 'Variable':
         return this.environment.get(expression.name);
 
@@ -911,6 +914,26 @@ class Evaluator {
   }
 
   /**
+   * Evaluates a template string with interpolation
+   * @param {Object} expression - Template string expression
+   * @returns {string} Interpolated string result
+   */
+  evaluateTemplateString(expression) {
+    const { parts, expressions } = expression;
+    let result = '';
+
+    for (let i = 0; i < parts.length; i++) {
+      result += parts[i];
+      if (i < expressions.length) {
+        const value = this.evaluateExpression(expressions[i]);
+        result += this.stringifySpanish(value);
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Evaluates an array literal
    * @param {Object} expression - Array literal expression
    * @returns {Array} Array value
@@ -1266,6 +1289,23 @@ class Evaluator {
     if (typeof value === 'string') return value;
     if (Array.isArray(value)) {
       return '[' + value.map(v => this.stringify(v)).join(', ') + ']';
+    }
+    return value.toString();
+  }
+
+  /**
+   * Converts a value to its Spanish string representation for template strings
+   * @param {any} value - Value to convert
+   * @returns {string} Spanish string representation
+   */
+  stringifySpanish(value) {
+    if (value === null) return 'nulo';
+    if (value === undefined) return 'indefinido';
+    if (value === true) return 'verdadero';
+    if (value === false) return 'falso';
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value)) {
+      return '[' + value.map(v => this.stringifySpanish(v)).join(', ') + ']';
     }
     return value.toString();
   }

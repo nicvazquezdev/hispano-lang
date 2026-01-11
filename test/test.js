@@ -3842,6 +3842,123 @@ function runTests() {
     }
   });
 
+  // ============================================
+  // STRING INTERPOLATION TESTS
+  // ============================================
+
+  test('Basic string interpolation with variable', () => {
+    const code = `
+      variable nombre = "María"
+      variable mensaje = \`Hola \${nombre}\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Hola María'], 'String interpolation should work with simple variable');
+  });
+
+  test('String interpolation with multiple variables', () => {
+    const code = `
+      variable nombre = "Juan"
+      variable edad = 25
+      variable mensaje = \`\${nombre} tiene \${edad} años\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Juan tiene 25 años'], 'String interpolation should work with multiple variables');
+  });
+
+  test('String interpolation with expressions', () => {
+    const code = `
+      variable a = 10
+      variable b = 5
+      variable mensaje = \`La suma es \${a + b} y la resta es \${a - b}\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['La suma es 15 y la resta es 5'], 'String interpolation should work with expressions');
+  });
+
+  test('String interpolation with function calls', () => {
+    const code = `
+      funcion doble(x) {
+        retornar x * 2
+      }
+      variable mensaje = \`El doble de 5 es \${doble(5)}\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['El doble de 5 es 10'], 'String interpolation should work with function calls');
+  });
+
+  test('String interpolation with nested expressions', () => {
+    const code = `
+      variable numeros = [1, 2, 3]
+      variable mensaje = \`El primer número es \${numeros[0]} y el último es \${numeros[2]}\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['El primer número es 1 y el último es 3'], 'String interpolation should work with array access');
+  });
+
+  test('String interpolation with object properties', () => {
+    const code = `
+      variable persona = {nombre: "Ana", edad: 30}
+      variable mensaje = \`\${persona.nombre} tiene \${persona.edad} años\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Ana tiene 30 años'], 'String interpolation should work with object properties');
+  });
+
+  test('String interpolation with boolean and null values', () => {
+    const code = `
+      variable activo = verdadero
+      variable valor = nulo
+      variable mensaje = \`Activo: \${activo}, Valor: \${valor}\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Activo: verdadero, Valor: nulo'], 'String interpolation should work with boolean and null');
+  });
+
+  test('String interpolation used directly in mostrar', () => {
+    const code = `
+      variable x = 42
+      mostrar \`El valor es \${x}\`
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['El valor es 42'], 'String interpolation should work directly in mostrar');
+  });
+
+  test('Empty string interpolation', () => {
+    const code = `
+      variable mensaje = \`Sin interpolación\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Sin interpolación'], 'Template string without interpolation should work');
+  });
+
+  test('String interpolation with escaped characters', () => {
+    const code = `
+      variable nombre = "Test"
+      variable mensaje = \`Hola \${nombre}!\`
+      mostrar mensaje
+    `;
+
+    const output = run(code);
+    assertEquals(output, ['Hola Test!'], 'String interpolation should handle special characters');
+  });
+
   // Show results
   console.log(`\n${colors.bold}📊 Test Results:${colors.reset}`);
   console.log(`${colors.green}Tests passed: ${testsPassed}${colors.reset}`);

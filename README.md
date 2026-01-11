@@ -24,7 +24,7 @@ La mayoría de los lenguajes de programación utilizan palabras clave en inglés
 - 🎓 **Minimalista** - Pensado para aprender lógica sin distracciones
 - 📚 **Educativo** - Enfoque en conceptos fundamentales
 - 🔧 **CLI Tool** - Interfaz de línea de comandos intuitiva
-- 🧪 **Suite de tests** - 170+ tests para garantizar calidad
+- 🧪 **Suite de tests** - 180+ tests para garantizar calidad
 - 📦 **NPM Package** - Fácil instalación y distribución
 - 🔄 **REPL Interactivo** - Modo interactivo para experimentar
 - 📝 **TypeScript Support** - Definiciones de tipos incluidas
@@ -232,6 +232,17 @@ mostrar texto.mayusculas()  // HOLA MUNDO
 mostrar texto.minusculas()  // hola mundo
 ```
 
+### Interpolación de cadenas
+
+Usa backticks (\`) para crear cadenas con expresiones embebidas usando `${expresion}`:
+
+```javascript
+variable nombre = "María"
+variable edad = 25
+mostrar `Hola ${nombre}, tienes ${edad} años`
+// Resultado: Hola María, tienes 25 años
+```
+
 ### Manejo de errores
 
 ```javascript
@@ -270,7 +281,7 @@ bin/
 └── hispano.js      # CLI tool
 
 test/
-└── test.js         # Suite completa de tests (170+ casos)
+└── test.js         # Suite completa de tests (180+ casos)
 ```
 
 ## 🛠️ Desarrollo
@@ -370,7 +381,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📊 Estadísticas
 
-- 🧪 **170+ tests** cubriendo todas las funcionalidades
+- 🧪 **180+ tests** cubriendo todas las funcionalidades
 - 📦 **NPM package** listo para instalación global
 - 🔧 **CLI tool** con modo interactivo
 - 📝 **TypeScript support** con definiciones incluidas
