@@ -71,5 +71,5 @@ module.exports = {
   run,
   getVariables,
   clearVariables,
-  Interpreter,
+  Interpreter
 };
