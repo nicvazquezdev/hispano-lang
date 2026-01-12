@@ -284,6 +284,41 @@ si edad >= 18 {
 }
 ```
 
+#### Condicional Si/Sino Si (Else If)
+
+```
+variable nota = 85
+
+si nota >= 90 {
+    mostrar "Excelente"
+} sino si nota >= 80 {
+    mostrar "Muy bien"
+} sino si nota >= 70 {
+    mostrar "Aprobado"
+} sino {
+    mostrar "Reprobado"
+}
+```
+
+Se pueden anidar condiciones:
+
+```
+variable edad = 25
+variable estudiante = verdadero
+
+si edad < 18 {
+    mostrar "Menor de edad"
+} sino si edad < 30 {
+    si estudiante {
+        mostrar "Joven estudiante"
+    } sino {
+        mostrar "Joven trabajador"
+    }
+} sino {
+    mostrar "Adulto"
+}
+```
+
 #### Elegir/Caso (Switch)
 
 ```
@@ -784,7 +819,7 @@ hispano-lang/
 ├── bin/
 │   └── hispano.js      # CLI
 ├── test/
-│   └── test.js         # Suite de tests (329+)
+│   └── test.js         # Suite de tests (334+)
 └── dist/               # Build de producción
 ```
 

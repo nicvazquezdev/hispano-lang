@@ -347,9 +347,14 @@ class Parser {
     let elseBranch = null;
 
     if (this.match("SINO")) {
-      this.consume("LEFT_BRACE", "Expected { after else");
-      elseBranch = this.block();
-      this.consume("RIGHT_BRACE", "Expected } after else block");
+      // Check for "sino si" (else if)
+      if (this.match("SI")) {
+        elseBranch = this.ifStatement();
+      } else {
+        this.consume("LEFT_BRACE", "Expected { after else");
+        elseBranch = this.block();
+        this.consume("RIGHT_BRACE", "Expected } after else block");
+      }
     }
 
     return {

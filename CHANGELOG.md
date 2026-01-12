@@ -5,6 +5,26 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 11-01-2026
+
+### ✨ Nuevo
+
+- **Operadores de incremento/decremento prefijos** (`++contador`, `--contador`)
+  - A diferencia de los postfijos (`contador++`), los prefijos retornan el valor **después** del incremento/decremento
+  - Funcionan con variables, propiedades de objetos y elementos de arrays
+  - Ejemplo: `variable x = 5; mostrar ++x` imprime `6`
+
+- **Condicional `sino si`** (else if)
+  - Permite encadenar múltiples condiciones sin anidar bloques
+  - Sintaxis: `si condicion { } sino si otraCondicion { } sino { }`
+  - Soporta anidamiento completo con bloques `si` internos
+
+### 🔧 Mejorado
+
+- **334 tests** cubriendo todas las funcionalidades (antes 325)
+
+---
+
 ## [2.1.2] - 11-01-2026
 
 ### 🐛 Corregido

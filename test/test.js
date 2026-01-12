@@ -296,6 +296,106 @@ function runTests() {
     assertEquals(output, ["menor de edad"], "If-else statement should work");
   });
 
+  // Test: Basic sino si (else if)
+  test("Basic sino si (else if)", () => {
+    const code = `
+      variable nota = 75
+      si nota >= 90 {
+        mostrar "Excelente"
+      } sino si nota >= 70 {
+        mostrar "Aprobado"
+      } sino {
+        mostrar "Reprobado"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Aprobado"], "Basic sino si should work");
+  });
+
+  // Test: Multiple sino si (else if chain)
+  test("Multiple sino si (else if chain)", () => {
+    const code = `
+      variable dia = 3
+      si dia == 1 {
+        mostrar "Lunes"
+      } sino si dia == 2 {
+        mostrar "Martes"
+      } sino si dia == 3 {
+        mostrar "Miércoles"
+      } sino si dia == 4 {
+        mostrar "Jueves"
+      } sino {
+        mostrar "Otro día"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["Miércoles"], "Multiple sino si chain should work");
+  });
+
+  // Test: sino si without final sino
+  test("sino si without final sino", () => {
+    const code = `
+      variable x = 5
+      si x > 10 {
+        mostrar "grande"
+      } sino si x > 3 {
+        mostrar "mediano"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(output, ["mediano"], "sino si without final sino should work");
+  });
+
+  // Test: sino si with no match and no final sino
+  test("sino si with no match and no final sino", () => {
+    const code = `
+      variable x = 1
+      si x > 10 {
+        mostrar "grande"
+      } sino si x > 5 {
+        mostrar "mediano"
+      }
+      mostrar "fin"
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["fin"],
+      "sino si with no match should continue execution",
+    );
+  });
+
+  // Test: Nested si inside sino si
+  test("Nested si inside sino si", () => {
+    const code = `
+      variable edad = 25
+      variable estudiante = verdadero
+
+      si edad < 18 {
+        mostrar "Menor"
+      } sino si edad < 30 {
+        si estudiante {
+          mostrar "Joven estudiante"
+        } sino {
+          mostrar "Joven trabajador"
+        }
+      } sino {
+        mostrar "Adulto"
+      }
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["Joven estudiante"],
+      "Nested si inside sino si should work",
+    );
+  });
+
   // Test 9: Multiple conditions
   test("Multiple conditions", () => {
     const code = `

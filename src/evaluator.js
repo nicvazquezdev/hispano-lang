@@ -197,7 +197,12 @@ class Evaluator {
     if (this.isTruthy(this.evaluateExpression(statement.condition))) {
       this.executeBlock(statement.thenBranch);
     } else if (statement.elseBranch !== null) {
-      this.executeBlock(statement.elseBranch);
+      // Check if elseBranch is another IfStatement (sino si) or a block
+      if (statement.elseBranch.type === "IfStatement") {
+        this.executeIfStatement(statement.elseBranch);
+      } else {
+        this.executeBlock(statement.elseBranch);
+      }
     }
   }
 
