@@ -239,6 +239,37 @@ x /= 4   // x = 6
 x %= 4   // x = 2
 ```
 
+#### Incremento y Decremento
+
+| Operador | Tipo     | Descripción                         | Ejemplo                       |
+| -------- | -------- | ----------------------------------- | ----------------------------- |
+| `x++`    | Postfijo | Retorna valor original, luego suma  | `x = 5; mostrar x++` → `5`    |
+| `x--`    | Postfijo | Retorna valor original, luego resta | `x = 5; mostrar x--` → `5`    |
+| `++x`    | Prefijo  | Suma primero, luego retorna         | `x = 5; mostrar ++x` → `6`    |
+| `--x`    | Prefijo  | Resta primero, luego retorna        | `x = 5; mostrar --x` → `4`    |
+
+```
+variable contador = 5
+
+// Postfijo: retorna el valor ANTES del cambio
+mostrar contador++    // Imprime 5, contador ahora es 6
+mostrar contador      // Imprime 6
+
+// Prefijo: retorna el valor DESPUÉS del cambio
+mostrar ++contador    // Imprime 7, contador ahora es 7
+mostrar contador      // Imprime 7
+```
+
+Funcionan también con arrays y objetos:
+
+```
+variable nums = [1, 2, 3]
+mostrar ++nums[0]     // Imprime 2, nums[0] ahora es 2
+
+variable obj = { valor: 10 }
+mostrar obj.valor++   // Imprime 10, obj.valor ahora es 11
+```
+
 ---
 
 ### Estructuras de Control
@@ -753,7 +784,7 @@ hispano-lang/
 ├── bin/
 │   └── hispano.js      # CLI
 ├── test/
-│   └── test.js         # Suite de tests (310+)
+│   └── test.js         # Suite de tests (329+)
 └── dist/               # Build de producción
 ```
 

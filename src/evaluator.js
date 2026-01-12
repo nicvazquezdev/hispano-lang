@@ -407,6 +407,9 @@ class Evaluator {
       case "Postfix":
         return this.evaluatePostfixExpression(expression);
 
+      case "Prefix":
+        return this.evaluatePrefixExpression(expression);
+
       case "Call":
         return this.evaluateCallExpression(expression);
 
@@ -2250,6 +2253,87 @@ class Evaluator {
     }
 
     throw new Error(`Operador postfijo desconocido: ${expression.operator}`);
+  }
+
+  /**
+   * Evaluates prefix expression (increment/decrement)
+   * @param {Object} expression - Prefix expression
+   * @returns {any} New value after increment/decrement
+   */
+  evaluatePrefixExpression(expression) {
+    const operand = this.evaluateExpression(expression.operand);
+
+    if (expression.operator === "PLUS_PLUS") {
+      if (typeof operand !== "number") {
+        throw new Error("Solo se pueden incrementar números");
+      }
+      const newValue = operand + 1;
+
+      // Update the variable if it's a variable reference
+      if (expression.operand.type === "Variable") {
+        this.environment.assign(expression.operand.name, newValue);
+      } else if (expression.operand.type === "PropertyAccess") {
+        const object = this.evaluateExpression(expression.operand.object);
+        if (typeof object !== "object" || object === null) {
+          throw new Error("Solo se pueden incrementar propiedades de objetos");
+        }
+        object[expression.operand.name] = newValue;
+      } else if (expression.operand.type === "ArrayAccess") {
+        const array = this.evaluateExpression(expression.operand.array);
+        const index = this.evaluateExpression(expression.operand.index);
+        if (!Array.isArray(array)) {
+          throw new Error("Solo se pueden incrementar elementos de arreglos");
+        }
+        if (typeof index !== "number") {
+          throw new Error("El índice del arreglo debe ser un número");
+        }
+        if (index < 0 || index >= array.length) {
+          throw new Error("Índice del arreglo fuera de rango");
+        }
+        array[index] = newValue;
+      } else {
+        throw new Error("Objetivo de incremento inválido");
+      }
+
+      return newValue; // Return the new value (prefix behavior)
+    }
+
+    if (expression.operator === "MINUS_MINUS") {
+      if (typeof operand !== "number") {
+        throw new Error("Solo se pueden decrementar números");
+      }
+      const newValue = operand - 1;
+
+      // Update the variable if it's a variable reference
+      if (expression.operand.type === "Variable") {
+        this.environment.assign(expression.operand.name, newValue);
+      } else if (expression.operand.type === "PropertyAccess") {
+        const object = this.evaluateExpression(expression.operand.object);
+        if (typeof object !== "object" || object === null) {
+          throw new Error("Solo se pueden decrementar propiedades de objetos");
+        }
+        object[expression.operand.name] = newValue;
+      } else if (expression.operand.type === "ArrayAccess") {
+        const array = this.evaluateExpression(expression.operand.array);
+        const index = this.evaluateExpression(expression.operand.index);
+        if (!Array.isArray(array)) {
+          throw new Error("Solo se pueden decrementar elementos de arreglos");
+        }
+        if (typeof index !== "number") {
+          throw new Error("El índice del arreglo debe ser un número");
+        }
+        if (index < 0 || index >= array.length) {
+          throw new Error("Índice del arreglo fuera de rango");
+        }
+        array[index] = newValue;
+      } else {
+        throw new Error("Objetivo de decremento inválido");
+      }
+
+      return newValue; // Return the new value (prefix behavior)
+    }
+
+    throw new Error(`Operador prefijo desconocido: ${expression.operator}`);
   }
 
   /**

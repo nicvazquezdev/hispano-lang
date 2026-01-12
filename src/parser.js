@@ -745,6 +745,17 @@ class Parser {
    * @returns {Object} Unary expression
    */
   unary() {
+    // Handle prefix increment/decrement operators (++x, --x)
+    if (this.match("PLUS_PLUS", "MINUS_MINUS")) {
+      const operator = this.previous();
+      const right = this.unary();
+      return {
+        type: "Prefix",
+        operator: operator.type,
+        operand: right,
+      };
+    }
+
     if (this.match("BANG", "MINUS")) {
       const operator = this.previous();
       const right = this.unary();

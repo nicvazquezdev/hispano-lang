@@ -1059,6 +1059,76 @@ function runTests() {
     assertEquals(output, ["3", "8"], "Multiple increments should work");
   });
 
+  // Test: Prefix increment operator
+  test("Prefix increment operator", () => {
+    const code = `
+      variable contador = 5
+      variable resultado = ++contador
+      mostrar contador
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["6", "6"],
+      "Prefix increment operator should return new value",
+    );
+  });
+
+  // Test: Prefix decrement operator
+  test("Prefix decrement operator", () => {
+    const code = `
+      variable numero = 10
+      variable resultado = --numero
+      mostrar numero
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["9", "9"],
+      "Prefix decrement operator should return new value",
+    );
+  });
+
+  // Test: Prefix vs Postfix comparison
+  test("Prefix vs Postfix comparison", () => {
+    const code = `
+      variable a = 5
+      variable b = 5
+      mostrar a++
+      mostrar ++b
+      mostrar a
+      mostrar b
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["5", "6", "6", "6"],
+      "Prefix and postfix should behave differently",
+    );
+  });
+
+  // Test: Prefix increment with arrays
+  test("Prefix increment with arrays", () => {
+    const code = `
+      variable arr = [1, 2, 3]
+      variable resultado = ++arr[1]
+      mostrar arr[1]
+      mostrar resultado
+    `;
+
+    const output = run(code);
+    assertEquals(
+      output,
+      ["3", "3"],
+      "Prefix increment with arrays should work",
+    );
+  });
+
   // Test 52: Basic compound assignment
   test("Basic compound assignment", () => {
     const code = `
